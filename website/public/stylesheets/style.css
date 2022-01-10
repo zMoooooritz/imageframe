@@ -1,0 +1,59 @@
+body {
+  padding: 10px 0 0 0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+/* * {
+  border-color: black;
+  border-style: dashed;
+} */
+
+a {
+  color: #00B7FF;
+}
+
+#content_section {
+  padding-left: 10px;
+}
+
+#image_section, #settings_section, #shutdown_section {
+  padding: 5px 0 0 10px;
+}
+
+.indent {
+  padding: 5px 0 0 10px;
+}
+
+.top-pad {
+  padding-top: 5px;
+}
+
+.left-pad {
+  padding-left: 5px;
+}
+
+input[type=file] {
+  font-size: larger;
+}
+
+input[type=checkbox] {
+  width: 30px;
+  height: 30px;
+}
+
+input[type=range] {
+  width: 100%;
+}
+
+button {
+  width: 100%;
+}
+
+select {
+  width: 100%;
+  height: 38px;
+}
+
+.bigger {
+  font-size: 20px;
+}

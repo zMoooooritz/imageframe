@@ -1,0 +1,22 @@
+{
+    "short_name": "Bilderrahmen",
+    "name": "Bilderrahmen-Steuerung",
+    "description": "Steuerungssoftware für den Bilderrahmen",
+    "icons": [
+        {
+            "src": "images/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ab4b4b",
+    "background_color": "#ab4b4b",
+    "start_url": "/",
+    "display": "fullscreen",
+    "orientation": "any"
+}
