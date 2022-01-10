@@ -26,8 +26,8 @@ The following steps are required to setup the image frame (using a Raspberry Pi)
 1. Install a Unix-based OS, I recommend [Arch Linux](https://archlinuxarm.org/platforms/armv6/raspberry-pi)
 2. Setup autologin via getty
 3. Clone this repository into the home directory
-5. Autostart the software via the startup.sh script
-6. The frontend should be reachable via the IP of the device and Port 3000
+5. Setup autostart for software (the entry point is the script startup.sh)
+7. The frontend should be reachable via the IP of the device and Port 3000
 
 ## TODO
 Currently the info-mode is relativly rigid and does not support many modules. -> More modules and better configurability
