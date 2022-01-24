@@ -1,117 +1,16 @@
 extends layout
 
 block content
-  div(class='container-fluid')
-    h1 #{title} @ Biering
-
-    div(id='content_section')
-      h2 Bilder anpassen
-      div(id='image_section')
-        form(method='post' enctype='multipart/form-data' action='/upload_images' class='row')
-          div(class='col-9')
-            input(type='file' name='fnimages' class="form-control-file" id='fnimages' accept='image/*' multiple)
-          div(class='col-3')
-            button(type='submit' class='btn btn-primary' id='images_n_submit' disabled) Bilder hochladen
-        <hr/>
-        div(class='row')
-          div(class='col-9')
-            form(method='post' enctype='multipart/form-data' action='/delete_image' class='row' id='delete_images')
-              div(class='col-8')
-                label(for='fdimages' class='sr-only') Bilder zum löschen auswählen
-                select(name='fdimages' id='fdimages' multiple)
-                  option(value='' selected disabled hidden) -- Bilder löschen Auswahl --
-                  each img in images
-                    option(value=img) #{img}
-              div(class='col-4')
-                button(type='submit'  class='btn btn-danger' id='images_d_submit' disabled) Bildauswahl löschen
-          div(class='col-3')
-            form(method='post' action='/delete_images' id='delete_all_images')
-              button(type='submit' class='btn btn-danger') Alle Bilder löschen
-      <br/>
-      h2 Bilderrahmen-Einstellungen
-      div(id='settings_section')
-        h3 Diashow-Modus
-          form(method='post' enctype='multipart/form-data' action='/start_slide' class='indent')
-            div(class='d-flex flex-column align-content-start')
-              div(class='d-flex flex-row align-content-start')
-                div(class='btn-group-toggle' data-toggle='buttons')
-                  label(class='btn btn-outline-info active') Zufällige Reihenfolge
-                    input(type='checkbox' id='frandom' name='frandom' checked autocomplete='off')
-                div(class='btn-group-toggle left-pad' data-toggle='buttons')
-                  label(class='btn btn-outline-info active') Bildname anzeigen
-                    input(type='checkbox' id='fname' name='fname' autocomplete='off')
-              div(class='input-group top-pad')
-                div(class='input-group-prepend')
-                  span(class='input-group-text') Zeit pro Bild
-                input(type='number' min='5' max='300' value='30' id='ftime' name='ftime' autocomplete='off')
-                div(class='input-group-append')
-                  span(class='input-group-text') s
-              div(class='input-group top-pad')
-                div(class='input-group-prepend')
-                  span(class='input-group-text') Übergangszeit
-                input(type='number' min='0' max='1000' value='200' id='fblend' name='fblend' autocomplete='off')
-                div(class='input-group-append')
-                  span(class='input-group-text') ms
-            div(class='row')
-              div(class='col-9')
-              div(class='col-3')
-                button(type='submit' class='btn btn-primary') Diashow starten
-        <br/>
-        h3 Info-Modus
-          form(method='post' enctype='multipart/form-data' action='/start_info' class='indent row')
-            div(class='col-9 d-flex justify-content-start')
-              div(class='btn-group-toggle' data-toggle='buttons')
-                label(class='btn btn-outline-info active') Datum
-                  input(type='checkbox' id='fdate' name='fdate' checked autocomplete='off')
-              div(class='btn-group-toggle left-pad' data-toggle='buttons')
-                label(class='btn btn-outline-info active') Witz
-                  input(type='checkbox' id='fjoke' name='fjoke' checked autocomplete='off')
-              div(class='input-group left-pad')
-                div(class='input-group-prepend')
-                  div(class='input-group-text') Wetter
-                div(class='btn-group btn-group-toggle' data-toggle='buttons')
-                  label(class='btn btn-outline-info') Aus
-                    input(type='radio' id='fwttr0' name='fwttr0' autocomplete='off')
-                  label(class='btn btn-outline-info active') Heute
-                    input(type='radio' id='fwttr1' name='fwttr1' checked autocomplete='off')
-                  label(class='btn btn-outline-info active') 3-Tage
-                    input(type='radio' id='fwttr3' name='fwttr3' autocomplete='off')
-            div(class='col-3')
-              button(type='submit' class='btn btn-primary') Info-Modus starten
-      <br/>
-
-      h2 Bildschirm-Optionen
-      div(id='display_section')
-        form(method='post' enctype='multipart/form-data' action='/display_schedule' class='row indent')
-          div(class='input-group col-4')
-            div(class='input-group-prepend')
-              div(class='input-group-text') Startzeit
-            input(type='time' class='form-control' id='fstime' name='fstime')
-          div(class='input-group col-4')
-            div(class='input-group-prepend')
-              div(class='input-group-text') Endzeit
-            input(type='time' class='form-control' id='fetime' name='fetime')
-          div(class='col-1')
-          div(class='col-3')
-            button(type='submit' class='btn btn-primary' id='schedule_submit' disabled) Zeitplan festlegen
-        <hr/>
-        div(class='row indent')
-          div(class='col-4')
-            form(method='post' enctype='multipart/form-data' action='/display_on')
-              button(type='submit' class='btn btn-success') Bildschirm einschalten
-          div(class='col-4')
-            form(method='post' enctype='multipart/form-data' action='/display_off')
-              button(type='submit' class='btn btn-warning') Bildschirm ausschalten
-          div(class='col-1')
-          div(class='col-3')
-            form(method='post' enctype='multipart/form-data' action='/display_noschedule' id='schedule_delete')
-              button(type='submit' class='btn btn-danger') Zeitplan löschen
-      <br/>
-      h2 Ausschalt-Optionen
-      div(id='shutdown_section' class="row")
-        div(class='col-6')
-          form(method='post' enctype='multipart/form-data' action='/shutdown_raspi' id='shutdown_raspi')
-            button(type='submit' class='btn btn-danger') Bilderrahmen herunterfahren
-        div(class='col-6')
-          form(method='post' enctype='multipart/form-data' action='/reboot_raspi' id='reboot_raspi')
-            button(type='submit' class='btn btn-danger') Bilderrahmen neustarten
+    div(class='container-fluid')
+        a(role='button' class='btn btn-primary btn-block' href='/image') Bilder anpassen
+        a(role='button' class='btn btn-primary btn-block' href='/directory') Ordner verwalten
+        hr
+        a(role='button' class='btn btn-primary btn-block' href='/slide') Diashow-Modus
+        a(role='button' class='btn btn-primary btn-block' href='/info') Info-Modus
+        hr
+        a(role='button' class='btn btn-primary btn-block' href='/screen') Bildschirm
+        hr
+        form(method='post' enctype='multipart/form-data' action='/power/off' id='power_off')
+            button(type='submit' class='btn btn-warning btn-block') Bilderrahmen herunterfahren
+        form(method='post' enctype='multipart/form-data' action='/power/reboot' id='power_reboot' class='top-pad')
+            button(type='submit' class='btn btn-warning btn-block') Bilderrahmen neustarten
