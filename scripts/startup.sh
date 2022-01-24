@@ -16,7 +16,7 @@ if [[ $1 == "all" ]]; then
     npm run start --prefix ${HOME}/website &
 fi
 
-read mode < ${HOME}/settings/mode
+(read mode < ${HOME}/settings/mode) > /dev/null 2>&1
 
 case $mode in
     "info")

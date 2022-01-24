@@ -6,23 +6,15 @@ var logger = require('morgan');
 var favicon = require('serve-favicon')
 
 var indexRouter = require('./routes/index');
-var startSlideRouter = require('./routes/start_slide');
-var startInfoRouter = require('./routes/start_info');
-var uploadImagesRoute = require('./routes/upload_images');
-var deleteImageRoute = require('./routes/delete_image');
-var deleteImagesRoute = require('./routes/delete_images');
-var displayOnRoute = require('./routes/display_on');
-var displayOffRoute = require('./routes/display_off');
-var displayScheduleRoute = require('./routes/display_schedule');
-var displayNoscheduleRoute = require('./routes/display_noschedule');
-var displayOffRoute = require('./routes/display_off');
-var shutdownRaspiRoute = require('./routes/shutdown_raspi');
-var rebootRaspiRoute = require('./routes/reboot_raspi');
-const serveStatic = require('serve-static');
+var imageRouter = require('./routes/image');
+var directoryRouter = require('./routes/directory');
+var slideRouter = require('./routes/slide');
+var infoRouter = require('./routes/info');
+var screenRouter = require('./routes/screen');
+var powerRouter = require('./routes/power');
 
 var app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -36,32 +28,35 @@ app.use(express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist')));
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.svg')));
 
 app.use('/', indexRouter);
-app.use('/start_slide', startSlideRouter);
-app.use('/start_info', startInfoRouter);
-app.use('/upload_images', uploadImagesRoute);
-app.use('/delete_image', deleteImageRoute);
-app.use('/delete_images', deleteImagesRoute);
-app.use('/display_on', displayOnRoute);
-app.use('/display_off', displayOffRoute);
-app.use('/display_schedule', displayScheduleRoute);
-app.use('/display_noschedule', displayNoscheduleRoute);
-app.use('/shutdown_raspi', shutdownRaspiRoute);
-app.use('/reboot_raspi', rebootRaspiRoute);
+app.use('/slide', slideRouter);
+app.use('/slide/start', slideRouter);
+app.use('/info', infoRouter);
+app.use('/info/start', infoRouter);
+app.use('/image', imageRouter);
+app.use('/image/upload', imageRouter);
+app.use('/image/delete', imageRouter);
+app.use('/directory', directoryRouter);
+app.use('/directory/create', directoryRouter);
+app.use('/directory/rename', directoryRouter);
+app.use('/directory/delete', directoryRouter);
+app.use('/screen', screenRouter);
+app.use('/screen/on', screenRouter);
+app.use('/screen/off', screenRouter);
+app.use('/screen/schedule', screenRouter);
+app.use('/screen/noschedule', screenRouter);
+app.use('/power/off', powerRouter);
+app.use('/power/reboot', powerRouter);
 
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
-// error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    res.status(err.status || 500);
+    res.render('error', { title: 'Fehler' });
 });
 
 module.exports = app;
