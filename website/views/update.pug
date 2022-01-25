@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    div(class='container-fluid')
+        div()
+            form(method='post' enctype='multipart/form-data' action='/update/software')
+                button(type='submit' class='btn btn-warning btn-block') Software aktualisieren
+        hr
+        div()
+            form(method='post' enctype='multipart/form-data' action='/update/system')
+                button(type='submit' class='btn btn-warning btn-block') System aktualisieren

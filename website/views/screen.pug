@@ -13,13 +13,13 @@ block content
             div(class='input-group')
                 div(class='input-group-prepend')
                     div(class='input-group-text') Startzeit
-                input(type='time' class='form-control' id='fstime' name='fstime')
+                input(type='time' class='form-control' id='fstime' name='fstime' required)
             div(class='input-group top-pad')
                 div(class='input-group-prepend')
                     div(class='input-group-text') Endzeit
-                input(type='time' class='form-control' id='fetime' name='fetime')
+                input(type='time' class='form-control' id='fetime' name='fetime' required)
             div(class='top-pad')
-                button(type='submit' class='btn btn-primary btn-block' id='screen_schedule' disabled) Zeitplan festlegen
+                button(type='submit' class='btn btn-primary btn-block' id='screen_schedule') Zeitplan festlegen
         hr
         form(method='post' enctype='multipart/form-data' action='/screen/noschedule' id='screen_noschedule')
             button(type='submit' class='btn btn-danger btn-block') Zeitplan löschen

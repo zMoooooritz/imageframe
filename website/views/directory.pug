@@ -3,24 +3,31 @@ extends layout
 block content
     div(class='container-fluid')
         form(method='post' enctype='multipart/form-data' action='/directory/create' id='directory_create')
-            label(for='fcreatedir' class='sr-only') Name für neuen Ordner
-            input(type='text' class='form-control' placeholder='Ordnername' autocomplete='off' id='fcreatedir' name='fcreatedir' pattern="[a-zA-Z0-9_-]+")
-            button(type='submit' class='btn btn-primary btn-block') Ordner erstellen
+            div()
+                label(for='fcreatedir' class='sr-only') Name für neuen Ordner
+                input(type='text' class='form-control' placeholder='Ordnername' autocomplete='off' id='fcreatedir' name='fcreatedir' pattern="[a-zA-Z0-9_-]+" required)
+            div(class='top-pad')
+                button(type='submit' class='btn btn-primary btn-block') Ordner erstellen
         hr
         form(method='post' enctype='multipart/form-data' action='/directory/rename' id='directory_rename')
-            label(for='folddir' class='sr-only') Alter Ordner
-            select(class='form-control' id='folddir' name='folddir')
-                option(value='' selected disabled hidden) -- Ordner auswählen --
-                each dir in dirs
-                    option(value=dir) #{dir}
-            label(for='fnewdir' class='sr-only') Neuer Ordner
-            input(type='text' class='form-control' placeholder='Neuer Ordernname' autocomplete='off' id='fnewdir' name='fnewdir' pattern="[a-zA-Z0-9_-]+")
-            button(type='submit' class='btn btn-primary btn-block') Ordner erstellen
+            div()
+                label(for='folddir' class='sr-only') Alter Ordner
+                select(class='form-control' id='folddir' name='folddir' required)
+                    option(value='' selected disabled hidden) -- Ordner auswählen --
+                    each dir in dirs
+                        option(value=dir) #{dir}
+            div(class='top-pad')
+                label(for='fnewdir' class='sr-only') Neuer Ordner
+                input(type='text' class='form-control' placeholder='Neuer Ordernname' autocomplete='off' id='fnewdir' name='fnewdir' pattern="[a-zA-Z0-9_-]+" required)
+            div(class='top-pad')
+                button(type='submit' class='btn btn-primary btn-block') Ordner umbenennen
         hr
         form(method='post' enctype='multipart/form-data' action='/directory/delete' id='directory_delete')
-            label(for='fdeldir' class='sr-only') Name von Ordner
-            select(class='form-control' id='fdeldir' name='fdeldir')
-                option(value='' selected disabled hidden) -- Ordner auswählen --
-                each dir in dirs
-                    option(value=dir) #{dir}
-            button(type='submit' class='btn btn-danger btn-block') Ordner löschen
+            div()
+                label(for='fdeldir' class='sr-only') Name von Ordner
+                select(class='form-control' id='fdeldir' name='fdeldir' required)
+                    option(value='' selected disabled hidden) -- Ordner auswählen --
+                    each dir in dirs
+                        option(value=dir) #{dir}
+            div(class='top-pad')
+                button(type='submit' class='btn btn-danger btn-block') Ordner löschen

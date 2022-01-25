@@ -3,25 +3,58 @@ extends layout
 block content
     div(class='container-fluid')
         form(method='post' enctype='multipart/form-data' action='/image/upload' id='image_upload')
-            label(for='fdir' class='sr-only') Ordner
-            select(class='form-control custom-select' id='fdir' name='fdir')
-                option(value='' selected disabled hidden) -- Ordner auswählen --
-                each dir in dirs
-                    option(value=dir) #{dir}
-            div(class='custom-file')
-                input(type="file" class="custom-file-input" id="customFileLang" lang="de" multiple disabled)
-                label(class="custom-file-label" for="customFileLang") Bilder
-            button(type='submit' class='btn btn-primary btn-block' disabled) Bilder hochladen
+            div()
+                label(for='fdirn' class='sr-only') Ordner
+                select(class='form-control custom-select' id='fdirn' name='fdirn' required)
+                    option(value='' selected disabled hidden) -- Ordner auswählen --
+                    each dir in dirs
+                        option(value=dir) #{dir}
+            div(class='input-group top-pad')
+                div(class='custom-file')
+                    input(type='file' class='custom-file-input' id='fimgs' name='fimgs' multiple required)
+                    label(class='custom-file-label' for='fimgs') Bilder
+            div(class='top-pad')
+                button(type='submit' class='btn btn-primary btn-block') Bilder hochladen
         hr
         form(method='post' enctype='multipart/form-data' action='/image/delete' id='image_delete')
-            label(for='fdir' class='sr-only') Ordner
-            select(class='form-control custom-select' id='fdir' name='fdir')
-                option(value='' selected disabled hidden) -- Ordner auswählen --
-                each dir in dirs
-                    option(value=dir) #{dir}
-            label(for='fimages' class='sr-only') Bilder
-            select(class='form-control custom-select' id='fimagedel' name='fimagedel' size='5' multiple disabled)
-                option(value='' selected disabled hidden) -- Bilder auswählen --
-                each dir in dirs
-                    option(value=dir) #{dir}
-            button(type='submit' class='btn btn-danger btn-block' disabled) Bilder löschen
+            div()
+                label(for='fdird' class='sr-only') Ordner
+                select(class='form-control custom-select' id='fdird' name='fdird' required)
+                    option(value='' selected disabled hidden) -- Ordner auswählen --
+                    each dir in dirs
+                        option(value=dir) #{dir}
+            div(class='top-pad')
+                label(for='fimagedel' class='sr-only') Bilder
+                select(class='form-control custom-select' id='fimagedel' name='fimagedel' size='5' multiple required)
+                    option(value='' selected disabled hidden) -- Bilder auswählen --
+            div(class='top-pad')
+                button(type='submit' class='btn btn-danger btn-block' id='fimage_delete' disabled) Bilder löschen
+    div(id='img_div' hidden) #{imgs}
+    script.
+        var dir_select = document.getElementById('fdird');
+        var img_select = document.getElementById('fimagedel');
+        var imgs = document.getElementById('img_div').innerHTML.split(',');
+        dir_select.addEventListener('input', function() {
+            img_select.options.length = 0;
+
+            var selected = dir_select.selectedIndex;
+            var current = 1;
+            var counter = 0;
+            while (current < selected) {
+                if (imgs[counter] == '_')
+                    current++;
+                counter++;
+            }
+            while(counter < imgs.length && imgs[counter] != '_') {
+                option = document.createElement('option');
+                option.value = option.text = imgs[counter];
+                img_select.add(option);
+                counter++;
+            }
+        });
+
+        var imgs_input = document.getElementById('fimgs');
+        imgs_input.addEventListener('input', function() {
+            var label = imgs_input.nextElementSibling;
+            label.innerText = imgs_input.files.length + " ausgewählt";
+        });

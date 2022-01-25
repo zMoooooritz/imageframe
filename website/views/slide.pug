@@ -4,16 +4,16 @@ block content
     div(class='container-fluid')
         form(method='post' enctype='multipart/form-data' action='/slide/start')
             label(for='fdirs' class='sr-only') Ordner
-            select(class='form-control' id='fdirs' name='fdirs' multiple)
+            select(class='form-control' id='fdirs' name='fdirs' multiple required)
                 option(value='' selected disabled hidden) -- Ordner auswählen --
                 each dir in dirs
                     option(value=dir) #{dir}
             hr
             div(class='btn-group btn-group-toggle btn-block' data-toggle='buttons')
-                label(class='btn btn-outline-info active') Zufällige Reihenfolge
+                label(class='btn btn-toggle btn-outline-info active') Zufällige Reihenfolge
                     input(type='checkbox' id='frandom' name='frandom' checked autocomplete='off')
             div(class='btn-group btn-group-toggle btn-block' data-toggle='buttons')
-                label(class='btn btn-outline-info active') Bildname anzeigen
+                label(class='btn btn-toggle btn-outline-info active') Bildname anzeigen
                     input(type='checkbox' id='fname' name='fname' autocomplete='off')
             div(class='input-group top-pad')
                 div(class='input-group-prepend')
@@ -28,4 +28,4 @@ block content
                 div(class='input-group-append')
                     span(class='input-group-text') ms
             br
-            button(type='submit' class='btn btn-success btn-block') Diashow starten
+            button(type='submit' class='btn btn-success btn-block' id='slide_start' disabled) Diashow starten
