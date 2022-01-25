@@ -1,11 +1,28 @@
 
-function scheduleChange() {
-    $('#screen_schedule').prop('disabled', $('#fstime').val() == '' || $('#fetime').val() == '');
-}
-$('#fstime').on('input', scheduleChange);
-$('#fetime').on('input', scheduleChange);
+$('#fdirs').on('input', function() {
+    var hasSelected = false;
+    $('#fdirs :selected').each(function() {
+        if ($(this).val() != '')
+            hasSelected = true;
+    });
+    $('#slide_start').prop('disabled', !hasSelected);
+});
+
+$('#fimagedel').on('input', function() {
+    var hasSelected = false;
+    $('#fimagedel :selected').each(function() {
+        if ($(this).val() != '')
+            hasSelected = true;
+    });
+    $('#fimage_delete').prop('disabled', !hasSelected);
+});
+
+$('#fdird').on('input', function() {
+    $('#fimage_delete').prop('disabled', true);
+});
 
 $('#image_delete').on('submit', function(event) {
+    console.log(event);
     return confirm('Sollen die ausgewählten Bilder wirklich gelöscht werden?');
 });
 

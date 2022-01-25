@@ -34,6 +34,7 @@ const upload = multer({
 router.get('/', async function(req, res, next) {
     res.locals = {
         dirs: await util.loadDirs(),
+        imgs: await util.loadImgs()
     };
 
     res.render('image', { title: 'Bilder' });
