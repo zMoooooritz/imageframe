@@ -21,8 +21,13 @@ router.post('/start', upload.none(), function(req, res, next) {
     var imageTime = req.body.ftime;
     var blendTime = req.body.fblend;
     var showNames = (req.body.fname === 'on') ? 1 : 0;
+    var dirs = req.body.fdirs;
+    if (typeof dirs === 'string') {
+        dirs = [dirs];
+    }
+    var str_dirs = dirs.join(';');
 
-    exec(config.scriptPath + 'slideshow.sh ' + isRandom + ' ' + imageTime + ' ' + blendTime + ' ' + showNames);
+    exec(config.scriptPath + 'slideshow.sh RANDOM=' + isRandom + ' STIME=' + imageTime + ' BTIME=' + blendTime + ' NAMES=' + showNames + ' DIRS=' + str_dirs);
 
     res.redirect('/');
 });

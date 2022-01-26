@@ -41,18 +41,22 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/upload', upload.none(), function(req, res, next) {
-    var dirName = req.body.fcreatedir;
+    var dir = req.body.fdirn;
 
-    exec(scriptPath + 'image.sh fixmv');
+    exec(config.scriptPath + 'image.sh fixmv ' + dir);
 
     res.redirect('/images')
 });
 
 router.post('/delete', upload.none(), function(req, res, next) {
-    var dirOld = req.body.folddir;
-    var dirNew = req.body.fnewdir;
+    var dir = req.body.fdird;
+    var imgs = req.body.fimgd;
+    if (typeof imgs === 'string') {
+        imgs = [imgs];
+    }
+    var str_imgs = imgs.join(' ');
 
-    exec(config.scriptPath + 'directory.sh rename ' + dirOld + ' ' + dirNew);
+    exec(config.scriptPath + 'image.sh del ' + dir + ' ' + str_imgs);
 
     res.redirect('/images')
 });

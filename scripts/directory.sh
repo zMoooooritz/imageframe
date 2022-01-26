@@ -27,6 +27,9 @@ case $1 in
         fi
         rm -rf ${img_path}$2
         ;;
+    "load")
+        ls -d ${img_path}*/ | tr -d "/" | tr "\n" ";" | head -c -1
+        ;;
     *)
         ;;
 esac

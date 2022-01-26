@@ -20,8 +20,7 @@ router.post('/start', upload.none(), function(req, res, next) {
     if (req.body.fwttr3 == 'on')
         wttr = 3;
     
-
-    exec(config.scriptPath + 'infoscreen.sh ' + hasDate + ' ' + hasJoke + ' ' + wttr);
+    exec(config.scriptPath + 'infoscreen.sh DATE=' + hasDate + ' JOKE=' + hasJoke + ' WTTR=' + wttr);
 
     res.redirect('/');
 });

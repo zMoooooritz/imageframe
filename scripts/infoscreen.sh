@@ -30,6 +30,15 @@ crontab -l | grep -v "infoscreen.sh" | sort - | uniq - | crontab -
 (crontab -l ; echo "$minute * * * * ${HOME}/scripts/infoscreen.sh") | sort - | uniq - | crontab -
 echo "info" > ${HOME}/settings/mode
 
+for ARGUMENT in "$@"; do
+   KEY=$(echo $ARGUMENT | cut -f1 -d=)
+
+   KEY_LENGTH=${#KEY}
+   VALUE="${ARGUMENT:$KEY_LENGTH+1}"
+
+   export "$KEY"="$VALUE"
+done
+
 # Create Info-Image and display it
 wall_path=$(find ${HOME}/images/default -name "wallpaper.*" | head -n 1)
 back_path="${HOME}/images/default/background.${wall_path##*.}"
@@ -41,18 +50,18 @@ else
     convert $back_path -resize 1920x1080 $back_path
 fi
 
-dat=$(read_set_get "info_date" 1 $1)
+dat=$(read_set_get "info_date" 1 $DATE)
 if [[ $dat == 1 ]]; then
     dat="$(date +"%A"),\n$(date +"%e"). $(date +"%B") $(date +"%Y")"
     echo -e $dat | convert $back_path -font "/usr/share/fonts/liberation/LiberationSans-Regular.ttf" -size 750x -stroke black -fill white -background "#171717AA" label:@- -geometry +50+100 -composite $back_path
 fi
 
-joke=$(read_set_get "info_joke" 1 $2)
+joke=$(read_set_get "info_joke" 1 $JOKE)
 if [[ $joke == 1 ]]; then
     ${HOME}/scripts/scrapjoke.sh | convert $back_path -font "/usr/share/fonts/liberation/LiberationSans-Regular.ttf" -size 1820x380 -stroke black -fill white -background "#171717AA" label:@- -geometry +50+700 -composite $back_path
 fi
 
-wttr=$(read_set_get "info_wttr" 1 $3)
+wttr=$(read_set_get "info_wttr" 1 $WTTR)
 case $wttr in
     "0")
         ;;

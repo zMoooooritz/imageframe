@@ -11,8 +11,8 @@ block content
                         option(value=dir) #{dir}
             div(class='input-group top-pad')
                 div(class='custom-file')
-                    input(type='file' class='custom-file-input' id='fimgs' name='fimgs' multiple required)
-                    label(class='custom-file-label' for='fimgs') Bilder
+                    input(type='file' class='custom-file-input' id='fimgn' name='fimgn' multiple required)
+                    label(class='custom-file-label' for='fimgn') Bilder
             div(class='top-pad')
                 button(type='submit' class='btn btn-primary btn-block') Bilder hochladen
         hr
@@ -24,16 +24,16 @@ block content
                     each dir in dirs
                         option(value=dir) #{dir}
             div(class='top-pad')
-                label(for='fimagedel' class='sr-only') Bilder
-                select(class='form-control custom-select' id='fimagedel' name='fimagedel' size='5' multiple required)
+                label(for='fimgd' class='sr-only') Bilder
+                select(class='form-control custom-select' id='fimgd' name='fimgd' size='5' multiple required)
                     option(value='' selected disabled hidden) -- Bilder auswählen --
             div(class='top-pad')
                 button(type='submit' class='btn btn-danger btn-block' id='fimage_delete' disabled) Bilder löschen
     div(id='img_div' hidden) #{imgs}
     script.
         var dir_select = document.getElementById('fdird');
-        var img_select = document.getElementById('fimagedel');
-        var imgs = document.getElementById('img_div').innerHTML.split(',');
+        var img_select = document.getElementById('fimgd');
+        var imgs = document.getElementById('img_div').innerHTML.split(';');
         dir_select.addEventListener('input', function() {
             img_select.options.length = 0;
 
@@ -53,7 +53,7 @@ block content
             }
         });
 
-        var imgs_input = document.getElementById('fimgs');
+        var imgs_input = document.getElementById('fimgn');
         imgs_input.addEventListener('input', function() {
             var label = imgs_input.nextElementSibling;
             label.innerText = imgs_input.files.length + " ausgewählt";
