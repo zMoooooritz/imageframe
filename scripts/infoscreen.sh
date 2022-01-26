@@ -1,25 +1,6 @@
 #!/bin/sh
 
-function read_set_get {
-    if [ -z $2 ]; then
-        exit 0
-    fi
-
-    val_name=$1
-    def_value=$2
-    new_value=$3
-
-    if ! [ -z $new_value ]; then
-        value=$new_value
-    else
-        read value < ${HOME}/settings/${val_name}
-    fi
-    if [ -z $value ]; then
-        value = $def_value
-    fi
-    
-    echo $value
-}
+read_set_get="${HOME}/scripts/read_set_get.sh"
 
 killall -q -KILL fbi
 
