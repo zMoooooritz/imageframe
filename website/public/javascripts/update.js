@@ -39,5 +39,9 @@ $('#power_off').on('submit', function(event) {
 });
 
 $('#power_reboot').on('submit', function(event) {
-    return confirm('Soll der Bilderrahmen wirklich neu gestartet werden?');
+    return confirm('Soll der Bilderrahmen wirklich neugestartet werden?');
+});
+
+$('#update_software').on('submit', function(event) {
+    return confirm('Soll der Bilderrahmen wirklich aktualisiert und neugestartet werden?');
 });

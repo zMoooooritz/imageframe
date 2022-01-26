@@ -17,16 +17,4 @@ router.post('/software', upload.none(), function(req, res, next) {
     res.redirect('/update');
 });
 
-router.post('/system', upload.none(), function(req, res, next) {
-    exec(config.scriptPath + 'update.sh system');
-
-    res.redirect('/update');
-});
-
-router.post('/all', upload.none(), function(req, res, next) {
-    exec(config.scriptPath + 'update.sh all');
-
-    res.redirect('/update');
-});
-
 module.exports = router;
