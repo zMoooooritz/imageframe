@@ -2,10 +2,6 @@
 
 settings_path="${HOME}/settings/"
 
-if [ -z $2 ]; then
-    exit 0
-fi
-
 val_name=$1
 def_value=$2
 new_value=$3

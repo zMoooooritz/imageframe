@@ -5,14 +5,14 @@ PATH=/opt/vc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 case $1 in
     "on")
         vcgencmd display_power 1
-        crontab -l | grep -v "display.sh onf" | sort - | uniq - | crontab -
+        # crontab -l | grep -v "display.sh onf" | sort - | uniq - | crontab -
         ${HOME}/scripts/startup.sh
         ;;
     "off")
         killall -q -KILL fbi
         vcgencmd display_power 0
-        minute=$((($(date +"%M") + 30) % 60))
-        (crontab -l ; echo "$minute * * * * ${HOME}/scripts/display.sh onf") | grep -v "infoscreen.sh" | sort - | uniq - | crontab -
+        # minute=$((($(date +"%M") + 30) % 60))
+        # (crontab -l ; echo "$minute * * * * ${HOME}/scripts/display.sh onf") | grep -v "infoscreen.sh" | sort - | uniq - | crontab -
         ;;
     "onf")
         vcgencmd display_power 1    

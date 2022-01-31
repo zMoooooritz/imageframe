@@ -10,7 +10,8 @@ else
   esac
 fi
 
-crontab -l | grep -v -e "infoscreen.sh" -e "display.sh onf" | sort - | uniq - | crontab -
+# crontab -l | grep -v -e "infoscreen.sh" -e "display.sh onf" | sort - | uniq - | crontab -
+crontab -l | grep -v "infoscreen.sh" | sort - | uniq - | crontab -
 
 if [[ $1 == "all" ]]; then
     npm run start --prefix ${HOME}/website &

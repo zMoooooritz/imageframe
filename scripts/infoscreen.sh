@@ -1,12 +1,12 @@
 #!/bin/sh
 
 read_set_get="${HOME}/scripts/read_set_get.sh"
+wall_path=$(find ${HOME}/images/default -name "wallpaper.*" | head -n 1)
+back_path="${HOME}/images/default/background.${wall_path##*.}"
 
 killall -q -KILL fbi
 
-# Schedule hourly refresh
 minute=$((($(date +"%M") + 59) % 60))
-
 crontab -l | grep -v "infoscreen.sh" | sort - | uniq - | crontab -
 (crontab -l ; echo "$minute * * * * ${HOME}/scripts/infoscreen.sh") | sort - | uniq - | crontab -
 echo "info" > ${HOME}/settings/mode
@@ -20,9 +20,6 @@ for ARGUMENT in "$@"; do
    export "$KEY"="$VALUE"
 done
 
-# Create Info-Image and display it
-wall_path=$(find ${HOME}/images/default -name "wallpaper.*" | head -n 1)
-back_path="${HOME}/images/default/background.${wall_path##*.}"
 if [ -z $wall_path ]; then
     back_path="${HOME}/images/default/background.jpg"
     convert -size 1920x1080 xc:white $back_path

@@ -8,12 +8,15 @@ case $1 in
             echo "Keinen Ordnername zur Verfügung gestellt"
             exit 0
         fi
-        mkdir ${img_path}$2
+        mkdir -p ${img_path}$2
         ;;
     "rename")
         if [ -z $3 ]; then
             echo "Keinen Ziel- und End-Namen Verfügung gestellt"
             exit 0
+        fi
+        if [ -d ${img_path}$3 ]; then
+            echo "Der Ordner $3 existiert bereits"
         fi
         mv -f ${img_path}$2 ${img_path}$3
         ;;
@@ -28,7 +31,8 @@ case $1 in
         rm -rf ${img_path}$2
         ;;
     "load")
-        ls -d ${img_path}*/ | tr -d "/" | tr "\n" ";" | head -c -1
+        cd ${img_path}
+        ls -d */ | tr -d "/" | tr "\n" ";" | head -c -1
         ;;
     *)
         ;;
