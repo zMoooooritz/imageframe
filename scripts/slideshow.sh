@@ -1,71 +1,60 @@
 #!/bin/sh
 
-function read_set_get {
-    if [ -z $2 ]; then
-        exit 0
-    fi
-
-    val_name=$1
-    def_value=$2
-    new_value=$3
-
-    if ! [ -z $new_value ]; then
-        value=$new_value
-    else
-        read value < ${HOME}/settings/${val_name}
-    fi
-    if [ -z $value ]; then
-        value = $def_value
-    fi
-
-    echo $value > ${HOME}/settings/${val_name}
-    
-    echo $value
-}
+path_images="${HOME}/images/wallpaper"
+path_img_list="${HOME}/images/list"
+read_set_get="${HOME}/scripts/read_set_get.sh"
 
 killall -q -KILL fbi
 
 crontab -l | grep -v "infoscreen.sh" | sort - | uniq - | crontab -
 echo "slide" > ${HOME}/settings/mode
 
-# If no images available start info mode
-imgs=$(ls ${HOME}/images/wallpaper | wc -l)
-if (( $imgs == 0 )); then
-    ${HOME}/scripts/infoscreen.sh
-    exit 0
-fi
+for ARGUMENT in "$@"; do
+   KEY=$(echo $ARGUMENT | cut -f1 -d=)
 
-options=""
-path_images="${HOME}/images/wallpaper"
-path_imgs="${HOME}/images/walls"
-echo -n "" > $path_imgs
-images=$(ls $path_images)
-for image in $images
-do
-    echo "${path_images}/${image}" >> $path_imgs
+   KEY_LENGTH=${#KEY}
+   VALUE="${ARGUMENT:$KEY_LENGTH+1}"
+
+   export "$KEY"="$VALUE"
 done
 
-random=$(read_set_get "slide_random" 1 $1)
+options=""
+
+random=$(${read_set_get} "slide_random" 1 $RANDOM)
 if [[ $random == 0 ]]; then
     options+="-norandom "
 else
     options+="-random "
 fi
 
-timeout=$(read_set_get "slide_time" 30 $2)
+timeout=$(${read_set_get} "slide_time" 30 $STIME)
 options+="-timeout $timeout "
 
-blend=$(read_set_get "slide_blend" 200 $3)
+blend=$(${read_set_get} "slide_blend" 200 $BTIME)
 options+="-blend $blend "
 
-names=$(read_set_get "slide_names" 0 $4)
+names=$(${read_set_get} "slide_names" 0 $NAMES)
 if [[ $names == 0 ]]; then
     options+="-noverbose "
 else
     options+="-verbose "
 fi
 
-options+="-list $path_imgs "
+echo -n "" > $path_img_list
+sdirs=$(${read_set_get} "slide_dirs" "" $DIRS)
+IFS=',' read -ra ndirs <<< $sdirs
+for ndir in $ndirs; do
+    images=$(ls ${path_images}/${ndir})
+    for image in $images; do
+        echo "${path_images}/${ndir}/${image}" >> $path_img_list
+    done
+done
+options+="-list $path_img_list"
+
+if [[ $(cat ${path_img_list} | wc -l) -eq 0 ]]; then
+    ${HOME}/scripts/infoscreen.sh
+    exit 0
+fi
 
 fbi -nointeractive -a -T 1 -cachemem 100 $options > /dev/null 2>&1 &
 

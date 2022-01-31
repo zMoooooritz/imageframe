@@ -1,0 +1,101 @@
+extends layout
+
+block content
+    div(class='container-fluid')
+        form(method='post' enctype='multipart/form-data' action='/image/upload' id='image_upload')
+            div()
+                label(for='fdirn' class='sr-only') Ordner
+                select(class='form-control custom-select' id='fdirn' name='fdirn' required oninvalid='this.setCustomValidity(\'Es muss ein Ordner ausgewählt werden.\')')
+                    option(value='' selected disabled hidden) -- Ordner auswählen --
+                    each dir in dirs
+                        option(value=dir) #{dir}
+            div(class='input-group top-pad')
+                div(class='custom-file')
+                    input(type='file' class='custom-file-input' id='fimgn' name='fimgn' multiple required oninvalid='this.setCustomValidity(\'Es muss mindestens ein Bild ausgewählt werden.\')')
+                    label(class='custom-file-label' for='fimgn' id='fimgl') Bilder
+            div(class='top-pad')
+                button(type='submit' class='btn btn-primary btn-block') Bilder hochladen
+        hr
+        form(method='post' enctype='multipart/form-data' action='/image/delete' id='image_delete')
+            div()
+                label(for='fdird' class='sr-only') Ordner
+                select(class='form-control custom-select' id='fdird' name='fdird' required oninvalid='this.setCustomValidity(\'Es muss ein Ordner ausgewählt werden.\')')
+                    option(value='' selected disabled hidden) -- Ordner auswählen --
+                    each dir in dirs
+                        option(value=dir) #{dir}
+            div(class='top-pad')
+                label(for='fimgd' class='sr-only') Bilder
+                select(class='form-control custom-select' id='fimgd' name='fimgd' size='5' multiple required oninvalid='this.setCustomValidity(\'Es muss mindestens ein Bild ausgewählt werden.\')')
+                    option(value='' selected disabled hidden) -- Bilder auswählen --
+            div(class='top-pad')
+                button(type='submit' class='btn btn-danger btn-block' id='fimage_delete' disabled) Bilder löschen
+    div(id='img_div' hidden) #{imgs}
+
+    div(class='modal fade' id='pmodal' tabindex='-1' role='dialog' aria-labelledby='pmodal_header' aria-hidden='true')
+        div(class='modal-dialog modal-dialog-centered' role='document')
+            div(class='modal-content')
+                div(class='modal-header')
+                    h5(class='modal-title' id='pmodal_header') Fortschritt
+                div(class='modal-body' id='pmodal_text')
+                    div() Bilder werden hochgeladen...
+                    br
+                    div(class="progress" style='height: 25px;')
+                        div(class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id='progress')
+
+    script(src='javascripts/confirm.js')
+    script.
+        $('#fdird').on('input', function() {
+            $('#fimage_delete').prop('disabled', true);
+        });
+
+        $('#fimgd').on('input', function() {
+            var hasSelected = false;
+            $('#fimgd :selected').each(function() {
+                if ($(this).val() != '')
+                    hasSelected = true;
+            });
+            $('#fimage_delete').prop('disabled', !hasSelected);
+        });
+
+        $('#fimgn').on('input', function() {
+            $('#fimgl').html($('#fimgn')[0].files.length + ' ausgewählt');
+        });
+
+        var imgs = $('#img_div').html().split(';');
+        $('#fdird').on('input', function() {
+            $('#fimgd').empty().append('<option selected disabled hidden value=\'0\'>-- Bilder auswählen --</option>');
+
+            var selected = $('#fdird').prop('selectedIndex');
+            var current = 1;
+            var counter = 0;
+            while (current < selected) {
+                if (imgs[counter] == '_')
+                    current++;
+                counter++;
+            }
+            while(counter < imgs.length && imgs[counter] != '_') {
+                $('#fimgd').append('<option value=' + imgs[counter] + '>' + imgs[counter] + '</option>');
+                counter++;
+            }
+        });
+
+        custom_confirm('#image_delete', 'Bilder löschen', 'Sollen die ausgewählten Bilder wirklich gelöscht werden?', 'Nein', 'Ja');
+
+        $('#image_upload').on('submit', function() {
+            $('#pmodal').modal({
+                backdrop: false
+            });
+            $('#pmodal').modal('show');
+
+            var imgAll = $('#fimgn')[0].files.length;
+            var imgCount = 0;
+            var interval = setInterval(function() {
+                imgCount += 1;
+                var progress = parseInt(100 * imgCount / imgAll);
+                $('#progress').css('width', progress + '%')
+                    .attr('aria-valuenow', progress)
+                    .text(imgCount + '/' + imgAll);
+                if (imgCount >= imgAll)
+                    clearInterval(interval);
+            }, 2000);
+        });

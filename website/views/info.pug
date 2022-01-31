@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    div(class='container-fluid')
+        form(method='post' enctype='multipart/form-data' action='/info/start')
+            div(class='d-flex flex-column')
+                div(class='btn-group btn-group-toggle' data-toggle='buttons')
+                    label(class='btn btn-outline-info active') Datum
+                        input(type='checkbox' id='fdate' name='fdate' checked autocomplete='off')
+                div(class='btn-group btn-group-toggle top-pad' data-toggle='buttons')
+                    label(class='btn btn-outline-info active') Witz
+                        input(type='checkbox' id='fjoke' name='fjoke' checked autocomplete='off')
+                div(class='input-group top-pad')
+                    div(class='input-group-prepend')
+                        div(class='input-group-text') Wetter
+                    div(class='btn-group btn-group-toggle' data-toggle='buttons')
+                        label(class='btn btn-outline-info') Aus
+                            input(type='radio' id='fwttr0' name='fwttr0' autocomplete='off')
+                        label(class='btn btn-outline-info active') Heute
+                            input(type='radio' id='fwttr1' name='fwttr1' checked autocomplete='off')
+                        label(class='btn btn-outline-info active') 3-Tage
+                            input(type='radio' id='fwttr3' name='fwttr3' autocomplete='off')
+                br
+                button(type='submit' class='btn btn-success') Info-Modus starten

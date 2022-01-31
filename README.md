@@ -10,7 +10,7 @@ But displaying images is only half of the required functionality a picture frame
 Therefore a NodeJS-Server does run on the device in the background and allow for remote control of the image frame:
 
 ## Supported functions
-1. Upload and delete images
+1. Upload and delete images (to and from different directories)
 2. Toggle between slideshow and info-mode
 3. Slideshow
    1. Change the time an image is displayed
@@ -31,4 +31,3 @@ The following steps are required to setup the image frame (using a Raspberry Pi)
 
 ## TODO
 Currently the info-mode is relativly rigid and does not support many modules. -> More modules and better configurability
-Since the Index-page of the Server does become cluttered a clean-up would be nice -> move settings into different sub-routes
