@@ -45,11 +45,11 @@ app.use('/screen/on', screenRouter);
 app.use('/screen/off', screenRouter);
 app.use('/screen/schedule', screenRouter);
 app.use('/screen/noschedule', screenRouter);
+app.use('/power', powerRouter);
 app.use('/power/off', powerRouter);
 app.use('/power/reboot', powerRouter);
 app.use('/update', updateRouter);
 app.use('/update/software', updateRouter);
-app.use('/update/system', updateRouter);
 
 app.use(function(req, res, next) {
     next(createError(404));

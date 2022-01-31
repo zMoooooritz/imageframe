@@ -5,29 +5,52 @@ block content
         form(method='post' enctype='multipart/form-data' action='/directory/create' id='directory_create')
             div()
                 label(for='fcreatedir' class='sr-only') Name für neuen Ordner
-                input(type='text' class='form-control' placeholder='Ordnername' autocomplete='off' id='fcreatedir' name='fcreatedir' pattern="[a-zA-Z0-9_-]+" required)
+                input(type='text' class='form-control' placeholder='Ordnername' autocomplete='off' id='fcreatedir' name='fcreatedir' pattern='[a-zA-Z0-9_-]+' required oninvalid='this.setCustomValidity(\'Es muss ein Ordnername eingegeben werden.\')')
             div(class='top-pad')
                 button(type='submit' class='btn btn-primary btn-block') Ordner erstellen
         hr
         form(method='post' enctype='multipart/form-data' action='/directory/rename' id='directory_rename')
             div()
                 label(for='folddir' class='sr-only') Alter Ordner
-                select(class='form-control' id='folddir' name='folddir' required)
+                select(class='form-control' id='folddir' name='folddir' required oninvalid='this.setCustomValidity(\'Es muss ein Ordner ausgewählt werden.\')')
                     option(value='' selected disabled hidden) -- Ordner auswählen --
                     each dir in dirs
                         option(value=dir) #{dir}
             div(class='top-pad')
                 label(for='fnewdir' class='sr-only') Neuer Ordner
-                input(type='text' class='form-control' placeholder='Neuer Ordernname' autocomplete='off' id='fnewdir' name='fnewdir' pattern="[a-zA-Z0-9_-]+" required)
+                input(type='text' class='form-control' placeholder='Neuer Ordernname' autocomplete='off' id='fnewdir' name='fnewdir' pattern='[a-zA-Z0-9_-]+' required)
             div(class='top-pad')
                 button(type='submit' class='btn btn-primary btn-block') Ordner umbenennen
         hr
         form(method='post' enctype='multipart/form-data' action='/directory/delete' id='directory_delete')
             div()
                 label(for='fdeldir' class='sr-only') Name von Ordner
-                select(class='form-control' id='fdeldir' name='fdeldir' required)
+                select(class='form-control' id='fdeldir' name='fdeldir' required oninvalid='this.setCustomValidity(\'Es muss ein Ordner ausgewählt werden.\')')
                     option(value='' selected disabled hidden) -- Ordner auswählen --
                     each dir in dirs
                         option(value=dir) #{dir}
             div(class='top-pad')
-                button(type='submit' class='btn btn-danger btn-block') Ordner löschen
+                button(type='submit' class='btn btn-danger btn-block' id='fdeldb') Ordner löschen
+
+    script(src='javascripts/confirm.js')
+    script.
+        custom_confirm('#directory_delete', 'Ordner löschen', 'Soll der ausgewählte Ordner wirklich gelöscht werden?', 'Nein', 'Ja');
+
+        $('#fcreatedir').on('input', function() {
+            $(this).get(0).reportValidity();
+        });
+
+        $('#fnewdir').on('input', function() {
+            var isEqual = false;
+            $('#folddir option').each(function() {
+                if ($(this).val() == $('#fnewdir').val())
+                    isEqual = true;
+            });
+            if (isEqual) {
+                $(this).get(0).setCustomValidity('Es muss ein neuer Ordnername eingegeben werden.');
+                $(this).get(0).reportValidity();
+            } else {
+                $(this).get(0).setCustomValidity('');
+                $(this).get(0).reportValidity();
+            }
+        });

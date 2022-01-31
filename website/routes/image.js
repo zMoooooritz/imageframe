@@ -1,11 +1,11 @@
 
 var express = require('express');
-var multer = require('multer')
+var multer = require('multer');
 var router = express.Router();
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
-var config = require('../config')
+var config = require('../config');
 var util = require('../util');
 
 const storage = multer.diskStorage({
@@ -40,12 +40,12 @@ router.get('/', async function(req, res, next) {
     res.render('image', { title: 'Bilder' });
 });
 
-router.post('/upload', upload.none(), function(req, res, next) {
+router.post('/upload', upload.array('fimgn'), function(req, res, next) {
     var dir = req.body.fdirn;
 
     exec(config.scriptPath + 'image.sh fixmv ' + dir);
 
-    res.redirect('/images')
+    res.redirect('/image')
 });
 
 router.post('/delete', upload.none(), function(req, res, next) {
@@ -58,7 +58,7 @@ router.post('/delete', upload.none(), function(req, res, next) {
 
     exec(config.scriptPath + 'image.sh del ' + dir + ' ' + str_imgs);
 
-    res.redirect('/images')
+    res.redirect('/image')
 });
 
 module.exports = router;

@@ -2,7 +2,7 @@ extends layout
 
 block content
     div(class='container-fluid')
-        form(method='post' enctype='multipart/form-data' action='/slide/start')
+        form(method='post' enctype='multipart/form-data' action='/slide/start' id='slide_start')
             label(for='fdirs' class='sr-only') Ordner
             select(class='form-control' id='fdirs' name='fdirs' multiple required)
                 option(value='' selected disabled hidden) -- Ordner auswählen --
@@ -28,4 +28,30 @@ block content
                 div(class='input-group-append')
                     span(class='input-group-text') ms
             br
-            button(type='submit' class='btn btn-success btn-block' id='slide_start' disabled) Diashow starten
+            button(type='submit' class='btn btn-success btn-block') Diashow starten
+    
+    script.
+        $('#slide_start').on('submit', function(event) {
+            var hasSelected = false;
+            $('#fdirs :selected').each(function() {
+                if ($(this).val() != '')
+                    hasSelected = true;
+            });
+            if (!hasSelected) {
+                $('#fdirs').get(0).setCustomValidity('Es muss mindestens ein Ordner ausgewählt werden.');
+                $(this).get(0).reportValidity();
+                event.preventDefault();
+            }
+        });
+
+        $('#fdirs').on('input', function() {
+            var hasSelected = false;
+            $('#fdirs :selected').each(function() {
+                if ($(this).val() != '')
+                    hasSelected = true;
+            });
+            if (hasSelected) {
+                $('#fdirs').get(0).setCustomValidity('');
+                $(this).get(0).reportValidity();
+            }
+        });

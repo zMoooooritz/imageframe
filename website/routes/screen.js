@@ -1,11 +1,11 @@
 
 var express = require('express');
-var multer = require('multer')
+var multer = require('multer');
 var router = express.Router();
 var exec = require('child_process').exec;
-var config = require('../config')
+var config = require('../config');
 
-const upload = multer()
+const upload = multer();
 
 router.get('/', async function(req, res, next) {
     res.render('screen', { title: 'Bildschirm' });

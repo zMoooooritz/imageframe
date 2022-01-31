@@ -13,13 +13,17 @@ block content
             div(class='input-group')
                 div(class='input-group-prepend')
                     div(class='input-group-text') Startzeit
-                input(type='time' class='form-control' id='fstime' name='fstime' required)
+                input(type='time' class='form-control' id='fstime' name='fstime' required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
             div(class='input-group top-pad')
                 div(class='input-group-prepend')
                     div(class='input-group-text') Endzeit
-                input(type='time' class='form-control' id='fetime' name='fetime' required)
+                input(type='time' class='form-control' id='fetime' name='fetime' required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
             div(class='top-pad')
                 button(type='submit' class='btn btn-primary btn-block' id='screen_schedule') Zeitplan festlegen
         hr
         form(method='post' enctype='multipart/form-data' action='/screen/noschedule' id='screen_noschedule')
             button(type='submit' class='btn btn-danger btn-block') Zeitplan löschen
+    
+    script(src='javascripts/confirm.js')
+    script.
+        custom_confirm('#screen_noschedule', 'Zeitplan', 'Soll der Zeitplan wirklich gelöscht werden?', 'Nein', 'Ja');
