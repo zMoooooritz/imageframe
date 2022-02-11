@@ -1,15 +1,18 @@
 body {
-    padding: 80px 0 0 0;
     font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-/* * {
-    border-color: black;
-    border-style: dashed;
-} */
+#content {
+    padding: 80px 0 0 0;
+    background-color: #b8b8b8;
+}
 
-a {
-    color: #00B7FF;
+html {
+    background-color: #b8b8b8;
+}
+
+.container-fluid {
+    background-color: #b8b8b8;
 }
 
 .top-pad {

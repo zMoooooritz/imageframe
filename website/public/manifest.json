@@ -11,12 +11,13 @@
         {
             "src": "images/android-chrome-512x512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ],
-    "theme_color": "#ab4b4b",
-    "background_color": "#ab4b4b",
+    "theme_color": "#999999",
+    "background_color": "#b8b8b8",
     "start_url": "/",
     "display": "fullscreen",
-    "orientation": "any"
+    "orientation": "portrait"
 }
