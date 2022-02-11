@@ -1,7 +1,5 @@
 #!/bin/sh
 
-PATH=/opt/vc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
   exit 0
 else
@@ -9,6 +7,13 @@ else
     sshd|*/sshd) exit 0;;
   esac
 fi
+
+# create required directories
+mkdir -p ${HOME}/images/default
+mkdir -p ${HOME}/images/wallpaper
+mkdir -p ${HOME}/images/tmp
+
+mkdir -p ${HOME}/settings
 
 # crontab -l | grep -v -e "infoscreen.sh" -e "display.sh onf" | sort - | uniq - | crontab -
 crontab -l | grep -v "infoscreen.sh" | sort - | uniq - | crontab -
@@ -27,8 +32,5 @@ case $mode in
         ${HOME}/scripts/slideshow.sh
         ;;
     *)
-        echo "Es wurde kein Modus angegeben, deswegen wird nur der Webserver gestartet"
-        echo "Folgende Modi gibt es: info, slide"
         ;;
 esac
-
