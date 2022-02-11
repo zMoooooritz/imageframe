@@ -12,15 +12,13 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/off', upload.none(), function(req, res, next) {
-    console.log("Herunterfahren");
-    // exec(config.scriptPath + 'power.sh shutdown');
+    exec(config.scriptPath + 'power.sh shutdown');
 
     res.redirect('/');
 });
 
 router.post('/reboot', upload.none(), function(req, res, next) {
-    console.log("Neustarten");
-    // exec(config.scriptPath + 'power.sh reboot');
+    exec(config.scriptPath + 'power.sh reboot');
 
     res.redirect('/');
 });

@@ -17,8 +17,7 @@ block content
         hr
         a(role='button' class='btn btn-secondary btn-block' href='/update') Updates
     
-    //- TODO das gibt probleme, da das letzte custom_confirm das vorherige überschreibt
     script(src='javascripts/confirm.js')
     script.
         custom_confirm("#power_off", "Herunterfahren", "Soll der Bilderrahmen wirklich heruntergefahren werden?", "Nein", "Ja");
-        custom_confirm("#power_reboot", "Neustarten", "Soll der Bilderrahmen wirklich neugestartet werden?", "Nein", "Ja");
+        custom_confirm_alt("#power_reboot", "Neustarten", "Soll der Bilderrahmen wirklich neugestartet werden?", "Nein", "Ja");
