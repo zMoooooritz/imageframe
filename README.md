@@ -24,7 +24,7 @@ Therefore a NodeJS-Server does run on the device in the background and allow for
 
 ## Setup
 The following steps are required to setup the image frame (using a Raspberry Pi):
-1. Install a Unix-based OS, I recommend [Arch Linux](https://archlinuxarm.org/platforms/armv6/raspberry-pi)
+1. Install an OS, I recommend [Arch Linux](https://archlinuxarm.org/platforms/armv6/raspberry-pi)
 2. Setup autologin via [getty](https://wiki.archlinux.org/title/Getty)
 3. Clone this repository into the home directory
 5. Setup autostart for the software (the entry point should be the call `startup.sh all`)
