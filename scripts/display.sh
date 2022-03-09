@@ -4,9 +4,10 @@ PATH=/opt/vc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 case $1 in
     "on")
-        vcgencmd display_power 1
+        # vcgencmd display_power 1
         # crontab -l | grep -v "display.sh onf" | sort - | uniq - | crontab -
-        ${HOME}/scripts/startup.sh
+        # ${HOME}/scripts/startup.sh
+        ${HOME}/scripts/power.sh reboot
         ;;
     "off")
         killall -q -KILL fbi
