@@ -27,7 +27,9 @@ The following steps are required to setup the image frame (using a Raspberry Pi)
 1. Install an OS, I recommend [Arch Linux](https://archlinuxarm.org/platforms/armv6/raspberry-pi)
 2. Setup autologin via [getty](https://wiki.archlinux.org/title/Getty)
 3. Clone this repository into the home directory
-5. Setup autostart for the software (the entry point should be the call `startup.sh all`)
+4. Install `npm` as we required it for the NodeJS server
+5. cd into the `website` directory and run `npm install`
+6. Setup autostart for the software (the entry point should be the call `startup.sh all`)
 7. The frontend should be reachable via the IP of the device and Port 3000 (without port forwarding the reachability is restricted to the local network)
 
 ## TODO
