@@ -8,7 +8,7 @@ update_software() {
 case $1 in
     "software")
         git fetch
-        if [ -n "$(git diff origin)" ]; then
+        if [ -n "$(git diff origin/master)" ]; then
             update_software
         fi
         ;;
