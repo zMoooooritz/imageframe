@@ -25,7 +25,7 @@ router.post('/start', upload.none(), function(req, res, next) {
     if (typeof dirs === 'string') {
         dirs = [dirs];
     }
-    var str_dirs = dirs.join(';');
+    var str_dirs = dirs.join(',');
 
     exec(config.scriptPath + 'slideshow.sh RANDOM=' + isRandom + ' STIME=' + imageTime + ' BTIME=' + blendTime + ' NAMES=' + showNames + ' DIRS=' + str_dirs);
 

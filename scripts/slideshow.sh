@@ -43,7 +43,7 @@ fi
 echo -n "" > $path_img_list
 sdirs=$(${read_set_get} "slide_dirs" "" $DIRS)
 IFS=',' read -ra ndirs <<< $sdirs
-for ndir in $ndirs; do
+for ndir in ${ndirs[@]}; do
     images=$(ls ${path_images}/${ndir})
     for image in $images; do
         echo "${path_images}/${ndir}/${image}" >> $path_img_list
