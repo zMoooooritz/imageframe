@@ -1,23 +1,30 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var favicon = require('serve-favicon')
+const createError = require('http-errors');
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const config = require('./util/config');
+const schedule = require('./util/schedule');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const favicon = require('serve-favicon')
 
-var indexRouter = require('./routes/index');
-var imageRouter = require('./routes/image');
-var directoryRouter = require('./routes/directory');
-var slideRouter = require('./routes/slide');
-var infoRouter = require('./routes/info');
-var screenRouter = require('./routes/screen');
-var powerRouter = require('./routes/power');
-var updateRouter = require('./routes/update');
+const indexRouter = require('./routes/index');
+const imageRouter = require('./routes/image');
+const directoryRouter = require('./routes/directory');
+const slideRouter = require('./routes/slide');
+const screenRouter = require('./routes/screen');
+const powerRouter = require('./routes/power');
+const updateRouter = require('./routes/update');
 
 var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+// directory structure setup
+fs.mkdirSync(config.getContainersPath(), { recursive: true });
+fs.mkdirSync(config.getTmpImagePath(), { recursive: true });
+fs.mkdirSync(config.getSettingsPath(), { recursive: true });
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -31,8 +38,6 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.svg')));
 app.use('/', indexRouter);
 app.use('/slide', slideRouter);
 app.use('/slide/start', slideRouter);
-app.use('/info', infoRouter);
-app.use('/info/start', infoRouter);
 app.use('/image', imageRouter);
 app.use('/image/upload', imageRouter);
 app.use('/image/delete', imageRouter);
@@ -43,7 +48,8 @@ app.use('/directory/delete', directoryRouter);
 app.use('/screen', screenRouter);
 app.use('/screen/on', screenRouter);
 app.use('/screen/off', screenRouter);
-app.use('/screen/schedule', screenRouter);
+app.use('/screen/dailyschedule', screenRouter);
+app.use('/screen/holidayschedule', screenRouter);
 app.use('/screen/noschedule', screenRouter);
 app.use('/power', powerRouter);
 app.use('/power/off', powerRouter);
@@ -62,5 +68,9 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', { title: 'Fehler' });
 });
+
+(async() => {
+    schedule.init();
+})();
 
 module.exports = app;

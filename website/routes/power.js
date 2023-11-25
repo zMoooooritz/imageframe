@@ -1,9 +1,7 @@
-
-var express = require('express');
-var multer = require('multer');
-var router = express.Router();
-var exec = require('child_process').exec;
-var config = require('../config');
+const express = require('express');
+const multer = require('multer');
+const router = express.Router();
+const system = require('../util/system');
 
 const upload = multer();
 
@@ -12,13 +10,13 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/off', upload.none(), function(req, res, next) {
-    exec(config.scriptPath + 'power.sh shutdown');
+    system.shutdown();
 
     res.redirect('/');
 });
 
 router.post('/reboot', upload.none(), function(req, res, next) {
-    exec(config.scriptPath + 'power.sh reboot');
+    system.reboot();
 
     res.redirect('/');
 });

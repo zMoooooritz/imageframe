@@ -61,22 +61,15 @@ block content
             $('#fimgl').html($('#fimgn')[0].files.length + ' ausgewählt');
         });
 
-        var imgs = $('#img_div').html().split(';');
+        var img_data = JSON.parse($('#img_div').html())
         $('#fdird').on('input', function() {
             $('#fimgd').empty().append('<option selected disabled hidden value=\'0\'>-- Bilder auswählen --</option>');
 
-            var selected = $('#fdird').prop('selectedIndex');
-            var current = 1;
-            var counter = 0;
-            while (current < selected) {
-                if (imgs[counter] == '_')
-                    current++;
-                counter++;
-            }
-            while(counter < imgs.length && imgs[counter] != '_') {
-                $('#fimgd').append('<option value=' + imgs[counter] + '>' + imgs[counter] + '</option>');
-                counter++;
-            }
+            var selected = $('#fdird').val();
+            var imgs = img_data[selected];
+            imgs.forEach((image) => {
+                $('#fimgd').append('<option value=' + image + '>' + image + '</option>');
+            });
         });
 
         custom_confirm('#image_delete', 'Bilder löschen', 'Sollen die ausgewählten Bilder wirklich gelöscht werden?', 'Nein', 'Ja');
