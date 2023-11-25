@@ -1,0 +1,41 @@
+extends layout
+
+block content
+    div(class='container-fluid')
+        div()
+            form(method='post' enctype='multipart/form-data' action='/screen/on')
+                button(type='submit' class='btn btn-success btn-block') Bildschirm einschalten
+        div(class='top-pad')
+            form(method='post' enctype='multipart/form-data' action='/screen/off')
+                button(type='submit' class='btn btn-warning btn-block') Bildschirm ausschalten
+        hr
+        form(method='post' enctype='multipart/form-data' action='/screen/dailyschedule' id='daily_schedule')
+            div(class='input-group')
+                div(class='input-group-prepend')
+                    div(class='input-group-text') Startzeit
+                input(type='time' class='form-control' id='dstime' name='dstime' value=daily_start_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
+            div(class='input-group top-pad')
+                div(class='input-group-prepend')
+                    div(class='input-group-text') Endzeit
+                input(type='time' class='form-control' id='detime' name='detime' value=daily_end_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
+            div(class='top-pad')
+                button(type='submit' class='btn btn-primary btn-block' form='daily_schedule') Täglichen Zeitplan festlegen
+        hr
+        form(method='post' enctype='multipart/form-data' action='/screen/holidayschedule' id='holiday_schedule')
+            div(class='input-group')
+                div(class='input-group-prepend')
+                    div(class='input-group-text') Startzeit
+                input(type='time' class='form-control' id='hstime' name='hstime' value=holiday_start_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
+            div(class='input-group top-pad')
+                div(class='input-group-prepend')
+                    div(class='input-group-text') Endzeit
+                input(type='time' class='form-control' id='hetime' name='hetime' value=holiday_end_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
+            div(class='top-pad')
+                button(type='submit' class='btn btn-primary btn-block' form='holiday_schedule') Sonn- und Feiertag Zeitplan festlegen
+        hr
+        form(method='post' enctype='multipart/form-data' action='/screen/noschedule' id='noschedule')
+            button(type='submit' class='btn btn-danger btn-block' form='noschedule') Zeitplan löschen
+    
+    script(src='javascripts/confirm.js')
+    script.
+        custom_confirm('#screen_noschedule', 'Zeitplan', 'Soll der Zeitplan wirklich gelöscht werden?', 'Nein', 'Ja');

@@ -1,16 +1,13 @@
+const express = require('express');
+const multer = require('multer');
+const router = express.Router();
+const path = require('path');
+const config = require('../util/config');
+const storage = require('../util/storage');
 
-var express = require('express');
-var multer = require('multer');
-var router = express.Router();
-var exec = require('child_process').exec;
-var fs = require('fs');
-var path = require('path');
-var config = require('../config');
-var util = require('../util');
-
-const storage = multer.diskStorage({
+const diskStorage = multer.diskStorage({
     destination: function(req, file, cb) {
-      cb(null, config.imagePath);
+      cb(null, config.getTmpImagePath());
     },
     filename: function(req, file, cb) {
       cb(null, file.originalname);
@@ -27,23 +24,21 @@ function fileFilter(req, file, cb) {
 }
 
 const upload = multer({
-    storage: storage,
+    storage: diskStorage,
     fileFilter: fileFilter
 });
 
 router.get('/', async function(req, res, next) {
     res.locals = {
-        dirs: await util.loadDirs(),
-        imgs: await util.loadImgs()
+        dirs: storage.listContainers(),
+        imgs: JSON.stringify(storage.buildImageMap()),
     };
 
     res.render('image', { title: 'Bilder' });
 });
 
 router.post('/upload', upload.array('fimgn'), function(req, res, next) {
-    var dir = req.body.fdirn;
-
-    exec(config.scriptPath + 'image.sh fixmv ' + dir);
+    storage.fixAndMove(req.body.fdirn);
 
     res.redirect('/image')
 });
@@ -54,9 +49,8 @@ router.post('/delete', upload.none(), function(req, res, next) {
     if (typeof imgs === 'string') {
         imgs = [imgs];
     }
-    var str_imgs = imgs.join(' ');
 
-    exec(config.scriptPath + 'image.sh del ' + dir + ' ' + str_imgs);
+    storage.deleteImages(dir, imgs)
 
     res.redirect('/image')
 });
