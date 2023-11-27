@@ -103,7 +103,9 @@ class Schedule {
             date,
             function() {
                 console.log("Display on at: " + new Date().toISOString());
-                system.displayOn();
+                if (!slideshow.isActive) {
+                    system.displayOn();
+                }
             },
             null,
             null
