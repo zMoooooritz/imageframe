@@ -1,4 +1,5 @@
 const exec = require('child_process').exec;
+const slideshow = require('./slideshow');
 
 function shutdown() {
     exec("sudo shutdown now");
@@ -16,7 +17,8 @@ function displayOn() {
 }
 
 function displayOff() {
-    exec("killall -q -KILL fbi; vcgencmd display_power 0");
+    slideshow.stop();
+    exec("vcgencmd display_power 0");
 }
 
 module.exports = {
