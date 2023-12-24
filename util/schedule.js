@@ -39,6 +39,8 @@ class Schedule {
         } else {
             if (!show_on_startup) {
                 system.displayOff();
+            } else {
+                this.scheduleDisplayOff(offTime);
             }
         }
         this.scheduleDisplayOn(onTime);
