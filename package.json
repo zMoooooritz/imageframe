@@ -1,8 +1,8 @@
 {
-  "name": "Bilderrahmen",
+  "name": "imageframe",
   "version": "0.2.1",
-  "description": "Steuerungssoftware für den Bilderrahmen",
-  "private": true,
+  "description": "Dynamic image slideshows on SoCs",
+  "private": false,
   "author": {
     "name": "Moritz Biering",
     "email": "moritzbiering.mb@gmail.com"
