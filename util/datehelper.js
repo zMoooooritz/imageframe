@@ -6,7 +6,7 @@ const TIMEZONE_OFFSET = 1
 // cron does handle the dates time zone aware
 // my code does not, since the user is inputting time zone'd data I need to offset it here in order for the calculations to work
 // quite possibly there is a proper and nice solution for this problem
-// but I don't want to doeal with time zone issues anymore...
+// but I don't want to deal with time zone issues anymore...
 
 class DateHelper {
 
@@ -20,18 +20,14 @@ class DateHelper {
 
         if (daily_start !== undefined && daily_end !== undefined) {
             daily_dates.forEach((day) => {
-                var date = new Date(day.getFullYear(), day.getMonth(), day.getDate(), daily_start.hours, daily_start.minutes, 0, 0);
-                start_dates.push(date);
-                var date = new Date(day.getFullYear(), day.getMonth(), day.getDate(), daily_end.hours, daily_end.minutes, 0, 0);
-                end_dates.push(date);
+                start_dates.push(this.constructDate(day, daily_start));
+                end_dates.push(this.constructDate(day, daily_end));
             });
         }
         if (holiday_start !== undefined && holiday_end !== undefined) {
             holiday_dates.forEach((day) => {
-                var date = new Date(day.getFullYear(), day.getMonth(), day.getDate(), holiday_start.hours, holiday_start.minutes, 0, 0);
-                start_dates.push(date);
-                var date = new Date(day.getFullYear(), day.getMonth(), day.getDate(), holiday_end.hours, holiday_end.minutes, 0, 0);
-                end_dates.push(date);
+                start_dates.push(this.constructDate(day, holiday_start));
+                end_dates.push(this.constructDate(day, holiday_end));
             });
         }
         if (start_dates.length == 0) {
@@ -83,7 +79,11 @@ class DateHelper {
         var today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const data = await fetch(getFeiertageURL());
+        const thisYear = new Date().getFullYear();
+        const nextYear = thisYear + 1;
+        const years = [ thisYear, nextYear ].join(",");
+
+        const data = await fetch(getFeiertageURL(years));
         if (!data.ok) {
             return [];
         }
@@ -93,14 +93,13 @@ class DateHelper {
             var date = new Date(this.convertStringToDate(day["date"]));
             date.setHours(0, 0, 0, 0);
 
-            if ( today == date ) {
-                dates.push(today);
+            if ( today <= date ) {
+                dates.push(date);
             }
             if ( today < date ) {
-                dates.push(date);
                 break;
             }
-        };
+        }
         return dates;
     }
 
@@ -124,11 +123,14 @@ class DateHelper {
         return new Date(year, month - 1, day);
     }
 
+    constructDate(day, time) {
+        return new Date(day.getFullYear(), day.getMonth(), day.getDate(), time.hours, time.minutes, 0, 0);
+    }
+
 }
 
-function getFeiertageURL() {
-    const year = new Date().getFullYear();
-    return `https://get.api-feiertage.de?years=${year}&states=bw`
+function getFeiertageURL(yearSelector) {
+    return `https://get.api-feiertage.de?years=${yearSelector}&states=bw`
 }
 
 var dateHelper = new DateHelper();
