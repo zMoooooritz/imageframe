@@ -46,12 +46,14 @@ class DateHelper {
         now.setHours(now.getHours() + TIMEZONE_OFFSET);
         var counter = 0;
         var lastStart = -1;
+        var lastEnd = -1;
         for (let i = 0; i < start_dates.length; i++) {
             if (start_dates[i] < now) {
                 lastStart = i;
                 counter += 1;
             }
             if (end_dates[i] < now) {
+                lastEnd = i;
                 counter -= 1;
             }
         }
@@ -59,7 +61,7 @@ class DateHelper {
         return {
             nothingToDo: false,
             shouldBeActive: counter > 0,
-            offTime: end_dates[lastStart],
+            offTime: end_dates[lastEnd+1],
             onTime: start_dates[lastStart+1]
         }
     }
