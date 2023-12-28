@@ -70,7 +70,7 @@ app.use(function(err, req, res, next) {
 });
 
 (async() => {
-    schedule.init();
+    await schedule.init();
 })();
 
 module.exports = app;
