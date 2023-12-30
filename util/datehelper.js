@@ -1,5 +1,5 @@
 
-const fetch = require('node-fetch');
+const retryFetch = require('./fetcher');
 
 const TIMEZONE_OFFSET = 1
 // ugly as hell
@@ -78,20 +78,27 @@ class DateHelper {
     }
 
     async getNextHolidayDates() {
-        var today = new Date();
-        today.setHours(0, 0, 0, 0);
-
         const thisYear = new Date().getFullYear();
         const nextYear = thisYear + 1;
         const years = [ thisYear, nextYear ].join(",");
 
-        const data = await fetch(getFeiertageURL(years));
-        if (!data.ok) {
-            return [];
-        }
+        return retryFetch(getFeiertageURL(years), {}, 3, 1000)
+            .then((response) => response.json())
+            .then(data => {
+                return this.parseFeiertagData(data)
+            })
+            .catch(error => {
+                console.error(error);
+                return [];
+            })
+    }
+
+    parseFeiertagData(data) {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         var dates = [];
-        var json = await data.json();
-        for (const day of json["feiertage"]) {
+        for (const day of data["feiertage"]) {
             var date = new Date(this.convertStringToDate(day["date"]));
             date.setHours(0, 0, 0, 0);
 
