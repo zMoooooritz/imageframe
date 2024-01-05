@@ -25,8 +25,14 @@ router.post('/start', upload.none(), async function(req, res, next) {
     await kvstore.load();
     kvstore.set("mode", "slideshow");
     kvstore.set("slide_random", (req.body.frandom === 'on') ? true : false);
-    kvstore.set("slide_time", req.body.ftime);
-    kvstore.set("slide_blend", req.body.fblend);
+    var slideTime = parseInt(req.body.ftime, 10)
+    if (!isNaN(slideTime)) {
+        kvstore.set("slide_time", slideTime)
+    }
+    var blendTime = parseInt(req.body.fblend, 10)
+    if (!isNaN(blendTime)) {
+        kvstore.set("slide_blend", blendTime)
+    }
     kvstore.set("slide_names", (req.body.fname === 'on') ? true : false);
     var dirs = req.body.fdirs;
     if (typeof dirs === 'string') {
