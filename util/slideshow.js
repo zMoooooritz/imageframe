@@ -28,18 +28,18 @@ class Slideshow {
 
         var options = "";
         options += slideRandom ? "-random " : "-norandom ";
-        options += `-timeout ${slideTime} `
-        options += `-blend ${slideBlend} `
+        options += `-timeout ${slideTime} `;
+        options += `-blend ${slideBlend} `;
         options += slideNames ? "-verbose " : "-noverbose ";
-        options += `-list ${config.getImageListFilePath()}`
+        options += `-list ${config.getImageListFilePath()}`;
 
-        exec(`fbi -nointeractive -a -T 1 -cachemem 100 ${options} > /dev/null 2>&1 &`)
+        exec(`fbi -nointeractive -a -T 1 -cachemem 100 ${options} > /dev/null 2>&1 &`);
     }
 
     stop() {
         this.isActive = false;
 
-        exec(`killall -q -KILL fbi`)
+        exec(`killall -q -KILL fbi`);
     }
 
 }
@@ -52,8 +52,8 @@ function buildConfigFile(directories) {
             data += imgPath + "\n";
         });
     });
-    fs.writeFileSync(config.getImageListFilePath(), data)
+    fs.writeFileSync(config.getImageListFilePath(), data);
 }
 
 const slideshow = new Slideshow();
-module.exports = slideshow
+module.exports = slideshow;
