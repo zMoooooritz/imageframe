@@ -105,8 +105,8 @@ class Schedule {
         const job = new CronJob(
             date,
             async function() {
-                console.log("Event: ", shouldBeActive === true ? "ON" : "OFF", " at " + new Date(date).toISOString());
-                executeEvent(shouldBeActive);
+                console.log("Event:", shouldBeActive === true ? "ON" : "OFF", "at", new Date(date).toISOString());
+                this.executeEvent(shouldBeActive);
                 await this.scheduleNextEvent(false);
             },
             null,

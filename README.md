@@ -79,6 +79,9 @@ passwd # change root pwd
 # change hostname if wanted
 $EDITOR /etc/hostname
 
+# change time zone
+ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
+
 # setup package manager
 pacman-key --init
 pacman-key --populate archlinuxarm
@@ -120,7 +123,7 @@ Setup the application
 ```bash
 # install required applications
 pacman -Syu
-pacman -S fbida git npm
+pacman -S fbida git npm ttf-hack # can also choose another monospace font
 
 # only needed if the application should be updated via git
 git config --global user.name "User Name"
