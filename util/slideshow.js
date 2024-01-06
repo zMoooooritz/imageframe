@@ -28,12 +28,14 @@ class Slideshow {
 
         var options = "";
         options += slideRandom ? "-random " : "-norandom ";
-        options += `-timeout ${slideTime} `
-        options += `-blend ${slideBlend} `
+        options += `-timeout ${slideTime} `;
+        options += `-blend ${slideBlend} `;
         options += slideNames ? "-verbose " : "-noverbose ";
-        options += `-list ${config.getImageListFilePath()}`
+        options += `-list ${config.getImageListFilePath()}`;
 
-        exec(`fbi -nointeractive -a -T 1 -cachemem 100 ${options} > /dev/null 2>&1 &`)
+        setTimeout(function() {
+            exec(`fbi -nointeractive -a -T 1 -cachemem 100 ${options}`);
+        }, 1000);
     }
 
     stop() {
