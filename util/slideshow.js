@@ -41,7 +41,7 @@ class Slideshow {
     stop() {
         this.isActive = false;
 
-        exec(`killall -q -KILL fbi`)
+        exec(`killall -q -KILL fbi`);
     }
 
 }
@@ -54,8 +54,8 @@ function buildConfigFile(directories) {
             data += imgPath + "\n";
         });
     });
-    fs.writeFileSync(config.getImageListFilePath(), data)
+    fs.writeFileSync(config.getImageListFilePath(), data);
 }
 
 const slideshow = new Slideshow();
-module.exports = slideshow
+module.exports = slideshow;

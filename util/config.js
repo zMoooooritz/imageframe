@@ -3,7 +3,7 @@ const path = require('path');
 
 class Config {
     constructor() {
-        this.basepath = os.homedir()
+        this.basepath = os.homedir();
     }
 
     getScriptPath() {

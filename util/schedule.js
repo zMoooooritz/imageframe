@@ -11,39 +11,40 @@ class Schedule {
     }
 
     async init() {
+        await this.scheduleNextEvent(true)
+    }
+
+    async scheduleNextEvent(executeNow) {
         await kvstore.load();
         const daily_start = kvstore.get("daily_start_time");
         const daily_end = kvstore.get("daily_end_time");
         const holiday_start = kvstore.get("holiday_start_time");
         const holiday_end = kvstore.get("holiday_end_time");
-        const show_on_startup = kvstore.getDefault("show_on_startup", false);
-        kvstore.set("show_on_startup", false);
-        await kvstore.save();
 
-        const {nothingToDo, shouldBeActive, offTime, onTime} = await dateHelper.getScheduleInformation(daily_start, daily_end, holiday_start, holiday_end);
+        const { nextEventTime, nextEventType, shouldBeActive } = await dateHelper.getScheduleInformation(daily_start, daily_end, holiday_start, holiday_end);
 
-        if (show_on_startup) {
-            slideshow.start();
-        }
-
-        if (nothingToDo) {
+        if (nextEventTime === undefined) {
             system.displayOff();
             return;
         }
 
+        if (executeNow) {
+            this.executeEvent(shouldBeActive);
+        }
+
+        this.scheduleEvent(nextEventTime, nextEventType === "start");
+    }
+
+    executeEvent(shouldBeActive) {
         if (shouldBeActive) {
+            system.displayOn();
             if (!slideshow.isActive) {
                 slideshow.start();
             }
-            this.scheduleDisplayOff(offTime);
         } else {
-            if (!show_on_startup) {
-                system.displayOff();
-            } else {
-                this.scheduleDisplayOff(offTime);
-            }
+            system.displayOff();
+            slideshow.stop();
         }
-        this.scheduleDisplayOn(onTime);
     }
 
     async integrateChanges() {
@@ -99,38 +100,23 @@ class Schedule {
         this.activeSchedules = [];
     }
 
-    scheduleDisplayOn(date) {
-        console.log("Display schedule on at: " + new Date(date).toISOString());
+    scheduleEvent(date, shouldBeActive) {
+        console.log("Schedule at: " + new Date(date).toISOString(), "- Event:", shouldBeActive === true ? "ON" : "OFF");
         const job = new CronJob(
             date,
-            function() {
-                console.log("Display on at: " + new Date().toISOString());
-                if (!slideshow.isActive) {
-                    system.displayOn();
-                }
+            async function() {
+                console.log("Event: ", shouldBeActive === true ? "ON" : "OFF", " at " + new Date(date).toISOString());
+                executeEvent(shouldBeActive);
+                await this.scheduleNextEvent(false);
             },
             null,
             null
-        )
-        job.start()
+        );
+        job.start();
         this.activeSchedules.push(job);
     }
 
-    scheduleDisplayOff(date) {
-        console.log("Display schedule off at: " + new Date(date).toISOString());
-        const job = new CronJob(
-            date,
-            function() {
-                console.log("Display off at: " + new Date().toISOString());
-                system.displayOff();
-            },
-            null,
-            null
-        )
-        job.start()
-        this.activeSchedules.push(job);
-    }
 }
 
 const schedule = new Schedule();
-module.exports = schedule
+module.exports = schedule;

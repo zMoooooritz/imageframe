@@ -30,13 +30,13 @@ class DateHelper {
                 end_dates.push(this.constructDate(day, holiday_end));
             });
         }
+
         if (start_dates.length == 0) {
             return {
-                nothingToDo: true,
+                nextEventTime: undefined,
+                nextEventType: undefined,
                 shouldBeActive: false,
-                offTime: undefined,
-                onTime: undefined
-            };
+            }
         }
 
         start_dates.sort((date1, date2) => date1 - date2);
@@ -58,11 +58,20 @@ class DateHelper {
             }
         }
 
+        const start = start_dates[lastStart+1]
+        const end = end_dates[lastEnd+1]
+
+        if (start < end) {
+            return {
+                nextEventTime: start,
+                nextEventType: "start",
+                shouldBeActive: counter > 0,
+            }
+        }
         return {
-            nothingToDo: false,
+            nextEventTime: end,
+            nextEventType: "end",
             shouldBeActive: counter > 0,
-            offTime: end_dates[lastEnd+1],
-            onTime: start_dates[lastStart+1]
         }
     }
 
