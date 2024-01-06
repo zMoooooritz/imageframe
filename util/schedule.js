@@ -21,18 +21,20 @@ class Schedule {
         const holiday_start = kvstore.get("holiday_start_time");
         const holiday_end = kvstore.get("holiday_end_time");
 
-        const { nextEventTime, nextEventType, shouldBeActive } = await dateHelper.getScheduleInformation(daily_start, daily_end, holiday_start, holiday_end);
+        const { nextEventTime, nextEventType } = await dateHelper.getScheduleInformation(daily_start, daily_end, holiday_start, holiday_end);
 
         if (nextEventTime === undefined) {
             system.displayOff();
             return;
         }
 
+        const shouldBeActive = nextEventType === "start"
+
         if (executeNow) {
-            this.executeEvent(shouldBeActive);
+            this.executeEvent(!shouldBeActive);
         }
 
-        this.scheduleEvent(nextEventTime, nextEventType === "start");
+        this.scheduleEvent(nextEventTime, shouldBeActive);
     }
 
     executeEvent(shouldBeActive) {
@@ -101,22 +103,28 @@ class Schedule {
     }
 
     scheduleEvent(date, shouldBeActive) {
-        console.log("Schedule at: " + new Date(date).toISOString(), "- Event:", shouldBeActive === true ? "ON" : "OFF");
-        const job = new CronJob(
-            date,
-            async function() {
-                console.log("Event:", shouldBeActive === true ? "ON" : "OFF", "at", new Date(date).toISOString());
-                this.executeEvent(shouldBeActive);
-                await this.scheduleNextEvent(false);
-            },
-            null,
-            null
-        );
-        job.start();
+        console.log("Schedule at:", new Date(date).toISOString(), "- Event:", shouldBeActive === true ? "ON" : "OFF");
+        const job = createNewJob(date, shouldBeActive);
         this.activeSchedules.push(job);
     }
 
 }
 
 const schedule = new Schedule();
+
+function createNewJob(date, shouldBeActive) {
+    const job = new CronJob(
+        date,
+        async function() {
+            console.log("Event:", shouldBeActive === true ? "ON" : "OFF", "at", new Date(date).toISOString());
+            schedule.executeEvent(shouldBeActive);
+            await schedule.scheduleNextEvent(false);
+        },
+        null,
+        null
+    );
+    job.start();
+    return job;
+}
+
 module.exports = schedule;

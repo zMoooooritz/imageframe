@@ -13,21 +13,24 @@ class DateHelper {
     async getScheduleInformation(daily_start, daily_end, holiday_start, holiday_end) {
         var daily_dates = this.getNextDailyDates();
         var holiday_dates = await this.getNextHolidayDates();
-        holiday_dates = holiday_dates.concat(this.getNextSundayDates());
+        var sunday_dates = this.getNextSundayDates()
+        holiday_dates = holiday_dates.concat(sunday_dates);
 
         var start_dates = [];
         var end_dates = [];
 
         if (daily_start !== undefined && daily_end !== undefined) {
             daily_dates.forEach((day) => {
-                start_dates.push(this.constructDate(day, daily_start));
-                end_dates.push(this.constructDate(day, daily_end));
+                const { startDate, endDate } = this.constructDates(day, daily_start, daily_end);
+                start_dates.push(startDate);
+                end_dates.push(endDate);
             });
         }
         if (holiday_start !== undefined && holiday_end !== undefined) {
             holiday_dates.forEach((day) => {
-                start_dates.push(this.constructDate(day, holiday_start));
-                end_dates.push(this.constructDate(day, holiday_end));
+                const { startDate, endDate } = this.constructDates(day, holiday_start, holiday_end);
+                start_dates.push(startDate);
+                end_dates.push(endDate);
             });
         }
 
@@ -35,7 +38,6 @@ class DateHelper {
             return {
                 nextEventTime: undefined,
                 nextEventType: undefined,
-                shouldBeActive: false,
             }
         }
 
@@ -65,13 +67,11 @@ class DateHelper {
             return {
                 nextEventTime: start,
                 nextEventType: "start",
-                shouldBeActive: counter > 0,
             }
         }
         return {
             nextEventTime: end,
             nextEventType: "end",
-            shouldBeActive: counter > 0,
         }
     }
 
@@ -141,10 +141,21 @@ class DateHelper {
         return new Date(year, month - 1, day);
     }
 
+    constructDates(day, start, end) {
+        const overlapsTwoDays = end.hours < start.hours || end.hours == start.hours && end.minutes < start.minutes;
+        var endDay = new Date(day);
+        if (overlapsTwoDays) {
+            endDay.setDate(endDay.getDate() + 1);
+        }
+        return {
+            "startDate": this.constructDate(day, start),
+            "endDate": this.constructDate(endDay, end),
+        };
+    }
+
     constructDate(day, time) {
         return new Date(day.getFullYear(), day.getMonth(), day.getDate(), time.hours, time.minutes, 0, 0);
     }
-
 }
 
 function getFeiertageURL(yearSelector) {
