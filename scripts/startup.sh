@@ -8,4 +8,6 @@ else
   esac
 fi
 
+figlet imageframe
+
 npm run start --prefix $(dirname $(dirname $(realpath $0))) &

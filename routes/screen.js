@@ -3,7 +3,6 @@ const multer = require('multer');
 const router = express.Router();
 const schedule = require("../util/schedule");
 const system = require("../util/system");
-const kvstore = require('../util/kvstore');
 const Time = require('../util/time');
 
 const upload = multer();
@@ -21,17 +20,14 @@ router.get('/', async function(req, res, next) {
     res.render('screen', { title: 'Bildschirm' });
 });
 
-router.post('/on', upload.none(), async function(req, res, next) {
-    await kvstore.load();
-    kvstore.set("show_on_startup", true);
-    await kvstore.save();
-    system.displayOn();
+router.post('/on', upload.none(), function(req, res, next) {
+    schedule.executeEvent(true);
 
     res.redirect('/screen');
 });
 
 router.post('/off', upload.none(), function(req, res, next) {
-    system.displayOff();
+    schedule.executeEvent(false);
 
     res.redirect('/screen');
 });

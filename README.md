@@ -123,7 +123,7 @@ Setup the application
 ```bash
 # install required applications
 pacman -Syu
-pacman -S fbida git npm ttf-hack # can also choose another monospace font
+pacman -S fbida git npm figlet ttf-hack # can also choose another monospace font
 
 # only needed if the application should be updated via git
 git config --global user.name "User Name"
