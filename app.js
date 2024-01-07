@@ -2,11 +2,14 @@ const createError = require('http-errors');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const config = require('./util/config');
-const schedule = require('./util/schedule');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const favicon = require('serve-favicon')
+
+global.__basedir = path.resolve(__dirname);
+
+const config = require('./util/config');
+const schedule = require('./util/schedule');
 
 const indexRouter = require('./routes/index');
 const imageRouter = require('./routes/image');
