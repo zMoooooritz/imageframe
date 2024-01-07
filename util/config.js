@@ -3,15 +3,16 @@ const path = require('path');
 
 class Config {
     constructor() {
-        this.basepath = os.homedir();
+        this.homePath = os.homedir();
+        this.rootPath = global.__basedir;
     }
 
     getScriptPath() {
-        return path.join(this.basepath, "scripts");
+        return path.join(this.rootPath, "scripts");
     }
 
     getImagePath() {
-        return path.join(this.basepath, "images");
+        return path.join(this.homePath, "images");
     }
 
     getTmpImagePath() {
@@ -27,7 +28,7 @@ class Config {
     }
 
     getSettingsPath() {
-        return path.join(this.basepath, "settings");
+        return path.join(this.homePath, "settings");
     }
 
     getKVStorePath() {
