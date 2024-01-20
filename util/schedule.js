@@ -90,7 +90,7 @@ class Schedule {
     async getSchedule(schedule) {
         await kvstore.load();
         const start = kvstore.get(toStorageKey(schedule, EventType.START));
-        const end = kvstore.get(toStorageKey(schedule, EventType.START));
+        const end = kvstore.get(toStorageKey(schedule, EventType.END));
         return { start: start, end: end };
     }
 
@@ -104,7 +104,7 @@ class Schedule {
         await kvstore.load();
         Object.values(ScheduleType).forEach((stype) => {
             kvstore.del(toStorageKey(stype, EventType.START));
-            kvstore.del(toStorageKey(stype, EventType.START));
+            kvstore.del(toStorageKey(stype, EventType.END));
         });
         await kvstore.save();
 
