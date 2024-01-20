@@ -9,7 +9,7 @@ const favicon = require('serve-favicon')
 global.__basedir = path.resolve(__dirname);
 
 const config = require('./util/config');
-const schedule = require('./util/schedule');
+const {schedule, ScheduleType} = require('./util/schedule');
 
 const indexRouter = require('./routes/index');
 const imageRouter = require('./routes/image');

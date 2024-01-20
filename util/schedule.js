@@ -4,6 +4,26 @@ var CronJob = require('cron').CronJob;
 var dateHelper = require('./datehelper');
 var slideshow = require('./slideshow');
 
+const EventType = Object.freeze({
+    START: "start",
+    END: "end",
+})
+
+
+const ScheduleType = Object.freeze({
+    EVERYDAY: "everyday",
+    WORKDAY: "workday",
+    HOLIDAY: "holiday",
+})
+
+function toStorageKey(schedule, event) {
+    if (event == EventType.START) {
+        return schedule + "_start_time";
+    } else {
+        return schedule + "_end_time";
+    }
+}
+
 class Schedule {
 
     constructor() {
@@ -16,12 +36,16 @@ class Schedule {
 
     async scheduleNextEvent(executeNow) {
         await kvstore.load();
-        const daily_start = kvstore.get("daily_start_time");
-        const daily_end = kvstore.get("daily_end_time");
-        const holiday_start = kvstore.get("holiday_start_time");
-        const holiday_end = kvstore.get("holiday_end_time");
+        var data = {
+            estart: kvstore.get(toStorageKey(ScheduleType.EVERYDAY, EventType.START)),
+            eend: kvstore.get(toStorageKey(ScheduleType.EVERYDAY, EventType.END)),
+            wstart: kvstore.get(toStorageKey(ScheduleType.WORKDAY, EventType.START)),
+            wend: kvstore.get(toStorageKey(ScheduleType.WORKDAY, EventType.END)),
+            hstart: kvstore.get(toStorageKey(ScheduleType.HOLIDAY, EventType.START)),
+            hend: kvstore.get(toStorageKey(ScheduleType.HOLIDAY, EventType.END)),
+        }
 
-        const { nextEventTime, nextEventType } = await dateHelper.getScheduleInformation(daily_start, daily_end, holiday_start, holiday_end);
+        const { nextEventTime, nextEventType } = await dateHelper.getScheduleInformation(data);
 
         if (nextEventTime === undefined) {
             system.displayOff();
@@ -54,44 +78,34 @@ class Schedule {
         await this.init();
     }
 
-    async setDailySchedule(start_time, end_time) {
+    async setSchedule(schedule, start_time, end_time) {
         await kvstore.load();
-        kvstore.set("daily_start_time", start_time);
-        kvstore.set("daily_end_time", end_time);
+        kvstore.set(toStorageKey(schedule, EventType.START), start_time);
+        kvstore.set(toStorageKey(schedule, EventType.END), end_time);
         await kvstore.save();
 
         await this.integrateChanges();
     }
 
-    async getDailySchedule() {
+    async getSchedule(schedule) {
         await kvstore.load();
-        const start = kvstore.get("daily_start_time");
-        const end = kvstore.get("daily_end_time");
-        return { dstart: start, dend: end };
+        const start = kvstore.get(toStorageKey(schedule, EventType.START));
+        const end = kvstore.get(toStorageKey(schedule, EventType.START));
+        return { start: start, end: end };
     }
 
-    async setHolidaySchedule(start_time, end_time) {
-        await kvstore.load();
-        kvstore.set("holiday_start_time", start_time);
-        kvstore.set("holiday_end_time", end_time);
+    async clearSchedule(schedule) {
+        kvstore.del(toStorageKey(schedule, EventType.START));
+        kvstore.del(toStorageKey(schedule, EventType.END));
         await kvstore.save();
-
-        await this.integrateChanges();
-    }
-
-    async getHolidaySchedule() {
-        await kvstore.load();
-        const start = kvstore.get("holiday_start_time");
-        const end = kvstore.get("holiday_end_time");
-        return { hstart: start, hend: end };
     }
 
     async clear() {
         await kvstore.load();
-        kvstore.del("daily_start_time");
-        kvstore.del("daily_end_time");
-        kvstore.del("holiday_start_time");
-        kvstore.del("holiday_end_time");
+        Object.values(ScheduleType).forEach((stype) => {
+            kvstore.del(toStorageKey(stype, EventType.START));
+            kvstore.del(toStorageKey(stype, EventType.START));
+        });
         await kvstore.save();
 
         this.resetSchedules();
@@ -127,4 +141,7 @@ function createNewJob(date, shouldBeActive) {
     return job;
 }
 
-module.exports = schedule;
+module.exports = {
+    schedule,
+    ScheduleType
+}
