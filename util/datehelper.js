@@ -10,8 +10,16 @@ const TIMEZONE_OFFSET = 1
 
 class DateHelper {
 
-    async getScheduleInformation(daily_start, daily_end, holiday_start, holiday_end) {
-        var daily_dates = this.getNextDailyDates();
+    async getScheduleInformation(data) {
+        var everyday_start = data.estart;
+        var everyday_end = data.eend;
+        var workday_start = data.wstart;
+        var workday_end = data.wend;
+        var holiday_start = data.hstart;
+        var holiday_end = data.hend;
+
+        var everyday_dates = this.getNextEverydayDates();
+        var workday_dates = this.getNextWorkdayDates();
         var holiday_dates = await this.getNextHolidayDates();
         var sunday_dates = this.getNextSundayDates()
         holiday_dates = holiday_dates.concat(sunday_dates);
@@ -19,9 +27,16 @@ class DateHelper {
         var start_dates = [];
         var end_dates = [];
 
-        if (daily_start !== undefined && daily_end !== undefined) {
-            daily_dates.forEach((day) => {
-                const { startDate, endDate } = this.constructDates(day, daily_start, daily_end);
+        if (everyday_start !== undefined && everyday_end !== undefined) {
+            everyday_dates.forEach((day) => {
+                const { startDate, endDate } = this.constructDates(day, everyday_start, everyday_end);
+                start_dates.push(startDate);
+                end_dates.push(endDate);
+            });
+        }
+        if (workday_start !== undefined && workday_end !== undefined) {
+            workday_dates.forEach((day) => {
+                const { startDate, endDate } = this.constructDates(day, workday_start, workday_end);
                 start_dates.push(startDate);
                 end_dates.push(endDate);
             });
@@ -75,7 +90,7 @@ class DateHelper {
         }
     }
 
-    getNextDailyDates() {
+    getNextEverydayDates() {
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         var dates = [today];
@@ -83,6 +98,23 @@ class DateHelper {
         tomorrow.setDate(tomorrow.getDate() + 1);
         tomorrow.setHours(0, 0, 0, 0);
         dates.push(tomorrow);
+        return dates;
+    }
+
+    isWorkday(day) {
+        return day != 0 && day != 6;
+    }
+
+    getNextWorkdayDates() {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var dates = [];
+        while (dates.length < 2) {
+            if (this.isWorkday(today.getDay())) {
+                dates.push(new Date(today))
+            }
+            today.setDate(today.getDate() + 1);
+        }
         return dates;
     }
 

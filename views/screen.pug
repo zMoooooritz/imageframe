@@ -1,5 +1,23 @@
 extends layout
 
+mixin schedule(header, id, start_id, end_id, start_time, end_time)
+    div(class='mt-3 mb-1')
+        span(class='badge btn-block rounded-pill bg-warning text-dark')= header
+    form(method='post' enctype='multipart/form-data' action='/screen/'+id id=id)
+        div(class='input-group')
+            div(class='input-group-prepend')
+                div(class='input-group-text') Startzeit
+            input(type='time' class='form-control' id=start_id name=start_id value=start_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
+        div(class='input-group top-pad')
+            div(class='input-group-prepend')
+                div(class='input-group-text') Endzeit
+            input(type='time' class='form-control' id=end_id name=end_id value=end_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
+        div(class='top-pad row')
+            div(class='col')
+                button(type='submit' class='btn btn-danger btn-block' form=id name='mode' value='clear' formnovalidate) Löschen
+            div(class='col')
+                button(type='submit' class='btn btn-primary btn-block' form=id name='mode' value='set') Festlegen
+
 block content
     div(class='container-fluid')
         div()
@@ -9,33 +27,16 @@ block content
             form(method='post' enctype='multipart/form-data' action='/screen/off')
                 button(type='submit' class='btn btn-warning btn-block') Bildschirm ausschalten
         hr
-        form(method='post' enctype='multipart/form-data' action='/screen/dailyschedule' id='daily_schedule')
-            div(class='input-group')
-                div(class='input-group-prepend')
-                    div(class='input-group-text') Startzeit
-                input(type='time' class='form-control' id='dstime' name='dstime' value=daily_start_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
-            div(class='input-group top-pad')
-                div(class='input-group-prepend')
-                    div(class='input-group-text') Endzeit
-                input(type='time' class='form-control' id='detime' name='detime' value=daily_end_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
-            div(class='top-pad')
-                button(type='submit' class='btn btn-primary btn-block' form='daily_schedule') Täglichen Zeitplan festlegen
+
+        div(class='accordion' id='accordion')
+            +schedule('Täglich', 'everydayschedule', 'estime', 'eetime', everyday_start_time, everyday_end_time)
+            +schedule('Arbeitstag', 'workdayschedule', 'wstime', 'wetime', workday_start_time, workday_end_time)
+            +schedule('Sonn- und Feiertag', 'holidayschedule', 'hstime', 'hetime', holiday_start_time, holiday_end_time)
+
         hr
-        form(method='post' enctype='multipart/form-data' action='/screen/holidayschedule' id='holiday_schedule')
-            div(class='input-group')
-                div(class='input-group-prepend')
-                    div(class='input-group-text') Startzeit
-                input(type='time' class='form-control' id='hstime' name='hstime' value=holiday_start_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
-            div(class='input-group top-pad')
-                div(class='input-group-prepend')
-                    div(class='input-group-text') Endzeit
-                input(type='time' class='form-control' id='hetime' name='hetime' value=holiday_end_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
-            div(class='top-pad')
-                button(type='submit' class='btn btn-primary btn-block' form='holiday_schedule') Sonn- und Feiertag Zeitplan festlegen
-        hr
-        form(method='post' enctype='multipart/form-data' action='/screen/noschedule' id='noschedule')
-            button(type='submit' class='btn btn-danger btn-block' form='noschedule') Zeitplan löschen
+        form(method='post' enctype='multipart/form-data' action='/screen/resetschedules' id='resetschedules')
+            button(type='submit' class='btn btn-danger btn-block' form='resetschedules') Zeitpläne löschen
     
     script(src='javascripts/confirm.js')
     script.
-        custom_confirm('#noschedule', 'Zeitplan', 'Soll der Zeitplan wirklich gelöscht werden?', 'Nein', 'Ja');
+        custom_confirm('#resetschedules', 'Zeitplan', 'Sollen wirklich alle Zeitpläne gelöscht werden?', 'Nein', 'Ja');
