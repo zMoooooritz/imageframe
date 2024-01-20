@@ -16,14 +16,6 @@ const ScheduleType = Object.freeze({
     HOLIDAY: "holiday",
 })
 
-function toStorageKey(schedule, event) {
-    if (event == EventType.START) {
-        return schedule + "_start_time";
-    } else {
-        return schedule + "_end_time";
-    }
-}
-
 class Schedule {
 
     constructor() {
@@ -37,12 +29,12 @@ class Schedule {
     async scheduleNextEvent(executeNow) {
         await kvstore.load();
         var data = {
-            estart: kvstore.get(toStorageKey(ScheduleType.EVERYDAY, EventType.START)),
-            eend: kvstore.get(toStorageKey(ScheduleType.EVERYDAY, EventType.END)),
-            wstart: kvstore.get(toStorageKey(ScheduleType.WORKDAY, EventType.START)),
-            wend: kvstore.get(toStorageKey(ScheduleType.WORKDAY, EventType.END)),
-            hstart: kvstore.get(toStorageKey(ScheduleType.HOLIDAY, EventType.START)),
-            hend: kvstore.get(toStorageKey(ScheduleType.HOLIDAY, EventType.END)),
+            estart: await this.getTime(ScheduleType.EVERYDAY, EventType.START),
+            eend: await this.getTime(ScheduleType.EVERYDAY, EventType.END),
+            wstart: await this.getTime(ScheduleType.WORKDAY, EventType.START),
+            wend: await this.getTime(ScheduleType.WORKDAY, EventType.END),
+            hstart: await this.getTime(ScheduleType.HOLIDAY, EventType.START),
+            hend: await this.getTime(ScheduleType.HOLIDAY, EventType.END),
         }
 
         const { nextEventTime, nextEventType } = await dateHelper.getScheduleInformation(data);
@@ -59,6 +51,16 @@ class Schedule {
         }
 
         this.scheduleEvent(nextEventTime, shouldBeActive);
+    }
+
+    async getTime(scheduleType, eventType) {
+        const scheduleData = kvstore.get(scheduleType);
+
+        if (scheduleData === undefined) {
+            return undefined;
+        }
+
+        return scheduleData[eventType];
     }
 
     executeEvent(shouldBeActive) {
@@ -80,8 +82,10 @@ class Schedule {
 
     async setSchedule(schedule, start_time, end_time) {
         await kvstore.load();
-        kvstore.set(toStorageKey(schedule, EventType.START), start_time);
-        kvstore.set(toStorageKey(schedule, EventType.END), end_time);
+        kvstore.set(schedule, {
+            [EventType.START]: start_time,
+            [EventType.END]: end_time
+        })
         await kvstore.save();
 
         await this.integrateChanges();
@@ -89,22 +93,26 @@ class Schedule {
 
     async getSchedule(schedule) {
         await kvstore.load();
-        const start = kvstore.get(toStorageKey(schedule, EventType.START));
-        const end = kvstore.get(toStorageKey(schedule, EventType.END));
+        const scheduleData = kvstore.get(schedule);
+
+        if (scheduleData === undefined) {
+            return { start: undefined, end: undefined };
+        }
+
+        const start = kvstore.get(schedule)[EventType.START]
+        const end = kvstore.get(schedule)[EventType.END]
         return { start: start, end: end };
     }
 
     async clearSchedule(schedule) {
-        kvstore.del(toStorageKey(schedule, EventType.START));
-        kvstore.del(toStorageKey(schedule, EventType.END));
+        kvstore.del(schedule)
         await kvstore.save();
     }
 
     async clear() {
         await kvstore.load();
         Object.values(ScheduleType).forEach((stype) => {
-            kvstore.del(toStorageKey(stype, EventType.START));
-            kvstore.del(toStorageKey(stype, EventType.END));
+            kvstore.del(stype);
         });
         await kvstore.save();
 

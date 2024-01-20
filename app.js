@@ -40,25 +40,11 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.svg')));
 
 app.use('/', indexRouter);
 app.use('/slide', slideRouter);
-app.use('/slide/start', slideRouter);
 app.use('/image', imageRouter);
-app.use('/image/upload', imageRouter);
-app.use('/image/delete', imageRouter);
 app.use('/directory', directoryRouter);
-app.use('/directory/create', directoryRouter);
-app.use('/directory/rename', directoryRouter);
-app.use('/directory/delete', directoryRouter);
 app.use('/screen', screenRouter);
-app.use('/screen/on', screenRouter);
-app.use('/screen/off', screenRouter);
-app.use('/screen/dailyschedule', screenRouter);
-app.use('/screen/holidayschedule', screenRouter);
-app.use('/screen/noschedule', screenRouter);
 app.use('/power', powerRouter);
-app.use('/power/off', powerRouter);
-app.use('/power/reboot', powerRouter);
 app.use('/update', updateRouter);
-app.use('/update/software', updateRouter);
 
 app.use(function(req, res, next) {
     next(createError(404));
