@@ -2,7 +2,7 @@ extends layout
 
 mixin schedule(header, id, start_id, end_id, start_time, end_time)
     div(class='mt-3 mb-1')
-        span(class='badge btn-block rounded-pill bg-warning text-dark')= header
+        span(class='badge rounded-pill bg-warning text-dark')= header
     form(method='post' enctype='multipart/form-data' action='/screen/'+id id=id)
         div(class='input-group')
             div(class='input-group-prepend')
@@ -13,19 +13,19 @@ mixin schedule(header, id, start_id, end_id, start_time, end_time)
                 div(class='input-group-text') Endzeit
             input(type='time' class='form-control' id=end_id name=end_id value=end_time required oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
         div(class='top-pad row')
-            div(class='col')
-                button(type='submit' class='btn btn-danger btn-block' form=id name='mode' value='clear' formnovalidate) Löschen
-            div(class='col')
-                button(type='submit' class='btn btn-primary btn-block' form=id name='mode' value='set') Festlegen
+            div(class='col d-grid')
+                button(type='submit' class='btn btn-danger' form=id name='mode' value='clear' formnovalidate) Löschen
+            div(class='col d-grid')
+                button(type='submit' class='btn btn-primary' form=id name='mode' value='set') Festlegen
 
 block content
     div(class='container-fluid')
         div()
-            form(method='post' enctype='multipart/form-data' action='/screen/on')
-                button(type='submit' class='btn btn-success btn-block') Bildschirm einschalten
+            form(method='post' enctype='multipart/form-data' action='/screen/on' class='d-grid')
+                button(type='submit' class='btn btn-success') Bildschirm einschalten
         div(class='top-pad')
-            form(method='post' enctype='multipart/form-data' action='/screen/off')
-                button(type='submit' class='btn btn-warning btn-block') Bildschirm ausschalten
+            form(method='post' enctype='multipart/form-data' action='/screen/off' class='d-grid')
+                button(type='submit' class='btn btn-warning') Bildschirm ausschalten
         hr
 
         div(class='accordion' id='accordion')
@@ -34,8 +34,8 @@ block content
             +schedule('Sonn- und Feiertag', 'holidayschedule', 'hstime', 'hetime', holiday_start_time, holiday_end_time)
 
         hr
-        form(method='post' enctype='multipart/form-data' action='/screen/resetschedules' id='resetschedules')
-            button(type='submit' class='btn btn-danger btn-block' form='resetschedules') Zeitpläne löschen
+        form(method='post' enctype='multipart/form-data' action='/screen/resetschedules' id='resetschedules' class='d-grid')
+            button(type='submit' class='btn btn-danger' form='resetschedules') Zeitpläne löschen
     
     script(src='javascripts/confirm.js')
     script.

@@ -1,21 +1,21 @@
 extends layout
 
 block content
-    div(class='container-fluid')
-        a(role='button' class='btn btn-primary btn-block' href='/image') Bilder anpassen
-        a(role='button' class='btn btn-primary btn-block' href='/directory') Ordner verwalten
-        hr
-        a(role='button' class='btn btn-primary btn-block' href='/slide') Diashow
-        hr
-        a(role='button' class='btn btn-primary btn-block' href='/screen') Bildschirm
-        hr
-        form(method='post' enctype='multipart/form-data' action='/power/off' id='power_off')
-            button(type='submit' class='btn btn-warning btn-block') Bilderrahmen herunterfahren
-        form(method='post' enctype='multipart/form-data' action='/power/reboot' id='power_reboot' class='top-pad')
-            button(type='submit' class='btn btn-warning btn-block') Bilderrahmen neustarten
-        hr
-        a(role='button' class='btn btn-secondary btn-block' href='/update') Updates
-    
+    div(class='container-fluid d-grid gap-2')
+        a(role='button' class='btn btn-primary' href='/image') Bilder anpassen
+        a(role='button' class='btn btn-primary' href='/directory') Ordner verwalten
+        hr(class='border border-dark border-1 m-1')
+        a(role='button' class='btn btn-primary' href='/slide') Diashow
+        hr(class='border border-dark border-1 m-1')
+        a(role='button' class='btn btn-primary' href='/screen') Bildschirm
+        hr(class='border border-dark border-1 m-1')
+        form(method='post' enctype='multipart/form-data' action='/power/off' id='power_off' class='d-grid')
+            button(type='submit' class='btn btn-warning') Bilderrahmen herunterfahren
+        form(method='post' enctype='multipart/form-data' action='/power/reboot' id='power_reboot' class='d-grid')
+            button(type='submit' class='btn btn-warning') Bilderrahmen neustarten
+        hr(class='border border-dark border-1 m-1')
+        a(role='button' class='btn btn-secondary' href='/update') Updates
+
     script(src='javascripts/confirm.js')
     script.
         custom_confirm("#power_off", "Herunterfahren", "Soll der Bilderrahmen wirklich heruntergefahren werden?", "Nein", "Ja");

@@ -18,9 +18,10 @@ html(lang='de')
     body
         div(id='content')
             nav(class='navbar fixed-top navbar-dark bg-dark')
-                a(class='navbar-brand' href='/')
-                    img(src='images/favicon.svg' width='30' height='30' class='d-inline-block align-top' alt='')
-                    span()  #{title}
+                div(class='container-fluid bg-dark')
+                    a(class='navbar-brand' href='/')
+                        img(src='images/favicon.svg' width='30' height='30' class='d-inline-block align-top' alt='')
+                        span()  #{title}
 
             div(class='modal fade' id='modal' tabindex='-1' role='dialog' aria-labelledby='modal_header' aria-hidden='true')
                 div(class='modal-dialog modal-dialog-centered' role='document')

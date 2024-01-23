@@ -9,13 +9,12 @@ block content
                     option(value='' selected disabled hidden) -- Ordner auswählen --
                     each dir in dirs
                         option(value=dir) #{dir}
-            div(class='input-group top-pad')
-                div(class='custom-file')
-                    input(type='file' class='custom-file-input' id='fimgn' name='fimgn' multiple required oninvalid='this.setCustomValidity(\'Es muss mindestens ein Bild ausgewählt werden.\')')
-                    label(class='custom-file-label' for='fimgn' id='fimgl') Bilder
             div(class='top-pad')
-                button(type='submit' class='btn btn-primary btn-block') Bilder hochladen
-        hr
+                label(class='form-label' for='fimgn' id='fimgl') Bilder
+                input(type='file' class='form-control' id='fimgn' name='fimgn' multiple required oninvalid='this.setCustomValidity(\'Es muss mindestens ein Bild ausgewählt werden.\')')
+            div(class='d-grid top-pad')
+                button(type='submit' class='btn btn-primary') Bilder hochladen
+        hr(class='border border-dark border-1 m-1 mt-3 mb-2')
         form(method='post' enctype='multipart/form-data' action='/image/delete' id='image_delete')
             div()
                 label(for='fdird' class='sr-only') Ordner
@@ -27,8 +26,8 @@ block content
                 label(for='fimgd' class='sr-only') Bilder
                 select(class='form-control custom-select' id='fimgd' name='fimgd' size='5' multiple required oninvalid='this.setCustomValidity(\'Es muss mindestens ein Bild ausgewählt werden.\')')
                     option(value='' selected disabled hidden) -- Bilder auswählen --
-            div(class='top-pad')
-                button(type='submit' class='btn btn-danger btn-block' id='fimage_delete' disabled) Bilder löschen
+            div(class='top-pad d-grid')
+                button(type='submit' class='btn btn-danger' id='fimage_delete' disabled) Bilder löschen
     div(id='img_div' hidden) #{imgs}
 
     div(class='modal fade' id='pmodal' tabindex='-1' role='dialog' aria-labelledby='pmodal_header' aria-hidden='true')
@@ -90,5 +89,5 @@ block content
                     .text(imgCount + '/' + imgAll);
                 if (imgCount >= imgAll)
                     clearInterval(interval);
-            }, 5000);
+            }, 800);
         });

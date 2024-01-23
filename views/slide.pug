@@ -4,7 +4,7 @@ block content
     div(class='container-fluid')
         form(method='post' enctype='multipart/form-data' action='/slide/start' id='slide_start')
             label(for='fdirs' class='sr-only') Ordner
-            select(class='form-control' id='fdirs' name='fdirs' multiple required)
+            select(class='form-select' id='fdirs' name='fdirs' multiple required)
                 option(value='' selected disabled hidden) -- Ordner auswählen --
                 each dir in dirs
                     - if (sdirs.includes(dir))
@@ -12,26 +12,26 @@ block content
                     - else
                         option(value=dir) #{dir}
             hr
-            div(class='btn-group btn-group-toggle btn-block' data-toggle='buttons')
-                label(class='btn btn-toggle btn-outline-info') Zufällige Reihenfolge
-                    input(type='checkbox' id='frandom' name='frandom' checked=srandom autocomplete='off')
-            div(class='btn-group btn-group-toggle btn-block' data-toggle='buttons')
-                label(class='btn btn-toggle btn-outline-info') Bildname anzeigen
-                    input(type='checkbox' id='fname' name='fname' checked=snames autocomplete='off')
+            div(class='d-grid gap-2')
+                input(type='checkbox' class='btn-check' id='frandom' name='frandom' checked=srandom autocomplete='off')
+                label(class='btn btn-outline-info' for='frandom') Zufällige Reihenfolge
+
+                input(type='checkbox' class='btn-check' id='fname' name='fname' checked=snames autocomplete='off')
+                label(class='btn btn-outline-info' for='fname') Bildname anzeigen
+
             div(class='input-group top-pad')
-                div(class='input-group-prepend')
-                    span(class='input-group-text') Zeit pro Bild
+                span(class='input-group-text') Zeit pro Bild
                 input(type='number' class='form-control' min='5' max='300' value=stime === undefined ? 30 : stime id='ftime' name='ftime' autocomplete='off')
-                div(class='input-group-append')
-                    span(class='input-group-text') s
+                span(class='input-group-text') s
+
             div(class='input-group top-pad')
-                div(class='input-group-prepend')
-                    span(class='input-group-text') Übergangszeit
+                span(class='input-group-text') Übergangszeit
                 input(type='number' class='form-control' min='0' max='1000' value=sblend === undefined ? 200 : sblend id='fblend' name='fblend' autocomplete='off')
-                div(class='input-group-append')
-                    span(class='input-group-text') ms
+                span(class='input-group-text') ms
+
             br
-            button(type='submit' class='btn btn-success btn-block') Diashow starten
+            div(class='d-grid')
+                button(type='submit' class='btn btn-success') Diashow starten
     
     script.
         $('#slide_start').on('submit', function(event) {
