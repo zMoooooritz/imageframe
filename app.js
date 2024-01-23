@@ -1,12 +1,19 @@
 const createError = require('http-errors');
 const express = require('express');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const favicon = require('serve-favicon')
 
-global.__basedir = path.resolve(__dirname);
+if (process.env.NODE_ENV === 'development') {
+    global.__projectBase = path.resolve(__dirname);
+    global.__dataBase = path.join(os.homedir(), "imageframe");
+} else {
+    global.__projectBase = path.resolve(__dirname);
+    global.__dataBase = os.homedir();
+}
 
 const config = require('./util/config');
 const {schedule, ScheduleType} = require('./util/schedule');
