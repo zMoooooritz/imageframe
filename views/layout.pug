@@ -1,5 +1,5 @@
 doctype html
-html(lang='de')
+html(lang='de' data-bs-theme='dark')
     head
         title=title
         link(rel='stylesheet', href='/stylesheets/style.css')
@@ -10,17 +10,17 @@ html(lang='de')
         link(rel='manifest' href='/manifest.json')
         link(rel='mask-icon' href='images/safari-pinned-tab.svg' color='#5bbad5')
 
-        meta(name='theme-color' content='#ab4b4b')
         meta(name='viewport' content='width=device-width, initial-scale=1')
 
         script(src='jquery.min.js')
         script(src='js/bootstrap.min.js')
     body
         div(id='content')
-            nav(class='navbar fixed-top navbar-dark bg-dark')
-                a(class='navbar-brand' href='/')
-                    img(src='images/favicon.svg' width='30' height='30' class='d-inline-block align-top' alt='')
-                    span()  #{title}
+            nav(class='navbar fixed-top' style='background-color: #B85E32')
+                div(class='container-fluid')
+                    a(class='navbar-brand' href='/')
+                        img(src='images/favicon.svg' width='30' height='30' class='d-inline-block align-top' alt='')
+                        span()  #{title}
 
             div(class='modal fade' id='modal' tabindex='-1' role='dialog' aria-labelledby='modal_header' aria-hidden='true')
                 div(class='modal-dialog modal-dialog-centered' role='document')

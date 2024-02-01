@@ -1,19 +1,27 @@
 const exec = require('child_process').exec;
 
 function shutdown() {
-    exec("sudo shutdown now");
+    execute("sudo shutdown now");
 }
 
 function reboot() {
-    exec("sudo shutdown -r now");
+    execute("sudo shutdown -r now");
 }
 
 function displayOn() {
-    exec("vcgencmd display_power 1");
+    execute("vcgencmd display_power 1");
 }
 
 function displayOff() {
-    exec("vcgencmd display_power 0");
+    execute("vcgencmd display_power 0");
+}
+
+function execute(command) {
+    if (process.env.NODE_ENV === "development") {
+        console.log(command);
+    } else {
+        exec(command);
+    }
 }
 
 module.exports = {

@@ -2,9 +2,8 @@ extends layout
 
 block content
     div(class='container-fluid')
-        div()
-            form(method='post' enctype='multipart/form-data' action='/update/software' id='update_software')
-                button(type='submit' class='btn btn-warning btn-block') Software aktualisieren
+        form(method='post' enctype='multipart/form-data' action='/update/software' id='update_software' class='d-grid')
+            button(type='submit' class='btn btn-warning') Software aktualisieren
     
     script(src='javascripts/confirm.js')
     script.
