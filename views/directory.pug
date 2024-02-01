@@ -6,9 +6,9 @@ block content
             div()
                 label(for='fcreatedir' class='sr-only') Name für neuen Ordner
                 input(type='text' class='form-control' placeholder='Ordnername' autocomplete='off' id='fcreatedir' name='fcreatedir' pattern='[a-zA-Z0-9_-]+' required oninvalid='this.setCustomValidity(\'Es muss ein Ordnername eingegeben werden.\')')
-            div(class='top-pad d-grid')
+            div(class='pt-2 d-grid')
                 button(type='submit' class='btn btn-primary') Ordner erstellen
-        hr(class='border border-dark border-1 m-1 mt-3 mb-2')
+        hr(class='m-1 mt-3 mb-2')
         form(method='post' enctype='multipart/form-data' action='/directory/rename' id='directory_rename')
             div()
                 label(for='folddir' class='sr-only') Alter Ordner
@@ -16,12 +16,12 @@ block content
                     option(value='' selected disabled hidden) -- Ordner auswählen --
                     each dir in dirs
                         option(value=dir) #{dir}
-            div(class='top-pad')
+            div(class='pt-2')
                 label(for='fnewdir' class='sr-only') Neuer Ordner
                 input(type='text' class='form-control' placeholder='Neuer Ordernname' autocomplete='off' id='fnewdir' name='fnewdir' pattern='[a-zA-Z0-9_-]+' required)
-            div(class='top-pad d-grid')
+            div(class='pt-2 d-grid')
                 button(type='submit' class='btn btn-primary') Ordner umbenennen
-        hr(class='border border-dark border-1 m-1 mt-3 mb-2')
+        hr(class='m-1 mt-3 mb-2')
         form(method='post' enctype='multipart/form-data' action='/directory/delete' id='directory_delete')
             div()
                 label(for='fdeldir' class='sr-only') Name von Ordner
@@ -29,7 +29,7 @@ block content
                     option(value='' selected disabled hidden) -- Ordner auswählen --
                     each dir in dirs
                         option(value=dir) #{dir}
-            div(class='top-pad d-grid')
+            div(class='pt-2 d-grid')
                 button(type='submit' class='btn btn-danger' id='fdeldb') Ordner löschen
 
     script(src='javascripts/confirm.js')

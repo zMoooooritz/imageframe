@@ -4,16 +4,16 @@ block content
     div(class='container-fluid d-grid gap-2')
         a(role='button' class='btn btn-primary' href='/image') Bilder anpassen
         a(role='button' class='btn btn-primary' href='/directory') Ordner verwalten
-        hr(class='border border-dark border-1 m-1')
+        hr(class='m-1')
         a(role='button' class='btn btn-primary' href='/slide') Diashow
-        hr(class='border border-dark border-1 m-1')
+        hr(class='m-1')
         a(role='button' class='btn btn-primary' href='/screen') Bildschirm
-        hr(class='border border-dark border-1 m-1')
+        hr(class='m-1')
         form(method='post' enctype='multipart/form-data' action='/power/off' id='power_off' class='d-grid')
             button(type='submit' class='btn btn-warning') Bilderrahmen herunterfahren
         form(method='post' enctype='multipart/form-data' action='/power/reboot' id='power_reboot' class='d-grid')
             button(type='submit' class='btn btn-warning') Bilderrahmen neustarten
-        hr(class='border border-dark border-1 m-1')
+        hr(class='m-1')
         a(role='button' class='btn btn-secondary' href='/update') Updates
 
     script(src='javascripts/confirm.js')
