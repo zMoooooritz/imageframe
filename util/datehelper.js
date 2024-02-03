@@ -2,18 +2,11 @@
 const retryFetch = require('./fetcher');
 const data = require('./data');
 
-const TIMEZONE_OFFSET = 1
-
-// ugly as hell
-// cron does handle the dates time zone aware
-// my code does not, since the user is inputting time zone'd data I need to offset it here in order for the calculations to work
-// quite possibly there is a proper and nice solution for this problem
-// but I don't want to deal with time zone issues anymore...
-
 class DateHelper {
 
-    async getNextEvent(schedules) {
+    async getCurrentAndNextEvent(schedules) {
         var holidayDates = await this.getNextHolidayDates();
+        const noneEvent = new data.Event(new Date(), data.EventActions.NONE, {})
 
         if (Array.isArray(schedules)) {
             var events = [];
@@ -51,15 +44,28 @@ class DateHelper {
             events.sort((e1, e2) => e1.date - e2.date);
 
             const now = new Date();
-            now.setHours(now.getHours() + TIMEZONE_OFFSET);
+
+            var activeSchedules = 0;
+            var lastStartEvent = noneEvent;
             for (const event of events) {
-                if (event.date > now)
-                    return event
+                if (event.date > now) {
+                    if (activeSchedules > 0)
+                        return [lastStartEvent, event]
+                    else
+                        return [noneEvent, event]
+                }
+
+                if (event.action == data.EventActions.START) {
+                    activeSchedules += 1;
+                    lastStartEvent = event;
+                }
+                if (event.action == data.EventActions.STOP)
+                    activeSchedules = Math.max(activeSchedules-1, 0);
             }
 
-            return new data.Event(new Date(), data.EventActions.NONE, {})
+            return [lastStartEvent, noneEvent];
         } else {
-            return new data.Event(new Date(), data.EventActions.NONE, {})
+            return [noneEvent, noneEvent];
         }
     }
 
