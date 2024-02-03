@@ -21,8 +21,6 @@ class Scheduler {
 
         const event = await dateHelper.getNextEvent(schedules);
 
-        console.log(event);
-
         if (event.action === data.EventActions.NONE) {
             system.displayOff();
             return;

@@ -21,7 +21,7 @@ router.post('/save', upload.none(), async function(req, res, next) {
     var ms = data.ModeSlide.FromData(req.body);
 
     await kvStore.load();
-    var defaults = kvStore.get("defaults");
+    var defaults = kvStore.getDefault("defaults", {});
     defaults["slide"] = ms;
     kvStore.set("defaults", defaults);
     await kvStore.save();

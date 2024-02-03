@@ -10,7 +10,7 @@ const data = require('../util/data');
 
 router.get('/', async function(req, res, next) {
     await kvStore.load();
-    var scheduleData = kvStore.get("automation", [])
+    var scheduleData = kvStore.getDefault("automation", [])
     for (var i = 0; i < scheduleData.length; i++) {
         scheduleData[i]["schedulingInformation"]["startTime"] = convertTime(scheduleData[i]["schedulingInformation"], "startTime");
     }
@@ -35,14 +35,14 @@ function convertTime(data, entry) {
 }
 
 router.post('/save', upload.none(), async function(req, res, next) {
-    var data = req.body;
+    var reqData = req.body;
     await kvStore.load();
 
     var schedules = [];
-    if ("SCHEDULE_NAME" in data) {
-        for (const [index, v] of Object.entries(data.SCHEDULE_NAME)) {
+    if ("SCHEDULE_NAME" in reqData) {
+        for (const [index, v] of Object.entries(reqData.SCHEDULE_NAME)) {
             var extractedData = {};
-            for (const [category, categoryData] of Object.entries(data)) {
+            for (const [category, categoryData] of Object.entries(reqData)) {
                 extractedData[category] = index in categoryData ? categoryData[index] : undefined;
             }
             schedules.push(data.Schedule.FromData(extractedData));

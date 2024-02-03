@@ -14,7 +14,7 @@ class KeyValueStore {
             this.data = JSON.parse(content);
         } catch (error) {
             this.data = {};
-            console.log("Unable to load key-values ", error)
+            console.log("Unable to load key-values")
         }
     }
 
@@ -23,7 +23,7 @@ class KeyValueStore {
             const content = JSON.stringify(this.data, null, 2);
             await fs.writeFile(this.filePath, content, 'utf-8');
         } catch (error) {
-            console.log("Unable to store key-values ", error)
+            console.log("Unable to store key-values")
         }
     }
 
