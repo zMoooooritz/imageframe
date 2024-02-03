@@ -1,19 +1,29 @@
 const exec = require('child_process').exec;
 
-function shutdown() {
-    execute("sudo shutdown now");
-}
+class System {
+    static shutdown() {
+        execute("sudo shutdown now");
+    }
 
-function reboot() {
-    execute("sudo shutdown -r now");
-}
+    static reboot() {
+        execute("sudo shutdown -r now");
+    }
 
-function displayOn() {
-    execute("vcgencmd display_power 1");
-}
+    static displayOn() {
+        execute("vcgencmd display_power 1");
+    }
 
-function displayOff() {
-    execute("vcgencmd display_power 0");
+    static displayOff() {
+        execute("vcgencmd display_power 0");
+    }
+
+    static startSlideshow(options) {
+        execute(`fbi -nointeractive -a -T 1 -cachemem 100 ${options}`);
+    }
+
+    static stopSlideshow() {
+        execute(`killall -q -KILL fbi`);
+    }
 }
 
 function execute(command) {
@@ -24,9 +34,4 @@ function execute(command) {
     }
 }
 
-module.exports = {
-    shutdown,
-    reboot,
-    displayOn,
-    displayOff,
-}
+module.exports = System

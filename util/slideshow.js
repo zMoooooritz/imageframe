@@ -1,9 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const exec = require('child_process').exec;
 const config = require('./config');
 const storage = require('./storage');
-const kvstore = require('./kvstore');
+const system = require('./system');
 
 class Slideshow {
 
@@ -11,40 +10,36 @@ class Slideshow {
         this.isActive = false;
     }
 
-    restart() {
+    async restart(cfg) {
         this.stop();
-        this.start();
+        this.start(cfg);
     }
 
-    start() {
+    async start(cfg) {
         this.isActive = true;
 
-        const slideRandom = kvstore.getDefault("slide_random", true);
-        const slideTime = kvstore.getDefault("slide_time", 30);
-        const slideBlend = kvstore.getDefault("slide_blend", 200);
-        const slideNames = kvstore.getDefault("slide_names", false);
-        const slideDirs = kvstore.getDefault("slide_dirs", []);
-        buildConfigFile(slideDirs);
+        buildConfigFile(cfg.directories);
 
         var options = "";
-        options += slideRandom ? "-random " : "-norandom ";
-        options += `-timeout ${slideTime} `;
-        options += `-blend ${slideBlend} `;
-        options += slideNames ? "-verbose " : "-noverbose ";
+        options += cfg.doRandom ? "-random " : "-norandom ";
+        options += `-timeout ${cfg.timePerSlide} `;
+        options += `-blend ${cfg.transitionTime} `;
+        options += cfg.showNames ? "-verbose " : "-noverbose ";
         options += `-list ${config.getImageListFilePath()}`;
 
         setTimeout(function() {
-            exec(`fbi -nointeractive -a -T 1 -cachemem 100 ${options}`);
+            system.startSlideshow(options);
         }, 1000);
     }
 
-    stop() {
+    async stop() {
         this.isActive = false;
 
-        exec(`killall -q -KILL fbi`);
+        system.stopSlideshow();
     }
 
 }
+
 function buildConfigFile(directories) {
     data = "";
     directories.forEach((directory) => {

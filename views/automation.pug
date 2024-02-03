@@ -1,0 +1,152 @@
+extends layout
+
+mixin accordionEntry(id, data)
+    div(class='accordion-item' class=id=='TEMPLATE_ID' ? 'd-none' : 'd-block' id='ACCORDION_ITEM['+id+']')
+        h2(class='accordion-header')
+            button(class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#ACCORDION_COLLAPSE_'+id aria-expaned='false' aria-controls='ACCORDION_COLLAPSE_'+id id='ACCORDION_HEADER['+id+']')= data.name
+        div(class='accordion-collapse collapse' id='ACCORDION_COLLAPSE_'+id data-bs-parent='')
+            div(class='accordion-body')
+                div(class='row pb-2')
+                    div(class='col d-grid')
+                        input(type='text' class='form-control' placeholder='Name' id='SCHEDULE_NAME['+id+']' name='SCHEDULE_NAME['+id+']' oninput='updateHeader(\''+id+'\')' value=data.name)
+                    div(class='col d-grid')
+                        button(type='button' class='btn btn-danger', id='REMOVE_ITEM['+id+']' onclick='deleteEntry(\''+id+'\')') Löschen
+                hr
+                div(class='')
+                    select(class='form-select' id='DAYS_SELECTED['+id+']' name='DAYS_SELECTED['+id+']' multiple)
+                        option(value='' selected hidden) -- Tage auswählen --
+                        option(value='monday' selected= data.schedulingInformation.days.monday) Montag
+                        option(value='tuesday' selected= data.schedulingInformation.days.tuesday) Dienstag
+                        option(value='wednesday' selected= data.schedulingInformation.days.wednesday) Mittwoch
+                        option(value='thursday' selected= data.schedulingInformation.days.thursday) Donnerstag
+                        option(value='friday' selected= data.schedulingInformation.days.friday) Freitag
+                        option(value='saturday' selected= data.schedulingInformation.days.saturday) Samstag
+                        option(value='sunday' selected= data.schedulingInformation.days.sunday) Sonntag
+                div(class='d-grid pt-2')
+                    div(class='btn-group' role='group' aria-label='Basic radio toggle button group')
+                        input(type='radio' class='btn-check' name='HOLIDAY_SELECTION['+id+']' id='NO_HOLIDAY_SELECTED['+id+']' autocomplete='off' value="off" checked= data.schedulingInformation.holidays=='off')
+                        label(class='btn btn-outline-info' for='NO_HOLIDAY_SELECTED['+id+']' id='NO_HOLIDAY_SELECTED_LABEL['+id+']') Ohne Feiertag
+                        input(type='radio' class='btn-check' name='HOLIDAY_SELECTION['+id+']' id='IG_HOLIDAY_SELECTED['+id+']' autocomplete='off' value="ignore" checked= data.schedulingInformation.holidays=='ignore'||id=='TEMPLATE_ID')
+                        label(class='btn btn-outline-info' for='IG_HOLIDAY_SELECTED['+id+']' id='IG_HOLIDAY_SELECTED_LABEL['+id+']') Ignorieren
+                        input(type='radio' class='btn-check' name='HOLIDAY_SELECTION['+id+']' id='HOLIDAY_SELECTED['+id+']' autocomplete='off' value="on" checked= data.schedulingInformation.holidays=='on')
+                        label(class='btn btn-outline-info' for='HOLIDAY_SELECTED['+id+']' id='HOLIDAY_SELECTED_LABEL['+id+']') Feiertag
+                div(class='input-group pt-2')
+                    div(class='input-group-prepend')
+                        div(class='input-group-text') Startzeit
+                    input(type='time' class='form-control' id='START_TIME['+id+']' name='START_TIME['+id+']' value=data.schedulingInformation.startTime oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
+                div(class='input-group pt-2')
+                    span(class='input-group-text') Dauer
+                    input(type='number' class='form-control' min='0' max='1440' id='DURATION['+id+']' name='DURATION['+id+']' value=data.schedulingInformation.duration autocomplete='off')
+                    span(class='input-group-text') Minuten
+                hr
+                div(class='')
+                    select(class='form-select' id='SELECTED_MODE['+id+']' name='SELECTED_MODE['+id+']' oninvalid='this.setCustomValidity(\'Es muss ein Modus ausgewählt werden\')')
+                        option(value='' selected disabled hidden) -- Modus auswählen --
+                        option(value='slide' selected= data.modeName=='slide') Diashow
+                div(class='pt-2')
+                    select(class='form-select' id='SLIDE_DIRS['+id+']' name='SLIDE_DIRS['+id+']' multiple)
+                        option(value='' selected disabled hidden) -- Ordner auswählen --
+                        each dir in imageContainers
+                            - if (data.modeData.directories.includes(dir))
+                                option(value=dir selected) #{dir}
+                            - else
+                                option(value=dir) #{dir}
+
+                div(class='d-grid gap-2 pt-2')
+                    input(type='checkbox' class='btn-check' id='SLIDE_RANDOM['+id+']' name='SLIDE_RANDOM['+id+']' checked= data.modeData.doRandom||id=='TEMPLATE_ID' autocomplete='off')
+                    label(class='btn btn-outline-info' for='SLIDE_RANDOM['+id+']' id='SLIDE_RANDOM_LABEL['+id+']') Zufällige Reihenfolge
+
+                    input(type='checkbox' class='btn-check' id='SLIDE_NAMES['+id+']' name='SLIDE_NAMES['+id+']' checked= data.modeData.showNames autocomplete='off')
+                    label(class='btn btn-outline-info' for='SLIDE_NAMES['+id+']' id='SLIDE_NAMES_LABEL['+id+']') Bildname anzeigen
+
+                div(class='input-group pt-2')
+                    span(class='input-group-text') Zeit pro Bild
+                    input(type='number' class='form-control' min='5' max='300' id='SLIDE_IMAGE_TIME['+id+']' name='SLIDE_IMAGE_TIME['+id+']' value=data.modeData.timePerSlide autocomplete='off')
+                    span(class='input-group-text') s
+
+                div(class='input-group pt-2')
+                    span(class='input-group-text') Übergangszeit
+                    input(type='number' class='form-control' min='0' max='1000' id='SLIDE_TRANSITION_TIME['+id+']' name='SLIDE_TRANSITION_TIME['+id+']' value=data.modeData.transitionTime autocomplete='off')
+                    span(class='input-group-text') ms
+
+
+block content
+    div(class='container-fluid')
+        div(class='d-grid pt-2 pb-2')
+            button(type='button' class='btn btn-primary' onclick='createEntry()') Neue Schedule
+        +accordionEntry('TEMPLATE_ID', emptySchedule)
+        form(method='post' enctype='multipart/form-data' action='/automation/save')
+            div(class='accordion' id='FORM_ACCORDION')
+                each schedule, index in scheduleData
+                    +accordionEntry("item"+index, schedule)
+
+            div(class='d-grid pt-2')
+                button(type='submit' class='btn btn-success') Speichern
+
+    script.
+        let items = [];
+        let currentIndex = !{scheduleData.length}
+        const TEMPLATE='TEMPLATE_ID'
+
+        function updateHeader(id) {
+            $('#ACCORDION_HEADER\\['+id+'\\]').text($('#SCHEDULE_NAME\\['+id+'\\]').val());
+        }
+
+        function deleteEntry(id) {
+            $('#ACCORDION_ITEM\\['+id+'\\]').remove();
+        }
+
+        function replaceId(template, name, id) {
+            template.find('#'+name+'\\['+TEMPLATE+'\\]').attr('id', name+'['+id+']')
+        }
+
+        function setName(template, templateName, id) {
+            template.find('#'+templateName+'\\['+id+'\\]').attr('name', templateName+'['+id+']');
+        }
+
+        function setFor(template, templateName, targetName, id) {
+            template.find('#'+templateName+'\\['+id+'\\]').attr('for', targetName+'['+id+']');
+        }
+
+        function createEntry() {
+            items.push(currentIndex);
+            identifier = 'item'+currentIndex;
+
+            var template = $('#ACCORDION_ITEM\\[TEMPLATE_ID\\]').clone()
+            template.attr('id', 'ACCORDION_ITEM['+identifier+']');
+            template.appendTo('#FORM_ACCORDION');
+
+            const replId = [ 'ACCORDION_HEADER', 'SCHEDULE_NAME', 'REMOVE_ITEM', 'DAYS_SELECTED', 'NO_HOLIDAY_SELECTED', 'IG_HOLIDAY_SELECTED', 'HOLIDAY_SELECTED', 'NO_HOLIDAY_SELECTED_LABEL', 'IG_HOLIDAY_SELECTED_LABEL', 'HOLIDAY_SELECTED_LABEL', 'START_TIME', 'DURATION', 'SELECTED_MODE', 'SLIDE_DIRS', 'SLIDE_RANDOM', 'SLIDE_RANDOM_LABEL', 'SLIDE_NAMES', 'SLIDE_NAMES_LABEL', 'SLIDE_IMAGE_TIME', 'SLIDE_TRANSITION_TIME' ]
+            const replName = [ 'SCHEDULE_NAME', 'DAYS_SELECTED', 'START_TIME', 'DURATION', 'SELECTED_MODE', 'SLIDE_DIRS', 'SLIDE_RANDOM', 'SLIDE_NAMES', 'SLIDE_IMAGE_TIME', 'SLIDE_TRANSITION_TIME' ]
+
+            replId.forEach(function(item, index) {
+                replaceId(template, item, identifier);
+            });
+            replName.forEach(function(item, index) {
+                setName(template, item, identifier);
+            });
+
+            template.find('#NO_HOLIDAY_SELECTED\\['+identifier+'\\]').attr('name', 'HOLIDAY_SELECTION['+identifier+']');
+            template.find('#IG_HOLIDAY_SELECTED\\['+identifier+'\\]').attr('name', 'HOLIDAY_SELECTION['+identifier+']');
+            template.find('#HOLIDAY_SELECTED\\['+identifier+'\\]').attr('name', 'HOLIDAY_SELECTION['+identifier+']');
+
+            setFor(template, 'NO_HOLIDAY_SELECTED_LABEL', 'NO_HOLIDAY_SELECTED', identifier);
+            setFor(template, 'IG_HOLIDAY_SELECTED_LABEL', 'IG_HOLIDAY_SELECTED', identifier);
+            setFor(template, 'HOLIDAY_SELECTED_LABEL', 'HOLIDAY_SELECTED', identifier);
+            setFor(template, 'SLIDE_RANDOM_LABEL', 'SLIDE_RANDOM', identifier);
+            setFor(template, 'SLIDE_NAME_LABEL', 'SLIDE_NAME', identifier);
+
+            template.find('#ACCORDION_COLLAPSE_'+TEMPLATE).attr('id', 'ACCORDION_COLLAPSE_'+identifier);
+            template.find('#ACCORDION_COLLAPSE_'+identifier).attr('data-bs-parent', '#FORM_ACCORDION');
+            template.find('#ACCORDION_HEADER\\['+identifier+'\\]').attr('data-bs-target', '#ACCORDION_COLLAPSE_'+identifier);
+            template.find('#ACCORDION_HEADER\\['+identifier+'\\]').attr('aria-controls', 'ACCORDION_COLLAPSE_'+identifier);
+            template.find('#ACCORDION_HEADER\\['+identifier+'\\]').text('Automatisierung #'+(currentIndex+1));
+            template.find('#SCHEDULE_NAME\\['+identifier+'\\]').attr('value', 'Automatisierung #'+(currentIndex+1));
+
+            template.find('#REMOVE_ITEM\\['+identifier+'\\]').attr('onclick', 'deleteEntry(\''+identifier+'\')')
+            template.find('#SCHEDULE_NAME\\['+identifier+'\\]').attr('oninput', 'updateHeader(\''+identifier+'\')')
+
+            template.toggleClass('d-none d-block');
+
+            currentIndex += 1;
+        }
