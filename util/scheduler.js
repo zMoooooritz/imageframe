@@ -12,21 +12,25 @@ class Scheduler {
     }
 
     async init() {
-        await this.reschedule()
+        await this.reschedule(true)
     }
 
-    async reschedule() {
+    async reschedule(executeNow) {
         await kvStore.load();
         var schedules = kvStore.getDefault("automation", []);
 
-        const event = await dateHelper.getNextEvent(schedules);
+        const [currEvent, nextEvent] = await dateHelper.getCurrentAndNextEvent(schedules);
 
-        if (event.action === data.EventActions.NONE) {
+        if (currEvent.action === data.EventActions.NONE) {
             system.displayOff();
-            return;
+        }
+        
+        if (executeNow) {
+            this.executeEvent(currEvent);
         }
 
-        this.scheduleEvent(event);
+        if (nextEvent.action !== data.EventActions.NONE)
+            this.scheduleEvent(nextEvent);
     }
 
     async executeEvent(event) {
@@ -35,9 +39,7 @@ class Scheduler {
         if (event.action == data.EventActions.START) {
             system.displayOn();
             if (eventData.mode == 'slide') {
-                if (!slideshow.isActive) {
-                    await slideshow.start(eventData.data);
-                }
+                await slideshow.restart(eventData.data);
             }
         }
 
@@ -75,7 +77,7 @@ function createNewJob(event) {
         async function() {
             console.log("Event:", event.action, "at", new Date(event.date).toISOString());
             scheduler.executeEvent(event);
-            await scheduler.reschedule();
+            await scheduler.reschedule(false);
         },
         null,
         null
