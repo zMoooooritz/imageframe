@@ -12,10 +12,10 @@ class Scheduler {
     }
 
     async init() {
-        await this.reschedule(true)
+        await this.reschedule()
     }
 
-    async reschedule(executeNow) {
+    async reschedule() {
         await kvStore.load();
         var schedules = kvStore.getDefault("automation", []);
 
@@ -26,17 +26,11 @@ class Scheduler {
             return;
         }
 
-        const shouldBeActive = event.action === data.EventActions.START;
-
-        if (executeNow) {
-            this.executeEvent(!shouldBeActive, event.data);
-        }
-
         this.scheduleEvent(event);
     }
 
     async executeEvent(event) {
-        var eventData = event.eventData;
+        var eventData = event.data;
 
         if (event.action == data.EventActions.START) {
             system.displayOn();
@@ -81,7 +75,7 @@ function createNewJob(event) {
         async function() {
             console.log("Event:", event.action, "at", new Date(event.date).toISOString());
             scheduler.executeEvent(event);
-            await scheduler.reschedule(false);
+            await scheduler.reschedule();
         },
         null,
         null
