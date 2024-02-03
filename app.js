@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const config = require('./util/config');
-const {schedule, ScheduleType} = require('./util/schedule');
+const scheduler = require('./util/scheduler');
 
 const indexRouter = require('./routes/index');
 const imageRouter = require('./routes/image');
@@ -24,6 +24,7 @@ const directoryRouter = require('./routes/directory');
 const slideRouter = require('./routes/slide');
 const screenRouter = require('./routes/screen');
 const powerRouter = require('./routes/power');
+const automationRouter = require('./routes/automation');
 const updateRouter = require('./routes/update');
 
 var app = express();
@@ -51,6 +52,7 @@ app.use('/image', imageRouter);
 app.use('/directory', directoryRouter);
 app.use('/screen', screenRouter);
 app.use('/power', powerRouter);
+app.use('/automation', automationRouter);
 app.use('/update', updateRouter);
 
 app.use(function(req, res, next) {
@@ -66,7 +68,7 @@ app.use(function(err, req, res, next) {
 });
 
 (async() => {
-    await schedule.init();
+    await scheduler.init();
 })();
 
 module.exports = app;
