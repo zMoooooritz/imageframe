@@ -45,9 +45,7 @@ class Scheduler {
 
         if (event.action == data.EventActions.STOP) {
             system.displayOff();
-            if (eventData.mode == 'slide') {
-                await slideshow.stop();
-            }
+            await slideshow.stop();
         }
     }
 
