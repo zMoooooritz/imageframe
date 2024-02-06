@@ -37,8 +37,8 @@ router.get('/', async function(req, res, next) {
     res.render('image', { title: 'Bilder' });
 });
 
-router.post('/upload', upload.array('fimgn'), function(req, res, next) {
-    storage.fixAndMove(req.body.fdirn);
+router.post('/upload', upload.array('fimgn'), async function(req, res, next) {
+    await storage.fixAndMove(req.body.fdirn);
 
     res.redirect('/image')
 });

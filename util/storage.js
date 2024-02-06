@@ -1,7 +1,10 @@
 const fs = require('fs')
 const path = require('path')
 const config = require('./config')
-const jo = require('jpeg-autorotate')
+const sharp = require('sharp')
+
+const WIDTH = 1920;
+const HEIGHT = 1080;
 
 class Storage {
 
@@ -53,28 +56,27 @@ class Storage {
         return images;
     }
 
-    fixAndMove(container) {
+    async fixAndMove(container) {
         const images = fs.readdirSync(config.getTmpImagePath());
 
-        const jpegs = images.filter((image) => {
-            const lower = image.toLowerCase();
-            return lower.endsWith(".jpg") || lower.endsWith(".jpeg");
-        });
-        jpegs.forEach((image) => {
-            jo.rotate(path.join(config.getTmpImagePath(), image), {})
-                .then(({buffer, orientation, dimensions, quality}) => {
-
-                })
-                .catch((error) => {
-                    console.log("Auto-Rotate-Error: " + error)
-                });
-        });
-
-        images.forEach((image) => {
+        for (const image of images) {
             const oldPath = path.join(config.getTmpImagePath(), image);
             const newPath = path.join(this.getContainerPath(container), image);
-            fs.renameSync(oldPath, newPath);
-        });
+
+            await sharp(oldPath)
+                .rotate()
+                .resize(WIDTH, HEIGHT, sharp.fit.contain)
+                .jpeg({quality: 100})
+                .toFile(newPath)
+                .catch(err => {console.log("Error while converting", image, err)});
+        };
+
+        images.forEach((image) => {
+            fs.unlinkSync(path.join(config.getTmpImagePath(), image), (err) => {
+                if (err)
+                    console.log("Unable to delete image");
+            });
+        })
     }
 
     deleteImages(container, images) {
