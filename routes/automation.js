@@ -52,8 +52,11 @@ router.post('/save', upload.none(), async function(req, res, next) {
     kvStore.set("automation", schedules);
     await kvStore.save();
 
-    await scheduler.reschedule(true);
+    res.redirect('/automation');
+});
 
+router.post('/apply', async function(req, res, next) {
+    await scheduler.reschedule(true);
     res.redirect('/automation');
 });
 
