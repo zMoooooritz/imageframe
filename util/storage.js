@@ -6,6 +6,8 @@ const sharp = require('sharp')
 const WIDTH = 1920;
 const HEIGHT = 1080;
 
+const FILE_SIZE_LIMIT = 8 * 1024 * 1024; // 8 MB
+
 class Storage {
 
     getContainerPath(name) {
@@ -58,10 +60,16 @@ class Storage {
 
     async fixAndMove(container) {
         const images = fs.readdirSync(config.getTmpImagePath());
+        sharp.cache(false);
 
         for (const image of images) {
             const oldPath = path.join(config.getTmpImagePath(), image);
             const newPath = path.join(this.getContainerPath(container), image);
+            const stats = fs.statSync(oldPath);
+            if (stats.size > FILE_SIZE_LIMIT) {
+                console.log("Dropping image since it is too big:", image);
+                continue;
+            }
 
             await sharp(oldPath)
                 .rotate()
@@ -73,8 +81,9 @@ class Storage {
 
         images.forEach((image) => {
             fs.unlinkSync(path.join(config.getTmpImagePath(), image), (err) => {
-                if (err)
-                    console.log("Unable to delete image");
+                if (err) {
+                    console.log("Unable to delete image:", image);
+                }
             });
         })
     }

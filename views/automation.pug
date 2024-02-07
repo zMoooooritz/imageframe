@@ -81,7 +81,11 @@ block content
                     +accordionEntry("item"+index, schedule)
 
             div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-success') Speichern
+                button(type='submit' class='btn btn-primary') Speichern
+        hr
+        form(method='post' enctype='multipart/form-data' action='/automation/apply')
+            div(class='d-grid pt-2')
+                button(type='submit' class='btn btn-success') Anwenden
 
     script.
         let items = [];
