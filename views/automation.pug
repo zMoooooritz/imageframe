@@ -14,7 +14,6 @@ mixin accordionEntry(id, data)
                 hr
                 div(class='')
                     select(class='form-select' id='DAYS_SELECTED['+id+']' name='DAYS_SELECTED['+id+']' multiple)
-                        option(value='' selected hidden) -- Tage auswählen --
                         option(value='monday' selected= data.schedulingInformation.days.monday) Montag
                         option(value='tuesday' selected= data.schedulingInformation.days.tuesday) Dienstag
                         option(value='wednesday' selected= data.schedulingInformation.days.wednesday) Mittwoch
@@ -45,7 +44,6 @@ mixin accordionEntry(id, data)
                         option(value='slide' selected= data.modeName=='slide') Diashow
                 div(class='pt-2')
                     select(class='form-select' id='SLIDE_DIRS['+id+']' name='SLIDE_DIRS['+id+']' multiple)
-                        option(value='' selected disabled hidden) -- Ordner auswählen --
                         each dir in imageContainers
                             - if (data.modeData.directories.includes(dir))
                                 option(value=dir selected) #{dir}

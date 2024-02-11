@@ -5,7 +5,6 @@ block content
         form(method='post' enctype='multipart/form-data' action='/slide/save' id='slide_save')
             div(class='pt-2')
                 select(class='form-select' id='SLIDE_DIRS' name='SLIDE_DIRS' multiple)
-                    option(value='' selected disabled hidden required) -- Ordner auswählen --
                     each dir in imageContainers
                         - if (data.directories.includes(dir))
                             option(value=dir selected) #{dir}
