@@ -1,7 +1,7 @@
 {
-    "short_name": "Bilderrahmen",
-    "name": "Bilderrahmen-Steuerung",
-    "description": "Steuerungssoftware für den Bilderrahmen",
+    "short_name": "imageframe",
+    "name": "imageframe",
+    "description": "Control software for the imageframe",
     "icons": [
         {
             "src": "images/android-chrome-192x192.png",

@@ -1,42 +1,43 @@
 extends layout
 
 block content
+    div(class='container-fluid d-grid gap-2')
     div(class='container-fluid')
         form(method='post' enctype='multipart/form-data' action='/image/upload' id='image_upload')
             div()
-                label(for='fdirn' class='sr-only') Ordner
-                select(class='form-control custom-select' id='fdirn' name='fdirn' required oninvalid='this.setCustomValidity(\'Es muss ein Ordner ausgewählt werden.\')')
-                    option(value='' selected disabled hidden) -- Ordner auswählen --
+                label(for='fdirn' class='sr-only') #{__('Directory')}
+                select(class='form-control custom-select' id='fdirn' name='fdirn' required)
+                    option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
                     each dir in dirs
                         option(value=dir) #{dir}
             div(class='pt-2')
-                label(class='form-label' for='fimgn' id='fimgl') Bilder
-                input(type='file' class='form-control' id='fimgn' name='fimgn' accept='image/png, image/jpeg' multiple required oninvalid='this.setCustomValidity(\'Es muss mindestens ein Bild ausgewählt werden.\')')
+                label(class='form-label' for='fimgn' id='fimgl') #{__('Images')}
+                input(type='file' class='form-control' id='fimgn' name='fimgn' accept='image/png, image/jpeg' multiple required)
             div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-primary') Bilder hochladen
+                button(type='submit' class='btn btn-primary') #{__('UploadImages')}
         hr(class='m-1 mt-3 mb-2')
         form(method='post' enctype='multipart/form-data' action='/image/delete' id='image_delete')
             div()
-                label(for='fdird' class='sr-only') Ordner
-                select(class='form-control custom-select' id='fdird' name='fdird' required oninvalid='this.setCustomValidity(\'Es muss ein Ordner ausgewählt werden.\')')
-                    option(value='' selected disabled hidden) -- Ordner auswählen --
+                label(for='fdird' class='sr-only') #{__('Directory')}
+                select(class='form-control custom-select' id='fdird' name='fdird' required)
+                    option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
                     each dir in dirs
                         option(value=dir) #{dir}
             div(class='pt-2')
-                label(for='fimgd' class='sr-only') Bilder
-                select(class='form-control custom-select' id='fimgd' name='fimgd' size='5' multiple required oninvalid='this.setCustomValidity(\'Es muss mindestens ein Bild ausgewählt werden.\')')
-                    option(value='' selected disabled hidden) -- Bilder auswählen --
+                label(for='fimgd' class='sr-only') #{__('Images')}
+                select(class='form-control custom-select' id='fimgd' name='fimgd' size='5' multiple required)
+                    option(value='' selected disabled hidden) > #{__('SelectImages')} <
             div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-danger' id='fimage_delete' disabled) Bilder löschen
+                button(type='submit' class='btn btn-danger' id='fimage_delete' disabled) #{__('DeleteImages')}
     div(id='img_div' hidden) #{imgs}
 
     div(class='modal fade' id='pmodal' tabindex='-1' role='dialog' aria-labelledby='pmodal_header' aria-hidden='true')
         div(class='modal-dialog modal-dialog-centered' role='document')
             div(class='modal-content')
                 div(class='modal-header')
-                    h5(class='modal-title' id='pmodal_header') Fortschritt
+                    h5(class='modal-title' id='pmodal_header') #{__('Progress')}
                 div(class='modal-body' id='pmodal_text')
-                    div() Bilder werden hochgeladen...
+                    div() #{__('ImagesAreUploaded')}...
                     br
                     div(class="progress" style='height: 25px;')
                         div(class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id='progress')
@@ -56,13 +57,9 @@ block content
             $('#fimage_delete').prop('disabled', !hasSelected);
         });
 
-        $('#fimgn').on('input', function() {
-            $('#fimgl').html($('#fimgn')[0].files.length + ' ausgewählt');
-        });
-
         var img_data = JSON.parse($('#img_div').html())
         $('#fdird').on('input', function() {
-            $('#fimgd').empty().append('<option selected disabled hidden value=\'0\'>-- Bilder auswählen --</option>');
+            $('#fimgd').empty();
 
             var selected = $('#fdird').val();
             var imgs = img_data[selected];
@@ -71,7 +68,7 @@ block content
             });
         });
 
-        custom_confirm('#image_delete', 'Bilder löschen', 'Sollen die ausgewählten Bilder wirklich gelöscht werden?', 'Nein', 'Ja');
+        custom_confirm('#image_delete', '#{__('DeleteImages')}', '#{__('ImagesDeleteConfirm')}', '#{__('No')}', '#{__('Yes')}');
 
         $('#image_upload').on('submit', function() {
             $('#pmodal').modal({

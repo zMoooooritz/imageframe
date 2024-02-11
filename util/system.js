@@ -1,4 +1,6 @@
 const exec = require('child_process').exec;
+const path = require('path');
+const config = require('./config');
 
 class System {
     static shutdown() {
@@ -23,6 +25,10 @@ class System {
 
     static stopSlideshow() {
         execute(`killall -q -KILL fbi`);
+    }
+
+    static update() {
+        execute(path.join(config.getScriptPath(), "update.sh") + " software");
     }
 }
 

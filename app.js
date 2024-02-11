@@ -6,6 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const favicon = require('serve-favicon')
+const i18n = require('i18n');
 
 if (process.env.NODE_ENV === 'development') {
     global.__projectBase = path.resolve(__dirname);
@@ -29,6 +30,12 @@ const updateRouter = require('./routes/update');
 
 var app = express();
 
+i18n.configure({
+    locales: ['en', 'de'],
+    directory: path.join(__dirname, 'locales'),
+    register: global,
+})
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -45,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules', 'bootstrap', 'dist')));
 app.use(express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist')));
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.svg')));
+app.use(i18n.init);
 
 app.use('/', indexRouter);
 app.use('/slide', slideRouter);
@@ -64,7 +72,7 @@ app.use(function(err, req, res, next) {
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
     res.status(err.status || 500);
-    res.render('error', { title: 'Fehler' });
+    res.render('error', { title: res.__('Error') });
 });
 
 (async() => {

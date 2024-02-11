@@ -10,38 +10,37 @@ mixin accordionEntry(id, data)
                     div(class='col d-grid')
                         input(type='text' class='form-control' placeholder='Name' id='SCHEDULE_NAME['+id+']' name='SCHEDULE_NAME['+id+']' oninput='updateHeader(\''+id+'\')' value=data.name)
                     div(class='col d-grid')
-                        button(type='button' class='btn btn-danger', id='REMOVE_ITEM['+id+']' onclick='deleteEntry(\''+id+'\')') Löschen
+                        button(type='button' class='btn btn-danger', id='REMOVE_ITEM['+id+']' onclick='deleteEntry(\''+id+'\')') #{__('Delete')}
                 hr
                 div(class='')
                     select(class='form-select' id='DAYS_SELECTED['+id+']' name='DAYS_SELECTED['+id+']' multiple)
-                        option(value='monday' selected= data.schedulingInformation.days.monday) Montag
-                        option(value='tuesday' selected= data.schedulingInformation.days.tuesday) Dienstag
-                        option(value='wednesday' selected= data.schedulingInformation.days.wednesday) Mittwoch
-                        option(value='thursday' selected= data.schedulingInformation.days.thursday) Donnerstag
-                        option(value='friday' selected= data.schedulingInformation.days.friday) Freitag
-                        option(value='saturday' selected= data.schedulingInformation.days.saturday) Samstag
-                        option(value='sunday' selected= data.schedulingInformation.days.sunday) Sonntag
+                        option(value='monday' selected= data.schedulingInformation.days.monday) #{__('Monday')}
+                        option(value='tuesday' selected= data.schedulingInformation.days.tuesday) #{__('Tuesday')}
+                        option(value='wednesday' selected= data.schedulingInformation.days.wednesday) #{__('Wednesday')}
+                        option(value='thursday' selected= data.schedulingInformation.days.thursday) #{__('Thursday')}
+                        option(value='friday' selected= data.schedulingInformation.days.friday) #{__('Friday')}
+                        option(value='saturday' selected= data.schedulingInformation.days.saturday) #{__('Saturday')}
+                        option(value='sunday' selected= data.schedulingInformation.days.sunday) #{__('Sunday')}
                 div(class='d-grid pt-2')
-                    div(class='btn-group' role='group' aria-label='Basic radio toggle button group')
+                    div(class='btn-group' role='group')
                         input(type='radio' class='btn-check' name='HOLIDAY_SELECTION['+id+']' id='NO_HOLIDAY_SELECTED['+id+']' autocomplete='off' value="off" checked= data.schedulingInformation.holidays=='off')
-                        label(class='btn btn-outline-info' for='NO_HOLIDAY_SELECTED['+id+']' id='NO_HOLIDAY_SELECTED_LABEL['+id+']') Ohne Feiertag
+                        label(class='btn btn-outline-info' for='NO_HOLIDAY_SELECTED['+id+']' id='NO_HOLIDAY_SELECTED_LABEL['+id+']') #{__('NoHolidays')}
                         input(type='radio' class='btn-check' name='HOLIDAY_SELECTION['+id+']' id='IG_HOLIDAY_SELECTED['+id+']' autocomplete='off' value="ignore" checked= data.schedulingInformation.holidays=='ignore'||id=='TEMPLATE_ID')
-                        label(class='btn btn-outline-info' for='IG_HOLIDAY_SELECTED['+id+']' id='IG_HOLIDAY_SELECTED_LABEL['+id+']') Ignorieren
+                        label(class='btn btn-outline-info' for='IG_HOLIDAY_SELECTED['+id+']' id='IG_HOLIDAY_SELECTED_LABEL['+id+']') #{__('Ignore')}
                         input(type='radio' class='btn-check' name='HOLIDAY_SELECTION['+id+']' id='HOLIDAY_SELECTED['+id+']' autocomplete='off' value="on" checked= data.schedulingInformation.holidays=='on')
-                        label(class='btn btn-outline-info' for='HOLIDAY_SELECTED['+id+']' id='HOLIDAY_SELECTED_LABEL['+id+']') Feiertag
+                        label(class='btn btn-outline-info' for='HOLIDAY_SELECTED['+id+']' id='HOLIDAY_SELECTED_LABEL['+id+']') #{__('Holidays')}
                 div(class='input-group pt-2')
                     div(class='input-group-prepend')
-                        div(class='input-group-text') Startzeit
-                    input(type='time' class='form-control' id='START_TIME['+id+']' name='START_TIME['+id+']' value=data.schedulingInformation.startTime oninvalid='this.setCustomValidity(\'Es muss ein Uhrzeit ausgewählt werden.\')')
+                        div(class='input-group-text') #{__('StartTime')}
+                    input(type='time' class='form-control' id='START_TIME['+id+']' name='START_TIME['+id+']' value=data.schedulingInformation.startTime)
                 div(class='input-group pt-2')
-                    span(class='input-group-text') Dauer
+                    span(class='input-group-text') #{__('Duration')}
                     input(type='number' class='form-control' min='0' max='1440' id='DURATION['+id+']' name='DURATION['+id+']' value=data.schedulingInformation.duration autocomplete='off')
-                    span(class='input-group-text') Minuten
+                    span(class='input-group-text') #{__('Minutes')}
                 hr
                 div(class='')
-                    select(class='form-select' id='SELECTED_MODE['+id+']' name='SELECTED_MODE['+id+']' oninvalid='this.setCustomValidity(\'Es muss ein Modus ausgewählt werden\')')
-                        option(value='' selected disabled hidden) -- Modus auswählen --
-                        option(value='slide' selected= data.modeName=='slide') Diashow
+                    select(class='form-select' id='SELECTED_MODE['+id+']' name='SELECTED_MODE['+id+']')
+                        option(value='slide' selected= data.modeName=='slide') #{__('Slideshow')}
                 div(class='pt-2')
                     select(class='form-select' id='SLIDE_DIRS['+id+']' name='SLIDE_DIRS['+id+']' multiple)
                         each dir in imageContainers
@@ -52,18 +51,18 @@ mixin accordionEntry(id, data)
 
                 div(class='d-grid gap-2 pt-2')
                     input(type='checkbox' class='btn-check' id='SLIDE_RANDOM['+id+']' name='SLIDE_RANDOM['+id+']' checked= data.modeData.doRandom||id=='TEMPLATE_ID' autocomplete='off')
-                    label(class='btn btn-outline-info' for='SLIDE_RANDOM['+id+']' id='SLIDE_RANDOM_LABEL['+id+']') Zufällige Reihenfolge
+                    label(class='btn btn-outline-info' for='SLIDE_RANDOM['+id+']' id='SLIDE_RANDOM_LABEL['+id+']') #{__('RandomOrder')}
 
                     input(type='checkbox' class='btn-check' id='SLIDE_NAMES['+id+']' name='SLIDE_NAMES['+id+']' checked= data.modeData.showNames autocomplete='off')
-                    label(class='btn btn-outline-info' for='SLIDE_NAMES['+id+']' id='SLIDE_NAMES_LABEL['+id+']') Bildname anzeigen
+                    label(class='btn btn-outline-info' for='SLIDE_NAMES['+id+']' id='SLIDE_NAMES_LABEL['+id+']') #{__('ShowNames')}
 
                 div(class='input-group pt-2')
-                    span(class='input-group-text') Zeit pro Bild
+                    span(class='input-group-text') #{__('TimePerImage')}
                     input(type='number' class='form-control' min='5' max='300' id='SLIDE_IMAGE_TIME['+id+']' name='SLIDE_IMAGE_TIME['+id+']' value=data.modeData.timePerSlide autocomplete='off')
                     span(class='input-group-text') s
 
                 div(class='input-group pt-2')
-                    span(class='input-group-text') Übergangszeit
+                    span(class='input-group-text') #{__('TransitionPeriod')}
                     input(type='number' class='form-control' min='0' max='1000' id='SLIDE_TRANSITION_TIME['+id+']' name='SLIDE_TRANSITION_TIME['+id+']' value=data.modeData.transitionTime autocomplete='off')
                     span(class='input-group-text') ms
 
@@ -71,7 +70,7 @@ mixin accordionEntry(id, data)
 block content
     div(class='container-fluid')
         div(class='d-grid pt-2 pb-2')
-            button(type='button' class='btn btn-primary' onclick='createEntry()') Neue Schedule
+            button(type='button' class='btn btn-primary' onclick='createEntry()') #{__('NewSchedule')}
         +accordionEntry('TEMPLATE_ID', emptySchedule)
         form(method='post' enctype='multipart/form-data' action='/automation/save')
             div(class='accordion' id='FORM_ACCORDION')
@@ -79,11 +78,11 @@ block content
                     +accordionEntry("item"+index, schedule)
 
             div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-primary') Speichern
+                button(type='submit' class='btn btn-primary') #{__('Save')}
         hr
         form(method='post' enctype='multipart/form-data' action='/automation/apply')
             div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-success') Anwenden
+                button(type='submit' class='btn btn-success') #{__('Apply')}
 
     script.
         let items = [];
@@ -142,8 +141,8 @@ block content
             template.find('#ACCORDION_COLLAPSE_'+identifier).attr('data-bs-parent', '#FORM_ACCORDION');
             template.find('#ACCORDION_HEADER\\['+identifier+'\\]').attr('data-bs-target', '#ACCORDION_COLLAPSE_'+identifier);
             template.find('#ACCORDION_HEADER\\['+identifier+'\\]').attr('aria-controls', 'ACCORDION_COLLAPSE_'+identifier);
-            template.find('#ACCORDION_HEADER\\['+identifier+'\\]').text('Automatisierung #'+(currentIndex+1));
-            template.find('#SCHEDULE_NAME\\['+identifier+'\\]').attr('value', 'Automatisierung #'+(currentIndex+1));
+            template.find('#ACCORDION_HEADER\\['+identifier+'\\]').text('#{__('Schedule')} #'+(currentIndex+1));
+            template.find('#SCHEDULE_NAME\\['+identifier+'\\]').attr('value', '#{__('Schedule')} #'+(currentIndex+1));
 
             template.find('#REMOVE_ITEM\\['+identifier+'\\]').attr('onclick', 'deleteEntry(\''+identifier+'\')')
             template.find('#SCHEDULE_NAME\\['+identifier+'\\]').attr('oninput', 'updateHeader(\''+identifier+'\')')
