@@ -4,7 +4,7 @@ block content
     div(class='container-fluid')
         form(method='post' enctype='multipart/form-data' action='/slide/save' id='slide_save')
             div(class='pt-2')
-                select(class='form-select' id='SLIDE_DIRS' name='SLIDE_DIRS' multiple)
+                select(class='form-select' id='SLIDE_DIRS' name='SLIDE_DIRS' multiple required)
                     each dir in imageContainers
                         - if (data.directories.includes(dir))
                             option(value=dir selected) #{dir}
@@ -13,52 +13,25 @@ block content
 
             div(class='d-grid gap-2 pt-2')
                 input(type='checkbox' class='btn-check' id='SLIDE_RANDOM' name='SLIDE_RANDOM' checked= data.doRandom autocomplete='off')
-                label(class='btn btn-outline-info' for='SLIDE_RANDOM' id='SLIDE_RANDOM_LABEL') Zufällige Reihenfolge
+                label(class='btn btn-outline-info' for='SLIDE_RANDOM' id='SLIDE_RANDOM_LABEL') #{__('RandomOrder')}
 
                 input(type='checkbox' class='btn-check' id='SLIDE_NAMES' name='SLIDE_NAMES' checked= data.showNames autocomplete='off')
-                label(class='btn btn-outline-info' for='SLIDE_NAMES' id='SLIDE_NAMES_LABEL') Bildname anzeigen
+                label(class='btn btn-outline-info' for='SLIDE_NAMES' id='SLIDE_NAMES_LABEL') #{__('ShowNames')}
 
             div(class='input-group pt-2')
-                span(class='input-group-text') Zeit pro Bild
+                span(class='input-group-text') #{__('TimePerImage')}
                 input(type='number' class='form-control' min='5' max='300' id='SLIDE_IMAGE_TIME' name='SLIDE_IMAGE_TIME' value=data.timePerSlide autocomplete='off')
                 span(class='input-group-text') s
 
             div(class='input-group pt-2')
-                span(class='input-group-text') Übergangszeit
+                span(class='input-group-text') #{__('TransitionPeriod')}
                 input(type='number' class='form-control' min='0' max='1000' id='SLIDE_TRANSITION_TIME' name='SLIDE_TRANSITION_TIME' value=data.transitionTime autocomplete='off')
                 span(class='input-group-text') ms
             br
             div(class='d-grid')
-                button(type='submit' class='btn btn-primary') Einstellungen speichern
+                button(type='submit' class='btn btn-primary') #{__('SaveSettings')}
         hr
         form(method='post' enctype='multipart/form-data' action='/slide/start' class='d-grid')
-            button(type='submit' class='btn btn-success') Diashow starten
+            button(type='submit' class='btn btn-success') #{__('StartSlideshow')}
         form(method='post' enctype='multipart/form-data' action='/slide/stop' class='d-grid pt-2')
-            button(type='submit' class='btn btn-warning') Diashow stoppen
-
-    
-    script.
-        $('#slide_save').on('submit', function(event) {
-            var hasSelected = false;
-            $('#fdirs :selected').each(function() {
-                if ($(this).val() != '')
-                    hasSelected = true;
-            });
-            if (!hasSelected) {
-                $('#fdirs').get(0).setCustomValidity('Es muss mindestens ein Ordner ausgewählt werden.');
-                $(this).get(0).reportValidity();
-                event.preventDefault();
-            }
-        });
-
-        $('#fdirs').on('input', function() {
-            var hasSelected = false;
-            $('#fdirs :selected').each(function() {
-                if ($(this).val() != '')
-                    hasSelected = true;
-            });
-            if (hasSelected) {
-                $('#fdirs').get(0).setCustomValidity('');
-                $(this).get(0).reportValidity();
-            }
-        });
+            button(type='submit' class='btn btn-warning') #{__('StopSlideshow')}

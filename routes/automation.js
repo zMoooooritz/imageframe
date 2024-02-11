@@ -1,7 +1,5 @@
 const express = require('express');
-const multer = require('multer');
 const router = express.Router();
-const upload = multer();
 const kvStore = require('../util/kvstore');
 const storage = require('../util/storage');
 const Time = require('../util/time');
@@ -23,7 +21,7 @@ router.get('/', async function(req, res, next) {
         emptySchedule: empSchedule,
     };
 
-    res.render('automation', { title: 'Automatisierung' });
+    res.render('automation', { title: res.__('Automation') });
 });
 
 function convertTime(data, entry) {
@@ -34,7 +32,7 @@ function convertTime(data, entry) {
     }
 }
 
-router.post('/save', upload.none(), async function(req, res, next) {
+router.post('/save', async function(req, res, next) {
     var reqData = req.body;
     await kvStore.load();
 

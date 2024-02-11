@@ -1,8 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const upload = multer();
-
 const storage = require('../util/storage')
 const kvStore = require('../util/kvstore');
 const data = require('../util/data');
@@ -14,10 +11,10 @@ router.get('/', async function(req, res, next) {
         data: await data.ModeSlide.Configuration(),
     };
 
-    res.render('slide', { title: 'Diashow' });
+    res.render('slide', { title: res.__('Slideshow') });
 });
 
-router.post('/save', upload.none(), async function(req, res, next) {
+router.post('/save', async function(req, res, next) {
     var ms = data.ModeSlide.FromData(req.body);
 
     await kvStore.load();
@@ -29,14 +26,14 @@ router.post('/save', upload.none(), async function(req, res, next) {
     res.redirect('/slide');
 });
 
-router.post('/start', upload.none(), async function(req, res, next) {
+router.post('/start', async function(req, res, next) {
     const cfg = await data.ModeSlide.Configuration();
     slideshow.restart(cfg);
 
     res.redirect('/slide');
 });
 
-router.post('/stop', upload.none(), async function(req, res, next) {
+router.post('/stop', function(req, res, next) {
     slideshow.stop();
 
     res.redirect('/slide');

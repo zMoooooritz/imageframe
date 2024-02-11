@@ -2,23 +2,23 @@ extends layout
 
 block content
     div(class='container-fluid d-grid gap-2')
-        a(role='button' class='btn btn-primary' href='/image') Bilder anpassen
-        a(role='button' class='btn btn-primary' href='/directory') Ordner verwalten
+        a(role='button' class='btn btn-primary' href='/image') #{__('Images')}
+        a(role='button' class='btn btn-primary' href='/directory') #{__('Directories')}
         hr(class='m-1')
-        a(role='button' class='btn btn-primary' href='/slide') Diashow
+        a(role='button' class='btn btn-primary' href='/slide') #{__('Slideshow')}
         hr(class='m-1')
-        a(role='button' class='btn btn-primary' href='/screen') Bildschirm
+        a(role='button' class='btn btn-primary' href='/screen') #{__('Screen')}
         hr(class='m-1')
-        a(role='button' class='btn btn-primary' href='/automation') Automatisierung
+        a(role='button' class='btn btn-primary' href='/automation') #{__('Automation')}
         hr(class='m-1')
         form(method='post' enctype='multipart/form-data' action='/power/off' id='power_off' class='d-grid')
-            button(type='submit' class='btn btn-warning') Bilderrahmen herunterfahren
+            button(type='submit' class='btn btn-warning') #{__('Shutdown')}
         form(method='post' enctype='multipart/form-data' action='/power/reboot' id='power_reboot' class='d-grid')
-            button(type='submit' class='btn btn-warning') Bilderrahmen neustarten
+            button(type='submit' class='btn btn-warning') #{__('Reboot')}
         hr(class='m-1')
-        a(role='button' class='btn btn-secondary' href='/update') Updates
+        a(role='button' class='btn btn-secondary' href='/update') #{__('Updates')}
 
     script(src='javascripts/confirm.js')
     script.
-        custom_confirm("#power_off", "Herunterfahren", "Soll der Bilderrahmen wirklich heruntergefahren werden?", "Nein", "Ja");
-        custom_confirm_alt("#power_reboot", "Neustarten", "Soll der Bilderrahmen wirklich neugestartet werden?", "Nein", "Ja");
+        custom_confirm("#power_off", '#{__('Shutdown')}', '#{__('ShutdownConfirm')}', '#{__('No')}', '#{__('Yes')}');
+        custom_confirm_alt("#power_reboot", '#{__('Reboot')}', '#{__('RebootConfirm')}', '#{__('No')}', '#{__('Yes')}');
