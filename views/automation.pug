@@ -10,7 +10,8 @@ mixin accordionEntry(id, data)
                     div(class='col d-grid')
                         input(type='text' class='form-control' placeholder='Name' id='SCHEDULE_NAME['+id+']' name='SCHEDULE_NAME['+id+']' oninput='updateHeader(\''+id+'\')' value=data.name)
                     div(class='col d-grid')
-                        button(type='button' class='btn btn-danger', id='REMOVE_ITEM['+id+']' onclick='deleteEntry(\''+id+'\')') #{__('Delete')}
+                        button(type='button' class='btn btn-danger', id='REMOVE_ITEM['+id+']' onclick='deleteEntry(\''+id+'\')') 
+                            span(class='bi-trash')  #{__('Delete')}
                 hr
                 div(class='')
                     select(class='form-select' id='DAYS_SELECTED['+id+']' name='DAYS_SELECTED['+id+']' multiple)
@@ -51,10 +52,10 @@ mixin accordionEntry(id, data)
 
                 div(class='d-grid gap-2 pt-2')
                     input(type='checkbox' class='btn-check' id='SLIDE_RANDOM['+id+']' name='SLIDE_RANDOM['+id+']' checked= data.modeData.doRandom||id=='TEMPLATE_ID' autocomplete='off')
-                    label(class='btn btn-outline-info' for='SLIDE_RANDOM['+id+']' id='SLIDE_RANDOM_LABEL['+id+']') #{__('RandomOrder')}
+                    label(class='btn btn-outline-info bi-shuffle' for='SLIDE_RANDOM['+id+']' id='SLIDE_RANDOM_LABEL['+id+']')  #{__('RandomOrder')}
 
                     input(type='checkbox' class='btn-check' id='SLIDE_NAMES['+id+']' name='SLIDE_NAMES['+id+']' checked= data.modeData.showNames autocomplete='off')
-                    label(class='btn btn-outline-info' for='SLIDE_NAMES['+id+']' id='SLIDE_NAMES_LABEL['+id+']') #{__('ShowNames')}
+                    label(class='btn btn-outline-info bi-eye' for='SLIDE_NAMES['+id+']' id='SLIDE_NAMES_LABEL['+id+']')  #{__('ShowNames')}
 
                 div(class='input-group pt-2')
                     span(class='input-group-text') #{__('TimePerImage')}
@@ -70,7 +71,7 @@ mixin accordionEntry(id, data)
 block content
     div(class='container-fluid')
         div(class='d-grid pt-2 pb-2')
-            button(type='button' class='btn btn-primary' onclick='createEntry()') #{__('NewSchedule')}
+            button(type='button' class='btn btn-primary bi-calendar-plus' onclick='createEntry()')  #{__('NewSchedule')}
         +accordionEntry('TEMPLATE_ID', emptySchedule)
         form(method='post' enctype='multipart/form-data' action='/automation/save')
             div(class='accordion' id='FORM_ACCORDION')
@@ -78,11 +79,11 @@ block content
                     +accordionEntry("item"+index, schedule)
 
             div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-primary') #{__('Save')}
+                button(type='submit' class='btn btn-primary bi-floppy')  #{__('Save')}
         hr
         form(method='post' enctype='multipart/form-data' action='/automation/apply')
             div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-success') #{__('Apply')}
+                button(type='submit' class='btn btn-success bi-send')  #{__('Apply')}
 
     script.
         let items = [];

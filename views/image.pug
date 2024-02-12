@@ -14,7 +14,7 @@ block content
                 label(class='form-label' for='fimgn' id='fimgl') #{__('Images')}
                 input(type='file' class='form-control' id='fimgn' name='fimgn' accept='image/png, image/jpeg' multiple required)
             div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-primary') #{__('UploadImages')}
+                button(type='submit' class='btn btn-primary bi-upload')  #{__('UploadImages')}
         hr(class='m-1 mt-3 mb-2')
         form(method='post' enctype='multipart/form-data' action='/image/delete' id='image_delete')
             div()
@@ -28,7 +28,7 @@ block content
                 select(class='form-control custom-select' id='fimgd' name='fimgd' size='5' multiple required)
                     option(value='' selected disabled hidden) > #{__('SelectImages')} <
             div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-danger' id='fimage_delete' disabled) #{__('DeleteImages')}
+                button(type='submit' class='btn btn-danger bi-trash' id='fimage_delete' disabled)  #{__('DeleteImages')}
     div(id='img_div' hidden) #{imgs}
 
     div(class='modal fade' id='pmodal' tabindex='-1' role='dialog' aria-labelledby='pmodal_header' aria-hidden='true')

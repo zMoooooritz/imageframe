@@ -7,7 +7,7 @@ block content
                 label(for='fcreatedir' class='sr-only') #{__('NameOfNewDirectory')}
                 input(type='text' class='form-control' placeholder=__('DirectoryName') autocomplete='off' id='fcreatedir' name='fcreatedir' pattern='[a-zA-Z0-9_\\-]+' required)
             div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-primary') #{__('CreateDirectory')}
+                button(type='submit' class='btn btn-primary bi-folder-plus')  #{__('CreateDirectory')}
         hr(class='m-1 mt-3 mb-2')
         form(method='post' enctype='multipart/form-data' action='/directory/rename' id='directory_rename')
             div()
@@ -20,7 +20,7 @@ block content
                 label(for='fnewdir' class='sr-only') #{__('NewDirectory')}
                 input(type='text' class='form-control' placeholder=__('NewDirectoryName') autocomplete='off' id='fnewdir' name='fnewdir' pattern='[a-zA-Z0-9_\\-]+' required)
             div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-primary') #{__('RenameDirectory')}
+                button(type='submit' class='btn btn-primary bi-folder-check')  #{__('RenameDirectory')}
         hr(class='m-1 mt-3 mb-2')
         form(method='post' enctype='multipart/form-data' action='/directory/delete' id='directory_delete')
             div()
@@ -30,7 +30,7 @@ block content
                     each dir in dirs
                         option(value=dir) #{dir}
             div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-danger' id='fdeldb') #{__('DeleteDirectory')}
+                button(type='submit' class='btn btn-danger bi-trash' id='fdeldb')  #{__('DeleteDirectory')}
 
     script(src='javascripts/confirm.js')
     script.

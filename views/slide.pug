@@ -13,10 +13,10 @@ block content
 
             div(class='d-grid gap-2 pt-2')
                 input(type='checkbox' class='btn-check' id='SLIDE_RANDOM' name='SLIDE_RANDOM' checked= data.doRandom autocomplete='off')
-                label(class='btn btn-outline-info' for='SLIDE_RANDOM' id='SLIDE_RANDOM_LABEL') #{__('RandomOrder')}
+                label(class='btn btn-outline-info bi-shuffle' for='SLIDE_RANDOM' id='SLIDE_RANDOM_LABEL')  #{__('RandomOrder')}
 
                 input(type='checkbox' class='btn-check' id='SLIDE_NAMES' name='SLIDE_NAMES' checked= data.showNames autocomplete='off')
-                label(class='btn btn-outline-info' for='SLIDE_NAMES' id='SLIDE_NAMES_LABEL') #{__('ShowNames')}
+                label(class='btn btn-outline-info bi-eye' for='SLIDE_NAMES' id='SLIDE_NAMES_LABEL')  #{__('ShowNames')}
 
             div(class='input-group pt-2')
                 span(class='input-group-text') #{__('TimePerImage')}
@@ -29,9 +29,9 @@ block content
                 span(class='input-group-text') ms
             br
             div(class='d-grid')
-                button(type='submit' class='btn btn-primary') #{__('SaveSettings')}
+                button(type='submit' class='btn btn-primary bi-floppy')  #{__('SaveSettings')}
         hr
         form(method='post' enctype='multipart/form-data' action='/slide/start' class='d-grid')
-            button(type='submit' class='btn btn-success') #{__('StartSlideshow')}
+            button(type='submit' class='btn btn-success bi-play-circle')  #{__('StartSlideshow')}
         form(method='post' enctype='multipart/form-data' action='/slide/stop' class='d-grid pt-2')
-            button(type='submit' class='btn btn-warning') #{__('StopSlideshow')}
+            button(type='submit' class='btn btn-warning bi-stop-circle')  #{__('StopSlideshow')}

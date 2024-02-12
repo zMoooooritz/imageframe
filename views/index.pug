@@ -2,21 +2,21 @@ extends layout
 
 block content
     div(class='container-fluid d-grid gap-2')
-        a(role='button' class='btn btn-primary' href='/image') #{__('Images')}
-        a(role='button' class='btn btn-primary' href='/directory') #{__('Directories')}
+        a(role='button' class='btn btn-primary bi-card-image' href='/image')  #{__('Images')}
+        a(role='button' class='btn btn-primary bi-folder' href='/directory')  #{__('Directories')}
         hr(class='m-1')
-        a(role='button' class='btn btn-primary' href='/slide') #{__('Slideshow')}
+        a(role='button' class='btn btn-primary bi-file-earmark-slides' href='/slide')  #{__('Slideshow')}
         hr(class='m-1')
-        a(role='button' class='btn btn-primary' href='/screen') #{__('Screen')}
+        a(role='button' class='btn btn-primary bi-display' href='/screen')  #{__('Screen')}
         hr(class='m-1')
-        a(role='button' class='btn btn-primary' href='/automation') #{__('Automation')}
+        a(role='button' class='btn btn-primary bi-calendar-date' href='/automation')  #{__('Automation')}
         hr(class='m-1')
         form(method='post' enctype='multipart/form-data' action='/power/off' id='power_off' class='d-grid')
-            button(type='submit' class='btn btn-warning') #{__('Shutdown')}
+            button(type='submit' class='btn btn-warning bi-power')  #{__('Shutdown')}
         form(method='post' enctype='multipart/form-data' action='/power/reboot' id='power_reboot' class='d-grid')
-            button(type='submit' class='btn btn-warning') #{__('Reboot')}
+            button(type='submit' class='btn btn-warning bi-bootstrap-reboot')  #{__('Reboot')}
         hr(class='m-1')
-        a(role='button' class='btn btn-secondary' href='/update') #{__('Updates')}
+        a(role='button' class='btn btn-secondary bi-arrow-clockwise' href='/update')  #{__('Updates')}
 
     script(src='javascripts/confirm.js')
     script.
