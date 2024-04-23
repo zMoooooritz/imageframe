@@ -1,9 +1,12 @@
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
 const storage = require('../util/storage')
 const kvStore = require('../util/kvstore');
 const data = require('../util/data');
 const slideshow = require('../util/slideshow');
+
+const upload = multer();
 
 router.get('/', async function(req, res, next) {
     res.locals = {
@@ -14,7 +17,7 @@ router.get('/', async function(req, res, next) {
     res.render('slide', { title: res.__('Slideshow') });
 });
 
-router.post('/save', async function(req, res, next) {
+router.post('/save', upload.none(), async function(req, res, next) {
     var ms = data.ModeSlide.FromData(req.body);
 
     await kvStore.load();

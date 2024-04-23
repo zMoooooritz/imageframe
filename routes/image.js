@@ -43,7 +43,7 @@ router.post('/upload', upload.array('fimgn'), async function(req, res, next) {
     res.redirect('/image')
 });
 
-router.post('/delete', function(req, res, next) {
+router.post('/delete', upload.none(), function(req, res, next) {
     var dir = req.body.fdird;
     var imgs = req.body.fimgd;
     if (typeof imgs === 'string') {
