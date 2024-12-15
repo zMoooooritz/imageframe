@@ -73,7 +73,12 @@ class Storage {
 
             await sharp(oldPath)
                 .rotate()
-                .resize(WIDTH, HEIGHT, sharp.fit.contain)
+                .resize({
+                    width: WIDTH,
+                    height: HEIGHT,
+                    fit: sharp.fit.contain,
+                    background: { r: 0, g: 0, b: 0 },
+                })
                 .jpeg({quality: 100})
                 .toFile(newPath)
                 .catch(err => {console.log("Error while converting", image, err)});
