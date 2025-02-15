@@ -1,19 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const schedule = require('../util/scheduler');
+const system = require('../util/system');
 
 router.get('/', function(req, res, next) {
     res.render('screen', { title: res.__('Screen') });
 });
 
 router.post('/on', async function(req, res, next) {
-    await schedule.executeEvent(true);
+    system.displayOn();
 
     res.redirect('/screen');
 });
 
 router.post('/off', async function(req, res, next) {
-    await schedule.executeEvent(false);
+    system.displayOff();
 
     res.redirect('/screen');
 });

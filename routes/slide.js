@@ -5,6 +5,7 @@ const storage = require('../util/storage')
 const kvStore = require('../util/kvstore');
 const data = require('../util/data');
 const slideshow = require('../util/slideshow');
+const system = require('../util/system');
 
 const upload = multer();
 
@@ -31,6 +32,7 @@ router.post('/save', upload.none(), async function(req, res, next) {
 
 router.post('/start', async function(req, res, next) {
     const cfg = await data.ModeSlide.Configuration();
+    system.displayOn();
     slideshow.restart(cfg);
 
     res.redirect('/slide');
