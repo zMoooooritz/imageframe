@@ -6,7 +6,7 @@ const sharp = require('sharp')
 const WIDTH = 1920;
 const HEIGHT = 1080;
 
-const FILE_SIZE_LIMIT = 8 * 1024 * 1024; // 8 MB
+const FILE_SIZE_LIMIT = 16 * 1024 * 1024; // 16 MB
 
 class Storage {
 
