@@ -59,5 +59,6 @@
 	"ImagesDeleteConfirm": "Should the selected images really be deleted?",
 	"ShutdownConfirm": "Should the imageframe really be shut down?",
 	"RebootConfirm": "Should the imageframe really be rebooted?",
-	"UpdateConfirm": "Should the imageframe really be updated and rebooted?"
+	"UpdateConfirm": "Should the imageframe really be updated and rebooted?",
+	"Software": "Software"
 }

@@ -8,6 +8,9 @@ const logger = require('morgan');
 const favicon = require('serve-favicon')
 const i18n = require('i18n');
 
+global.__repo = "imageframe";
+global.__owner = "zMoooooritz";
+
 if (process.env.NODE_ENV === 'development') {
     global.__projectBase = path.resolve(__dirname);
     global.__dataBase = path.join(os.homedir(), "imageframe");
@@ -26,7 +29,7 @@ const slideRouter = require('./routes/slide');
 const screenRouter = require('./routes/screen');
 const powerRouter = require('./routes/power');
 const automationRouter = require('./routes/automation');
-const updateRouter = require('./routes/update');
+const softwareRouter = require('./routes/software');
 
 var app = express();
 
@@ -67,7 +70,7 @@ app.use('/directory', directoryRouter);
 app.use('/screen', screenRouter);
 app.use('/power', powerRouter);
 app.use('/automation', automationRouter);
-app.use('/update', updateRouter);
+app.use('/software', softwareRouter);
 
 app.use(function(req, res, next) {
     next(createError(404));
