@@ -64,7 +64,8 @@ class Storage {
 
         for (const image of images) {
             const oldPath = path.join(config.getTmpImagePath(), image);
-            const newPath = path.join(this.getContainerPath(container), image);
+            const escapedImageName = image.replace(/[^a-zA-Z0-9.]/g, '_');
+            const newPath = path.join(this.getContainerPath(container), escapedImageName);
             const stats = fs.statSync(oldPath);
             if (stats.size > FILE_SIZE_LIMIT) {
                 console.log("Dropping image since it is too big:", image);
