@@ -1,10 +1,13 @@
-const os = require('os');
 const path = require('path');
 
 class Config {
     constructor() {
         this.dataBase = global.__dataBase;
         this.projectBase = global.__projectBase;
+    }
+
+    getProjectBasePath() {
+        return this.projectBase;
     }
 
     getScriptPath() {

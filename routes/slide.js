@@ -40,6 +40,7 @@ router.post('/start', async function(req, res, next) {
 
 router.post('/stop', function(req, res, next) {
     slideshow.stop();
+    system.displayOff();
 
     res.redirect('/slide');
 });

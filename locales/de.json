@@ -59,5 +59,6 @@
 	"ImagesDeleteConfirm": "Sollen die ausgewählten Bilder wirklich gelöscht werden?",
 	"ShutdownConfirm": "Soll der Bilderrahmen wirklich heruntergefahren werden?",
 	"RebootConfirm": "Soll der Bilderrahmen wirklich neugestartet werden?",
-	"UpdateConfirm": "Soll der Bilderrahmen wirklich aktualisiert und neugestartet werden?"
+	"UpdateConfirm": "Soll der Bilderrahmen wirklich aktualisiert und neugestartet werden?",
+	"Software": "Software"
 }
