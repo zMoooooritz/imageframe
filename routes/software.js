@@ -5,8 +5,8 @@ const storage = require('../util/storage');
 
 router.get('/', async function(req, res, next) {
     res.locals = {
-        currTag: system.getInstalledTag(),
-        newestTag: system.getLatestTag(),
+        currVersion: system.getInstalledVersion().trim(),
+        newestVersion: system.getLatestVersion().trim(),
         tmpFiles: storage.countFilesInTmpDir(),
     };
 

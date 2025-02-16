@@ -32,6 +32,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const config = require('./util/config');
 const scheduler = require('./util/scheduler');
+const system = require('./util/system');
 
 const indexRouter = require('./routes/index');
 const imageRouter = require('./routes/image');
@@ -41,6 +42,8 @@ const screenRouter = require('./routes/screen');
 const powerRouter = require('./routes/power');
 const automationRouter = require('./routes/automation');
 const softwareRouter = require('./routes/software');
+
+global.__version = system.getInstalledVersion()
 
 var app = express();
 

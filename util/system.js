@@ -29,7 +29,7 @@ class System {
         execute(`killall -q -KILL fbi`);
     }
 
-    static getInstalledTag() {
+    static getInstalledVersion() {
         if (process.env.NODE_ENV === "development") {
             return "Local Build";
         } else {
@@ -42,7 +42,7 @@ class System {
         }
     }
 
-    static getLatestTag() {
+    static getLatestVersion() {
         let done = false;
         let latestTag = "";
 
