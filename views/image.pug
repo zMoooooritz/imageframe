@@ -51,6 +51,8 @@ block content
 
     script(src='javascripts/confirm.js')
     script.
+        var viewerInstance = null;
+
         function generateShowIndices(count, len) {
             if (count > len) {
                 return Array.from({ length: len }, (_, index) => index);
@@ -87,7 +89,7 @@ block content
                 viewer.append(`<li ${hidden}><img src="/image/view/${container}/${img}" alt="${img}"></li>`);
             }
 
-            new Viewer(
+            viewerInstance = new Viewer(
                 viewer[0],
                 {
                     toolbar: true,
@@ -98,6 +100,10 @@ block content
         }
 
         $('#fdirv').on('input', function() {
+            if (viewerInstance !== null) {
+                viewerInstance.destroy();
+            }
+
             var selected = $('#fdirv').val();
             loadViewerImages(selected);
         });

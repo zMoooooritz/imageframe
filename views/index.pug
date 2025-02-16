@@ -43,9 +43,9 @@ block content
                         h5(class='card-title bi-power')  #{__('PowerSettings')}
                         p(class='card-text') #{__('PowerSettingsDesc')}
                         div(class='d-flex justify-content-between')
-                            form(method='post' action='/power/off' class='d-inline-block')
+                            form(method='post' action='/power/off' id='power_off')
                                 button(type='submit' class='btn btn-light bi-power')  #{__('Shutdown')}
-                            form(method='post' action='/power/reboot' class='d-inline-block')
+                            form(method='post' action='/power/reboot' id='power_reboot')
                                 button(type='submit' class='btn btn-light bi-bootstrap-reboot')  #{__('Reboot')}
 
             div(class='col-md-4')
