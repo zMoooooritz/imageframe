@@ -1,22 +1,59 @@
 extends layout
 
 block content
-    div(class='container-fluid d-grid gap-2')
-        a(role='button' class='btn btn-primary bi-card-image' href='/image')  #{__('Images')}
-        a(role='button' class='btn btn-primary bi-folder' href='/directory')  #{__('Directories')}
-        hr(class='m-1')
-        a(role='button' class='btn btn-primary bi-file-earmark-slides' href='/slide')  #{__('Slideshow')}
-        hr(class='m-1')
-        a(role='button' class='btn btn-primary bi-display' href='/screen')  #{__('Screen')}
-        hr(class='m-1')
-        a(role='button' class='btn btn-primary bi-calendar-date' href='/automation')  #{__('Automation')}
-        hr(class='m-1')
-        form(method='post' enctype='multipart/form-data' action='/power/off' id='power_off' class='d-grid')
-            button(type='submit' class='btn btn-warning bi-power')  #{__('Shutdown')}
-        form(method='post' enctype='multipart/form-data' action='/power/reboot' id='power_reboot' class='d-grid')
-            button(type='submit' class='btn btn-warning bi-bootstrap-reboot')  #{__('Reboot')}
-        hr(class='m-1')
-        a(role='button' class='btn btn-secondary bi-arrow-clockwise' href='/software')  #{__('Software')}
+    div(class='container')
+        div(class='row justify-content-center g-3')
+            div(class='col-md-4')
+                div(class='card text-white bg-primary')
+                    div(class='card-body')
+                        h5(class='card-title bi-database-gear')  #{__('Data')}
+                        p(class='card-text') #{__('DataDesc')}
+                        div(class='d-flex justify-content-between')
+                            a(class='btn btn-light bi-card-image' href='/image')  #{__('Images')}
+                            a(class='btn btn-light bi-folder' href='/directory')  #{__('Directories')}
+            
+            div(class='col-md-4')
+                div(class='card text-white bg-info')
+                    div(class='card-body')
+                        h5(class='card-title bi-display')  #{__('Screen')}
+                        p(class='card-text') #{__('ScreenDesc')}
+                        div(class='d-flex justify-content-between')
+                            form(method='post' enctype='multipart/form-data' action='/screen/on')
+                                button(type='submit' class='btn btn-light bi-tv-fill')  #{__('SwitchOnScreen')}
+                            form(method='post' enctype='multipart/form-data' action='/screen/off')
+                                button(type='submit' class='btn btn-light bi-tv')  #{__('SwitchOffScreen')}
+
+            div(class='col-md-4')
+                div(class='card text-white bg-success')
+                    div(class='card-body')
+                        h5(class='card-title bi-collection-play')  #{__('Slideshow')}
+                        p(class='card-text') #{__('SlideshowDesc')}
+                        a(class='btn btn-light bi-gear' href='/slide')  #{__('Configure')}
+
+            div(class='col-md-4')
+                div(class='card bg-success')
+                    div(class='card-body')
+                        h5(class='card-title bi-file-earmark-slides')  #{__('Automation')}
+                        p(class='card-text') #{__('AutomationDesc')}
+                        a(class='btn btn-light bi-gear' href='/automation')  #{__('Configure')}
+
+            div(class='col-md-4')
+                div(class='card text-white bg-warning')
+                    div(class='card-body')
+                        h5(class='card-title bi-power')  #{__('PowerSettings')}
+                        p(class='card-text') #{__('PowerSettingsDesc')}
+                        div(class='d-flex justify-content-between')
+                            form(method='post' action='/power/off' class='d-inline-block')
+                                button(type='submit' class='btn btn-light bi-power')  #{__('Shutdown')}
+                            form(method='post' action='/power/reboot' class='d-inline-block')
+                                button(type='submit' class='btn btn-light bi-bootstrap-reboot')  #{__('Reboot')}
+
+            div(class='col-md-4')
+                div(class='card text-white bg-secondary')
+                    div(class='card-body')
+                        h5(class='card-title bi-code-slash')  #{__('Software')}
+                        p(class='card-text') #{__('SoftwareDesc')}
+                        a(class='btn btn-light bi-gear' href='/software')  #{__('Configure')}
 
     script(src='javascripts/confirm.js')
     script.

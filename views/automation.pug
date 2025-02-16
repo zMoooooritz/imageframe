@@ -13,7 +13,7 @@ mixin accordionEntry(id, data)
                         button(type='button' class='btn btn-danger', id='REMOVE_ITEM['+id+']' onclick='deleteEntry(\''+id+'\')') 
                             span(class='bi-trash')  #{__('Delete')}
                 hr
-                div(class='')
+                div()
                     select(class='form-select' id='DAYS_SELECTED['+id+']' name='DAYS_SELECTED['+id+']' multiple)
                         option(value='monday' selected= data.schedulingInformation.days.monday) #{__('Monday')}
                         option(value='tuesday' selected= data.schedulingInformation.days.tuesday) #{__('Tuesday')}
@@ -39,7 +39,7 @@ mixin accordionEntry(id, data)
                     input(type='number' class='form-control' min='0' max='1440' id='DURATION['+id+']' name='DURATION['+id+']' value=data.schedulingInformation.duration autocomplete='off')
                     span(class='input-group-text') #{__('Minutes')}
                 hr
-                div(class='')
+                div()
                     select(class='form-select' id='SELECTED_MODE['+id+']' name='SELECTED_MODE['+id+']')
                         option(value='slide' selected= data.modeName=='slide') #{__('Slideshow')}
                 div(class='pt-2')
@@ -69,21 +69,21 @@ mixin accordionEntry(id, data)
 
 
 block content
-    div(class='container-fluid')
-        div(class='d-grid pt-2 pb-2')
-            button(type='button' class='btn btn-primary bi-calendar-plus' onclick='createEntry()')  #{__('NewSchedule')}
-        +accordionEntry('TEMPLATE_ID', emptySchedule)
-        form(method='post' enctype='multipart/form-data' action='/automation/save')
-            div(class='accordion' id='FORM_ACCORDION')
-                each schedule, index in scheduleData
-                    +accordionEntry("item"+index, schedule)
-
-            div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-primary bi-floppy')  #{__('Save')}
-        hr
-        form(method='post' enctype='multipart/form-data' action='/automation/apply')
-            div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-success bi-send')  #{__('Apply')}
+    div(class='container')
+        div(class='card mb-4')
+            div(class='card-header d-flex justify-content-between')
+                button(type='button' class='btn btn-primary bi-calendar-plus' onclick='createEntry()')  #{__('NewSchedule')}
+                button(type='submit' form='automationform' class='btn btn-primary bi-floppy')  #{__('Save')}
+            div(class='card-body')
+                +accordionEntry('TEMPLATE_ID', emptySchedule)
+                form(method='post' enctype='multipart/form-data' action='/automation/save' id='automationform')
+                    div(class='accordion' id='FORM_ACCORDION')
+                        each schedule, index in scheduleData
+                            +accordionEntry("item"+index, schedule)
+                hr
+                form(method='post' enctype='multipart/form-data' action='/automation/apply')
+                    div(class='d-grid pt-2')
+                        button(type='submit' class='btn btn-success bi-send')  #{__('Apply')}
 
     script.
         let items = [];
