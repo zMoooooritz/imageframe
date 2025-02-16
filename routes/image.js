@@ -37,6 +37,14 @@ router.get('/', async function(req, res, next) {
     res.render('image', { title: res.__('Images') });
 });
 
+router.get('/list/:container', function(req, res, next) {
+    const { container } = req.params;
+
+    res.json(storage.listImages(container));
+});
+
+router.use('/view', express.static(config.getContainersPath()));
+
 router.post('/upload', upload.array('fimgn'), async function(req, res, next) {
     await storage.fixAndMove(req.body.fdirn);
 

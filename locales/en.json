@@ -63,4 +63,5 @@
 	"Software": "Software",
 	"ClearTmpDir": "Delete temporary image folder",
 	"ClearTmpDirConfirm": "Should the temporary image folder really be deleted?",
+	"ViewImages": "View Images",
 }

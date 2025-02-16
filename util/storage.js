@@ -14,6 +14,10 @@ class Storage {
         return path.join(config.getContainersPath(), name);
     }
 
+    getImagePath(container, image) {
+        return path.join(config.getContainerPath(container), iamge);
+    }
+
     createContainer(name) {
         fs.mkdirSync(this.getContainerPath(name));
     }
@@ -49,6 +53,10 @@ class Storage {
 
     listImages(container) {
         const containerPath = this.getContainerPath(container);
+        if (!fs.existsSync(containerPath) || !fs.lstatSync(containerPath).isDirectory()) {
+            return [];
+        }
+
         const contents = fs.readdirSync(containerPath);
 
         const images = contents.filter((image) => {
