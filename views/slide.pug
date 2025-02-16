@@ -1,37 +1,43 @@
 extends layout
 
 block content
-    div(class='container-fluid')
-        form(method='post' enctype='multipart/form-data' action='/slide/save' id='slide_save')
-            div(class='pt-2')
-                select(class='form-select' id='SLIDE_DIRS' name='SLIDE_DIRS' multiple required)
-                    each dir in imageContainers
-                        - if (data.directories.includes(dir))
-                            option(value=dir selected) #{dir}
-                        - else
-                            option(value=dir) #{dir}
+    div(class='container')
+        div(class='card mb-4')
+            div(class='card-header') #{__('SlideshowSettings')}
+            div(class='card-body')
+                form(method='post' enctype='multipart/form-data' action='/slide/save' id='slide_save')
+                    div(class='pt-2')
+                        select(class='form-select' id='SLIDE_DIRS' name='SLIDE_DIRS' multiple required)
+                            each dir in imageContainers
+                                - if (data.directories.includes(dir))
+                                    option(value=dir selected) #{dir}
+                                - else
+                                    option(value=dir) #{dir}
 
-            div(class='d-grid gap-2 pt-2')
-                input(type='checkbox' class='btn-check' id='SLIDE_RANDOM' name='SLIDE_RANDOM' checked= data.doRandom autocomplete='off')
-                label(class='btn btn-outline-info bi-shuffle' for='SLIDE_RANDOM' id='SLIDE_RANDOM_LABEL')  #{__('RandomOrder')}
+                    div(class='d-grid gap-2 pt-2')
+                        input(type='checkbox' class='btn-check' id='SLIDE_RANDOM' name='SLIDE_RANDOM' checked= data.doRandom autocomplete='off')
+                        label(class='btn btn-outline-info bi-shuffle' for='SLIDE_RANDOM' id='SLIDE_RANDOM_LABEL')  #{__('RandomOrder')}
 
-                input(type='checkbox' class='btn-check' id='SLIDE_NAMES' name='SLIDE_NAMES' checked= data.showNames autocomplete='off')
-                label(class='btn btn-outline-info bi-eye' for='SLIDE_NAMES' id='SLIDE_NAMES_LABEL')  #{__('ShowNames')}
+                        input(type='checkbox' class='btn-check' id='SLIDE_NAMES' name='SLIDE_NAMES' checked= data.showNames autocomplete='off')
+                        label(class='btn btn-outline-info bi-eye' for='SLIDE_NAMES' id='SLIDE_NAMES_LABEL')  #{__('ShowNames')}
 
-            div(class='input-group pt-2')
-                span(class='input-group-text') #{__('TimePerImage')}
-                input(type='number' class='form-control' min='5' max='300' id='SLIDE_IMAGE_TIME' name='SLIDE_IMAGE_TIME' value=data.timePerSlide autocomplete='off')
-                span(class='input-group-text') s
+                    div(class='input-group pt-2')
+                        span(class='input-group-text') #{__('TimePerImage')}
+                        input(type='number' class='form-control' min='5' max='300' id='SLIDE_IMAGE_TIME' name='SLIDE_IMAGE_TIME' value=data.timePerSlide autocomplete='off')
+                        span(class='input-group-text') s
 
-            div(class='input-group pt-2')
-                span(class='input-group-text') #{__('TransitionPeriod')}
-                input(type='number' class='form-control' min='0' max='1000' id='SLIDE_TRANSITION_TIME' name='SLIDE_TRANSITION_TIME' value=data.transitionTime autocomplete='off')
-                span(class='input-group-text') ms
-            br
-            div(class='d-grid')
-                button(type='submit' class='btn btn-primary bi-floppy')  #{__('SaveSettings')}
-        hr
-        form(method='post' enctype='multipart/form-data' action='/slide/start' class='d-grid')
-            button(type='submit' class='btn btn-success bi-play-circle')  #{__('StartSlideshow')}
-        form(method='post' enctype='multipart/form-data' action='/slide/stop' class='d-grid pt-2')
-            button(type='submit' class='btn btn-warning bi-stop-circle')  #{__('StopSlideshow')}
+                    div(class='input-group pt-2')
+                        span(class='input-group-text') #{__('TransitionPeriod')}
+                        input(type='number' class='form-control' min='0' max='1000' id='SLIDE_TRANSITION_TIME' name='SLIDE_TRANSITION_TIME' value=data.transitionTime autocomplete='off')
+                        span(class='input-group-text') ms
+                    br
+                    div(class='d-grid')
+                        button(type='submit' class='btn btn-primary bi-floppy')  #{__('Save')}
+        div(class='card mb-4')
+            div(class='card-header') #{__('SlideshowControl')}
+            div(class='card-body')
+                div(class='d-flex justify-content-between gap-3')
+                    form(method='post' enctype='multipart/form-data' action='/slide/start' class='flex-fill')
+                        button(type='submit' class='btn btn-success bi-play-circle w-100')  #{__('Start')}
+                    form(method='post' enctype='multipart/form-data' action='/slide/stop' class='flex-fill')
+                        button(type='submit' class='btn btn-warning bi-stop-circle w-100')  #{__('Stop')}
