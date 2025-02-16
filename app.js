@@ -5,18 +5,29 @@ const os = require('os');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const favicon = require('serve-favicon')
+const favicon = require('serve-favicon');
 const i18n = require('i18n');
 
 global.__repo = "imageframe";
 global.__owner = "zMoooooritz";
 
+var i18nConfig = {
+    locales: ['en', 'de'],
+    fallbacks: { nl: 'de', 'de-*': 'de' },
+    defaultLocale: 'en',
+    directory: path.join(__dirname, 'locales'),
+    register: global,
+}
+
 if (process.env.NODE_ENV === 'development') {
     global.__projectBase = path.resolve(__dirname);
-    global.__dataBase = path.join(os.homedir(), "imageframe");
+    global.__dataBase = path.join(os.homedir(), global.__repo);
 } else {
     global.__projectBase = path.resolve(__dirname);
     global.__dataBase = os.homedir();
+
+    i18nConfig["autoReload"] = true;
+    i18nConfig["updateFiles"] = false;
 }
 
 const config = require('./util/config');
@@ -33,11 +44,7 @@ const softwareRouter = require('./routes/software');
 
 var app = express();
 
-i18n.configure({
-    locales: ['en', 'de'],
-    directory: path.join(__dirname, 'locales'),
-    register: global,
-})
+i18n.configure(i18nConfig);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

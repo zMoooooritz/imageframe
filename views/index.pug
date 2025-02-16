@@ -13,6 +13,20 @@ block content
                             a(class='btn btn-light bi-folder' href='/directory')  #{__('Directories')}
             
             div(class='col-md-4')
+                div(class='card text-white bg-success')
+                    div(class='card-body')
+                        h5(class='card-title bi-collection-play')  #{__('Slideshow')}
+                        p(class='card-text') #{__('SlideshowDesc')}
+                        a(class='btn btn-light bi-gear' href='/slide')  #{__('Configure')}
+
+            div(class='col-md-4')
+                div(class='card text-white bg-success')
+                    div(class='card-body')
+                        h5(class='card-title bi-file-earmark-slides')  #{__('Automation')}
+                        p(class='card-text') #{__('AutomationDesc')}
+                        a(class='btn btn-light bi-gear' href='/automation')  #{__('Configure')}
+
+            div(class='col-md-4')
                 div(class='card text-white bg-info')
                     div(class='card-body')
                         h5(class='card-title bi-display')  #{__('Screen')}
@@ -22,20 +36,6 @@ block content
                                 button(type='submit' class='btn btn-light bi-tv-fill')  #{__('SwitchOnScreen')}
                             form(method='post' enctype='multipart/form-data' action='/screen/off')
                                 button(type='submit' class='btn btn-light bi-tv')  #{__('SwitchOffScreen')}
-
-            div(class='col-md-4')
-                div(class='card text-white bg-success')
-                    div(class='card-body')
-                        h5(class='card-title bi-collection-play')  #{__('Slideshow')}
-                        p(class='card-text') #{__('SlideshowDesc')}
-                        a(class='btn btn-light bi-gear' href='/slide')  #{__('Configure')}
-
-            div(class='col-md-4')
-                div(class='card bg-success')
-                    div(class='card-body')
-                        h5(class='card-title bi-file-earmark-slides')  #{__('Automation')}
-                        p(class='card-text') #{__('AutomationDesc')}
-                        a(class='btn btn-light bi-gear' href='/automation')  #{__('Configure')}
 
             div(class='col-md-4')
                 div(class='card text-white bg-warning')
