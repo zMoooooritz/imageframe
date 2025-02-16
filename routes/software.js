@@ -7,9 +7,10 @@ router.get('/', async function(req, res, next) {
     res.locals = {
         currTag: system.getInstalledTag(),
         newestTag: system.getLatestTag(),
+        tmpFiles: storage.countFilesInTmpDir(),
     };
 
-    res.render('software', { title: res.__('Software') });
+    res.render('software', { title: res.__('Settings') });
 });
 
 router.post('/update', function(req, res, next) {

@@ -69,10 +69,11 @@
 	"Stop": "Stop",
 	"PowerSettings": "Power Settings",
 	"PowerSettingsDesc": "Manage the power settings",
-	"SoftwareDesc": "Update and manage the software",
+	"SettingsDesc": "Update and manage general settings",
 	"Configure": "Configure",
 	"SlideshowDesc": "Manage the current slideshow",
 	"AutomationDesc": "Schedule automated tasks",
 	"SlideshowSettings": "Slideshow Settings",
-	"SlideshowControl": "Slideshow Control"
+	"SlideshowControl": "Slideshow Control",
+	"Settings": "Settings"
 }

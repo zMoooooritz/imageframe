@@ -109,8 +109,13 @@ class Storage {
         });
     }
 
+    countFilesInTmpDir() {
+        const tmpDir = config.getTmpImagePath();
+        return fs.readdirSync(tmpDir).length;
+    }
+
     clearTmpDir() {
-        const tmpDir = config.getTmpImagePath()
+        const tmpDir = config.getTmpImagePath();
         fs.readdir(tmpDir, (err, files) => {
             if (err) throw err;
 
