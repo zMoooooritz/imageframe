@@ -1,34 +1,41 @@
 extends layout
 
 block content
-    div(class='container-fluid d-grid gap-2')
-    div(class='container-fluid')
-        form(method='post' enctype='multipart/form-data' action='/image/upload' id='image_upload')
-            div()
-                label(for='fdirn' class='sr-only') #{__('Directory')}
-                select(class='form-control custom-select' id='fdirn' name='fdirn' required)
+    div(class='container')
+        div(class='card mb-4')
+            div(class='card-header') #{__('UploadImages')}
+            div(class='card-body')
+                form(method='post' enctype='multipart/form-data' action='/image/upload' id='image_upload')
+                    select(class='form-control custom-select' id='fdirn' name='fdirn' required)
+                        option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
+                        each dir in dirs
+                            option(value=dir) #{dir}
+                    div(class='pt-2')
+                        input(type='file' class='form-control' id='fimgn' name='fimgn' accept='image/png, image/jpeg' multiple required)
+                    div(class='d-grid pt-2')
+                        button(type='submit' class='btn btn-primary bi-upload')  #{__('UploadImages')}
+        div(class='card mb-4')
+            div(class='card-header') #{__('ViewImages')}
+            div(class='card-body')
+                select(class='form-control custom-select' id='fdirv' name='fdirv' required)
                     option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
                     each dir in dirs
                         option(value=dir) #{dir}
-            div(class='pt-2')
-                label(class='form-label' for='fimgn' id='fimgl') #{__('Images')}
-                input(type='file' class='form-control' id='fimgn' name='fimgn' accept='image/png, image/jpeg' multiple required)
-            div(class='d-grid pt-2')
-                button(type='submit' class='btn btn-primary bi-upload')  #{__('UploadImages')}
-        hr(class='m-1 mt-3 mb-2')
-        form(method='post' enctype='multipart/form-data' action='/image/delete' id='image_delete')
-            div()
-                label(for='fdird' class='sr-only') #{__('Directory')}
-                select(class='form-control custom-select' id='fdird' name='fdird' required)
-                    option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
-                    each dir in dirs
-                        option(value=dir) #{dir}
-            div(class='pt-2')
-                label(for='fimgd' class='sr-only') #{__('Images')}
-                select(class='form-control custom-select' id='fimgd' name='fimgd' size='5' multiple required)
-                    option(value='' selected disabled hidden) > #{__('SelectImages')} <
-            div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-danger bi-trash' id='fimage_delete' disabled)  #{__('DeleteImages')}
+                div(class='pt-2 d-flex w-100 justify-content-center align-items-center')
+                    ul(id='fimgv')
+        div(class='card mb-4')
+            div(class='card-header') #{__('DeleteImages')}
+            div(class='card-body')
+                form(method='post' enctype='multipart/form-data' action='/image/delete' id='image_delete')
+                    select(class='form-control custom-select' id='fdird' name='fdird' required)
+                        option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
+                        each dir in dirs
+                            option(value=dir) #{dir}
+                    div(class='pt-2')
+                        select(class='form-control custom-select' id='fimgd' name='fimgd' size='5' multiple required)
+                            option(value='' selected disabled hidden) > #{__('SelectImages')} <
+                    div(class='pt-2 d-grid')
+                        button(type='submit' class='btn btn-danger bi-trash' id='fimage_delete' disabled)  #{__('DeleteImages')}
     div(id='img_div' hidden) #{imgs}
 
     div(class='modal fade' id='pmodal' tabindex='-1' role='dialog' aria-labelledby='pmodal_header' aria-hidden='true')
@@ -44,6 +51,57 @@ block content
 
     script(src='javascripts/confirm.js')
     script.
+        function generateShowIndices(count, len) {
+            if (count > len) {
+                return Array.from({ length: len }, (_, index) => index);
+            } else {
+                const result = [0, len - 1];
+                const remaining = count - 2;
+                if (remaining > 0) {
+                    const step = Math.floor((len - 1) / (remaining + 1));
+
+                    for (let i = 1; i <= remaining; i++) {
+                        const newValue = i * step;
+                        result.splice(i, 0, newValue);
+                    }
+                }
+                return result;
+            }
+        }
+
+        async function loadViewerImages(container) {
+            const response = await fetch(`/image/list/${container}`);
+            const images = await response.json();
+
+            const viewer = $('#fimgv');
+            viewer.empty();
+
+            const indices = generateShowIndices(9, images.length);
+            console.log(indices);
+
+            for (const [index, img] of images.entries()) {
+                var hidden = 'class="hidden"';
+                if (indices.includes(index)) {
+                    hidden = "";
+                }
+                viewer.append(`<li ${hidden}><img src="/image/view/${container}/${img}" alt="${img}"></li>`);
+            }
+
+            new Viewer(
+                viewer[0],
+                {
+                    toolbar: true,
+                    navbar: false,
+                    title: true,
+                }
+            );
+        }
+
+        $('#fdirv').on('input', function() {
+            var selected = $('#fdirv').val();
+            loadViewerImages(selected);
+        });
+
         $('#fdird').on('input', function() {
             $('#fimage_delete').prop('disabled', true);
         });
@@ -88,3 +146,39 @@ block content
                     clearInterval(interval);
             }, 5000);
         });
+
+    style.
+        #fimgv {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            padding: 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        #fimgv li {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+
+        #fimgv li img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #fimgv li img:hover {
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none !important;
+        }

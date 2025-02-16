@@ -1,36 +1,39 @@
 extends layout
 
 block content
-    div(class='container-fluid')
-        form(method='post' enctype='multipart/form-data' action='/directory/create' id='directory_create')
-            div()
-                label(for='fcreatedir' class='sr-only') #{__('NameOfNewDirectory')}
-                input(type='text' class='form-control' placeholder=__('DirectoryName') autocomplete='off' id='fcreatedir' name='fcreatedir' pattern='[a-zA-Z0-9_\\-]+' required)
-            div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-primary bi-folder-plus')  #{__('CreateDirectory')}
-        hr(class='m-1 mt-3 mb-2')
-        form(method='post' enctype='multipart/form-data' action='/directory/rename' id='directory_rename')
-            div()
-                label(for='folddir' class='sr-only') #{__('OldDirectory')}
-                select(class='form-control' id='folddir' name='folddir' required)
-                    option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
-                    each dir in dirs
-                        option(value=dir) #{dir}
-            div(class='pt-2')
-                label(for='fnewdir' class='sr-only') #{__('NewDirectory')}
-                input(type='text' class='form-control' placeholder=__('NewDirectoryName') autocomplete='off' id='fnewdir' name='fnewdir' pattern='[a-zA-Z0-9_\\-]+' required)
-            div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-primary bi-folder-check')  #{__('RenameDirectory')}
-        hr(class='m-1 mt-3 mb-2')
-        form(method='post' enctype='multipart/form-data' action='/directory/delete' id='directory_delete')
-            div()
-                label(for='fdeldir' class='sr-only') #{__('DirectoryName')}
-                select(class='form-control' id='fdeldir' name='fdeldir' required)
-                    option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
-                    each dir in dirs
-                        option(value=dir) #{dir}
-            div(class='pt-2 d-grid')
-                button(type='submit' class='btn btn-danger bi-trash' id='fdeldb')  #{__('DeleteDirectory')}
+    div(class='container')
+        div(class='card mb-4')
+            div(class='card-header') #{__('CreateDirectory')}
+            div(class='card-body')
+                form(method='post' enctype='multipart/form-data' action='/directory/create' id='directory_create')
+                    div()
+                        input(type='text' class='form-control' placeholder=__('DirectoryName') autocomplete='off' id='fcreatedir' name='fcreatedir' pattern='[a-zA-Z0-9_\\-]+' required)
+                    div(class='pt-2 d-grid')
+                        button(type='submit' class='btn btn-primary bi-folder-plus')  #{__('CreateDirectory')}
+        div(class='card mb-4')
+            div(class='card-header') #{__('RenameDirectory')}
+            div(class='card-body')
+                form(method='post' enctype='multipart/form-data' action='/directory/rename' id='directory_rename')
+                    div()
+                        select(class='form-control' id='folddir' name='folddir' required)
+                            option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
+                            each dir in dirs
+                                option(value=dir) #{dir}
+                    div(class='pt-2')
+                        input(type='text' class='form-control' placeholder=__('NewDirectoryName') autocomplete='off' id='fnewdir' name='fnewdir' pattern='[a-zA-Z0-9_\\-]+' required)
+                    div(class='pt-2 d-grid')
+                        button(type='submit' class='btn btn-primary bi-folder-check')  #{__('RenameDirectory')}
+        div(class='card mb-4')
+            div(class='card-header') #{__('DeleteDirectory')}
+            div(class='card-body')
+                form(method='post' enctype='multipart/form-data' action='/directory/delete' id='directory_delete')
+                    div()
+                        select(class='form-control' id='fdeldir' name='fdeldir' required)
+                            option(value='' selected disabled hidden) > #{__('SelectDirectory')} <
+                            each dir in dirs
+                                option(value=dir) #{dir}
+                    div(class='pt-2 d-grid')
+                        button(type='submit' class='btn btn-danger bi-trash' id='fdeldb')  #{__('DeleteDirectory')}
 
     script(src='javascripts/confirm.js')
     script.

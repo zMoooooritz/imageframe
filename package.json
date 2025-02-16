@@ -29,6 +29,7 @@
     "pug": "^3.0.2",
     "serve-favicon": "^2.5.0",
     "serve-static": "^1.14.2",
-    "sharp": "^0.33.2"
+    "sharp": "^0.33.2",
+    "viewerjs": "^1.11.7"
   }
 }

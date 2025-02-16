@@ -13,6 +13,10 @@ router.get('/', async function(req, res, next) {
     res.render('directory', { title: res.__('Directories') });
 });
 
+router.get('/list', function(req, res, next) {
+    res.json(storage.listContainers());
+});
+
 router.post('/create', upload.none(), function(req, res, next) {
     storage.createContainer(req.body.fcreatedir);
 
