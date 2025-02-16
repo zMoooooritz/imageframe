@@ -60,5 +60,7 @@
 	"ShutdownConfirm": "Should the imageframe really be shut down?",
 	"RebootConfirm": "Should the imageframe really be rebooted?",
 	"UpdateConfirm": "Should the imageframe really be updated and rebooted?",
-	"Software": "Software"
+	"Software": "Software",
+	"ClearTmpDir": "Delete temporary image folder",
+	"ClearTmpDirConfirm": "Should the temporary image folder really be deleted?",
 }

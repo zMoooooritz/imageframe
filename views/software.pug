@@ -1,16 +1,19 @@
 extends layout
 
 block content
-    div(class='container-fluid')
+    div(class='container')
         div(class='row g-2')
             div(class='col-6')
                 button(class='btn btn-info w-100 bi-tv' disabled)  #{currTag}
             div(class='col-6')
                 button(class='btn btn-info w-100 bi-cloud' disabled)  #{newestTag}
-        div()
-            form(method='post' enctype='multipart/form-data' action='/software/update' id='update_software' class='d-grid pt-2')
-                button(type='submit' class='btn btn-warning bi-cloud-arrow-down')  #{__('UpdateSoftware')}
+        form(method='post' enctype='multipart/form-data' action='/software/update' id='update_software' class='d-grid pt-2')
+            button(type='submit' class='btn btn-warning bi-cloud-arrow-down')  #{__('UpdateSoftware')}
+        hr(class='m-1 mt-3 mb-2')
+        form(method='post' enctype='multipart/form-data' action='/software/clear-tmp-dir' id='clear-tmp-dir' class='d-grid pt-2')
+            button(type='submit' class='btn btn-danger bi-trash')  #{__('ClearTmpDir')}
     
     script(src='javascripts/confirm.js')
     script.
         custom_confirm('#update_software', '#{__('UpdateSoftware')}', '#{__('UpdateConfirm')}', '#{__('No')}', '#{__('Yes')}');
+        custom_confirm_alt('#clear-tmp-dir', '#{__('ClearTmpDir')}', '#{__('ClearTmpDirConfirm')}', '#{__('No')}', '#{__('Yes')}');

@@ -60,6 +60,8 @@ app.use('/assets/vendor/jquery', express.static(
     path.join(__dirname, 'node_modules', 'jquery', 'dist')));
 app.use('/assets/vendor/bootstrap/css', express.static(
     path.join(__dirname, 'node_modules', 'bootstrap-icons', 'font')));
+app.use('/assets/vendor/viewerjs', express.static(
+    path.join(__dirname, 'node_modules', 'viewerjs', 'dist')));
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.svg')));
 app.use(i18n.init);
 
