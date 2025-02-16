@@ -60,5 +60,7 @@
 	"ShutdownConfirm": "Soll der Bilderrahmen wirklich heruntergefahren werden?",
 	"RebootConfirm": "Soll der Bilderrahmen wirklich neugestartet werden?",
 	"UpdateConfirm": "Soll der Bilderrahmen wirklich aktualisiert und neugestartet werden?",
-	"Software": "Software"
+	"Software": "Software",
+	"ClearTmpDir": "Temporäres Bildverzeichnis löschen",
+	"ClearTmpDirConfirm": "Soll das temporäre Bildverzeichnis wirklich gelöscht werden?",
 }

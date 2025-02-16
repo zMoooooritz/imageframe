@@ -100,6 +100,19 @@ class Storage {
             fs.rmSync(imgPath);
         });
     }
+
+    clearTmpDir() {
+        const tmpDir = config.getTmpImagePath()
+        fs.readdir(tmpDir, (err, files) => {
+            if (err) throw err;
+
+            for (const file of files) {
+                fs.unlink(path.join(tmpDir, file), (err) => {
+
+                });
+            }
+        });
+    }
 }
 
 const storage = new Storage();
