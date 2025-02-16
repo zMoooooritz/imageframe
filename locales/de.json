@@ -69,10 +69,11 @@
 	"Stop": "Stop",
 	"PowerSettings": "Energieeinstellungen",
 	"PowerSettingsDesc": "Energieeinstellungen verwalten",
-	"SoftwareDesc": "Software verwalten und aktualisieren",
+	"SettingsDesc": "Allgemeine Einstellungen verwalten",
 	"Configure": "Konfigurieren",
 	"SlideshowDesc": "Diashow-Einstellungen verwalten",
 	"AutomationDesc": "Automatisierung verwalten",
 	"SlideshowSettings": "Diashow Einstellungen",
-	"SlideshowControl": "Diashow Steuerung"
+	"SlideshowControl": "Diashow Steuerung",
+	"Settings": "Einstellungen"
 }
