@@ -1,14 +1,12 @@
 # imageframe
 
-This project enables the creation of a slideshow on a display or television. The executing device can be as simple as a Raspberry.
+ImageFrame is a lightweight application for creating a slideshow on a display or television. It can run on minimal hardware, such as a Raspberry Pi, making it an efficient choice for embedded systems.
 
-The images are displayed via [fbida](https://github.com/fcarlier/fbida) therefore a desktop environment is _not_ required.
-As a result, the lightweight software can be run on small SoC's (the Raspberry Pi Zero W) included.
+The images are displayed using [fbida](https://github.com/fcarlier/fbida), eliminating the need for a desktop environment. This allows the software to run smoothly even on low-power devices, including the Raspberry Pi Zero W.
 
-Displaying images is only half of the functionality provided by this application.
-See the section [functionality](#supported-functionality) for more information.
+However, displaying images is only part of what this application offers. See the [Functionality](#supported-functionality) section for a full overview of its features and a preview in the [Preview](#preview) section.  
 
-A NodeJS-Server is running on the device in the background (if this can be said about one of the heaviest objects in the universe) and allows for remote control of the image frame.
+A Node.js server runs in the background on the device, enabling remote control of the image frame. (Though calling Node.js a "background process" might be a stretch—after all, it’s one of the heaviest objects in the universe!)
 
 ## Installation
 The following steps are required to setup the image frame (using a Raspberry Pi) [detailed instructions](#detailed-installation-instructions) provides a more detailed guide on how to setup the application:
@@ -20,19 +18,28 @@ The following steps are required to setup the image frame (using a Raspberry Pi)
 6. Setup autostart for the software (the entry point should is `scripts/startup.sh`)
 The frontend should be reachable via the IP of the device (assign a static IP for ease of operation) and Port 3000 (without forwarding the reachability is restricted to the local network)
 
-## Supported functionality
-1. Upload and delete images (to and from different directories)
-2. Slideshow
-   1. Change the duration an image is displayed
-   2. Change the blend time between images
-   3. Whether or not to show the images in a random order
-3. Set a daily schedule at which the screen should be (in)active
-4. Set another possibly overlapping schedule for Sundays and holidays
-5. Trigger a synchronize / update of the software
+## Supported Functionality
+1. Upload, manage, and delete images while organizing them into folders.
+2. Create custom slideshows using images from multiple folders.
+3. Schedule specific slideshows to play during predefined timeframes.
+4. Update the software directly from the user interface.
+
+## Preview
+
+<table>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/d32e281d-9585-459e-be0c-06113634185f" width="400"></td>
+    <td><img src="https://github.com/user-attachments/assets/0451dbf9-e4f1-4ebe-97f0-dcf81d982288" width="400"></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/0ec8c2e3-4583-4668-9cd9-cbae1a32d467" width="400"></td>
+    <td><img src="https://github.com/user-attachments/assets/f79767ea-603a-4741-b476-9a8a0288305d" width="400"></td>
+  </tr>
+</table>
 
 ## Detailed Installation Instructions
 
-Installation of the Operating System on the SD card `/dev/sdX`
+Installation of the Operating System (from another Host OS) on the SD card `/dev/sdX`
 ```bash
  # Setup two partitions
  # 1. Boot - W95 FAT32 (LBA) - 200MB
