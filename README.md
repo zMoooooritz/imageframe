@@ -14,8 +14,7 @@ The following steps are required to setup the image frame (using a Raspberry Pi)
 2. Setup autologin via [getty](https://wiki.archlinux.org/title/Getty)
 3. Install `npm` as it is required for the NodeJS server
 4. Clone this repository onto the device
-5. cd into the cloned repository and run `npm install`
-6. Setup autostart for the software (the entry point should is `scripts/startup.sh`)
+5. Run the `setup.sh` script provided in this repository
 The frontend should be reachable via the IP of the device (assign a static IP for ease of operation) and Port 3000 (without forwarding the reachability is restricted to the local network)
 
 ## Supported Functionality
@@ -106,6 +105,8 @@ _________________________________________________
  # add those lines
  imageframe ALL=/sbin/shutdown
  imageframe ALL=NOPASSWD: /sbin/shutdown
+ imageframe ALL=/sbin/systemctl
+ imageframe ALL=NOPASSWD: /sbin/systemctl
 _________________________________________________
 
 # since the newest hardware acceleration driver is broken
@@ -116,14 +117,6 @@ ______________________________________________
 
  dtoverlay=vc4-fkms-v3d # add this line
 ______________________________________________
-
-# enable automatic login 
-$EDITOR /etc/systemd/system/getty@tty1.service.d/autologin.conf
-_____________________________________________________________________________________
- [Service]
- ExecStart=
- ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin imageframe %I $TERM
-_____________________________________________________________________________________
 ```
 
 Setup the application
@@ -132,24 +125,6 @@ Setup the application
 pacman -Syu
 pacman -S fbida git npm figlet ttf-hack # can also choose another monospace font
 
-# only needed if the application should be updated via git
-git config --global user.name "User Name"
-git config --global user.email "user@mail.com"
-ssh-keygen -t rsa -b 4096 -C "user@mail.com"
-
 git clone https://github.com/zMoooooritz/imageframe code
-cd code
-npm install
-
-npm run start # test if the node server starts up successfully and Ctrl+C afterwards
-
-$EDITOR ~/.bash_profile
-_________________________________
- if [ -z "SSH_AUTH_SOCK" ]; then
-   eval `ssh-agent -s`
-   ssh-add
- fi
-
- ~/code/scripts/startup.sh
-_________________________________
+bash code/scripts/setup.sh
 ```

@@ -75,5 +75,9 @@
 	"AutomationDesc": "Schedule automated tasks",
 	"SlideshowSettings": "Slideshow Settings",
 	"SlideshowControl": "Slideshow Control",
-	"Settings": "Settings"
+	"Settings": "Settings",
+	"ShutdownHeader": "Shutting Down...",
+	"ShutdownDesc": "Your device has been shut down. The page will reload automatically once it is back online.",
+	"RebootHeader": "Rebooting...",
+	"RebootDesc": "Your device is restarting. The page will reload automatically once it is back online."
 }

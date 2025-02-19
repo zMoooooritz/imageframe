@@ -75,5 +75,9 @@
 	"AutomationDesc": "Automatisierung verwalten",
 	"SlideshowSettings": "Diashow Einstellungen",
 	"SlideshowControl": "Diashow Steuerung",
-	"Settings": "Einstellungen"
+	"Settings": "Einstellungen",
+	"ShutdownHeader": "Herunterfahren...",
+	"ShutdownDesc": "Ihr Gerät wurde heruntergefahren. Die Seite wird automatisch neu geladen, sobald diese wieder online ist.",
+	"RebootHeader": "Neustart...",
+	"RebootDesc": "Ihr Gerät wird neu gestartet. Die Seite wird automatisch neu geladen, sobald diese wieder online ist."
 }
