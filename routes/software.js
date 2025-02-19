@@ -3,7 +3,7 @@ const router = express.Router();
 const system = require('../util/system');
 const storage = require('../util/storage');
 
-router.get('/', async function(req, res, next) {
+router.get('/', function(req, res, next) {
     res.locals = {
         currVersion: system.getInstalledVersion().trim(),
         newestVersion: system.getLatestVersion().trim(),
