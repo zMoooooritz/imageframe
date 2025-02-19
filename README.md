@@ -98,15 +98,10 @@ useradd -m -G wheel,video -s /bin/bash imageframe
 passwd imageframe
 
 # configure correct sudo permissions
+# grant wheel users elevated privileges
 visudo
 _________________________________________________
-  %wheel ALL=(ALL:ALL) ALL # uncomment this line
- 
- # add those lines
- imageframe ALL=/sbin/shutdown
- imageframe ALL=NOPASSWD: /sbin/shutdown
- imageframe ALL=/sbin/systemctl
- imageframe ALL=NOPASSWD: /sbin/systemctl
+  %wheel ALL=(ALL:ALL) NOPASSWD:ALL # uncomment this line
 _________________________________________________
 
 # since the newest hardware acceleration driver is broken
