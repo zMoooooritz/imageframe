@@ -19,11 +19,10 @@ var i18nConfig = {
     register: global,
 }
 
+global.__projectBase = path.resolve(__dirname);
 if (process.env.NODE_ENV === 'development') {
-    global.__projectBase = path.resolve(__dirname);
     global.__dataBase = path.join(os.homedir(), global.__repo);
 } else {
-    global.__projectBase = path.resolve(__dirname);
     global.__dataBase = os.homedir();
 
     i18nConfig["autoReload"] = true;
@@ -42,10 +41,12 @@ const screenRouter = require('./routes/screen');
 const powerRouter = require('./routes/power');
 const automationRouter = require('./routes/automation');
 const softwareRouter = require('./routes/software');
+const miscRouter = require('./routes/misc')
+const logsRouter = require('./routes/logs');
 
 global.__version = system.getInstalledVersion()
 
-var app = express();
+const app = express();
 
 i18n.configure(i18nConfig);
 
@@ -57,7 +58,13 @@ fs.mkdirSync(config.getContainersPath(), { recursive: true });
 fs.mkdirSync(config.getTmpImagePath(), { recursive: true });
 fs.mkdirSync(config.getSettingsPath(), { recursive: true });
 
-app.use(logger('dev'));
+if (process.env.NODE_ENV === 'development') {
+    app.use(logger('dev'));
+} else {
+    app.use(logger('tiny', {
+        skip: function(req, res) { return res.statusCode < 400 }
+    }));
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -83,12 +90,14 @@ app.use('/screen', screenRouter);
 app.use('/power', powerRouter);
 app.use('/automation', automationRouter);
 app.use('/software', softwareRouter);
+app.use('/misc', miscRouter);
+app.use('/logs', logsRouter);
 
 app.use(function(req, res, next) {
     next(createError(404));
 });
 
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 

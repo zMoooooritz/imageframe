@@ -6,12 +6,14 @@ block content
         p() #{description}
 
     script.
-        setInterval(function() {
-            fetch("/")
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = "/";
-                    }
-                })
-                .catch(() => {});
-        }, 5000);
+        if (#{shouldReload}) {
+            setInterval(function() {
+                fetch("/")
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = "/";
+                        }
+                    })
+                    .catch(() => {});
+            }, 5000);
+        }

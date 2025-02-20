@@ -1,6 +1,6 @@
 {
   "name": "imageframe",
-  "version": "0.2.1",
+  "version": "0.4.5",
   "description": "Dynamic image slideshows on SoCs",
   "private": false,
   "author": {

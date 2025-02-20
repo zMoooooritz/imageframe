@@ -13,6 +13,10 @@ class System {
         execute("sudo shutdown -r now");
     }
 
+    static restartSoftware() {
+        execute("sudo systemctl restart imageframe");
+    }
+
     static displayOn() {
         execute("vcgencmd display_power 1");
     }
