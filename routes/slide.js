@@ -9,7 +9,7 @@ const system = require('../util/system');
 
 const upload = multer();
 
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
     res.locals = {
         imageContainers: storage.listContainers(),
         data: await data.ModeSlide.Configuration(),
@@ -18,7 +18,7 @@ router.get('/', async function(req, res, next) {
     res.render('slide', { title: res.__('Slideshow') });
 });
 
-router.post('/save', upload.none(), async function(req, res, next) {
+router.post('/save', upload.none(), async function(req, res) {
     var ms = data.ModeSlide.FromData(req.body);
 
     await kvStore.load();
@@ -30,7 +30,7 @@ router.post('/save', upload.none(), async function(req, res, next) {
     res.redirect('/slide');
 });
 
-router.post('/start', async function(req, res, next) {
+router.post('/start', async function(req, res) {
     const cfg = await data.ModeSlide.Configuration();
     system.displayOn();
     slideshow.restart(cfg);
@@ -38,7 +38,7 @@ router.post('/start', async function(req, res, next) {
     res.redirect('/slide');
 });
 
-router.post('/stop', function(req, res, next) {
+router.post('/stop', function(req, res) {
     slideshow.stop();
     system.displayOff();
 

@@ -9,7 +9,7 @@ const data = require('../util/data');
 
 const upload = multer();
 
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
     await kvStore.load();
     var scheduleData = kvStore.getDefault("automation", [])
     for (var i = 0; i < scheduleData.length; i++) {
@@ -35,7 +35,7 @@ function convertTime(data, entry) {
     }
 }
 
-router.post('/save', upload.none(), async function(req, res, next) {
+router.post('/save', upload.none(), async function(req, res) {
     var reqData = req.body;
     await kvStore.load();
 
@@ -56,7 +56,7 @@ router.post('/save', upload.none(), async function(req, res, next) {
     res.redirect('/automation');
 });
 
-router.post('/apply', async function(req, res, next) {
+router.post('/apply', async function(req, res) {
     await scheduler.reschedule(true);
     res.redirect('/automation');
 });

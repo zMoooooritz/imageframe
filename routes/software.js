@@ -3,26 +3,33 @@ const router = express.Router();
 const system = require('../util/system');
 const storage = require('../util/storage');
 
-router.get('/', function(req, res, next) {
-    res.locals = {
-        currVersion: system.getInstalledVersion().trim(),
-        newestVersion: system.getLatestVersion().trim(),
-        tmpFiles: storage.countFilesInTmpDir(),
-    };
+router.post('/update', function(req, res) {
+    res.render('static', {
+            title: res.__('Imageframe'),
+            header: res.__('UpdateHeader'),
+            description: res.__('UpdateDesc'),
+            shouldReload: false,
+        }
+    );
 
-    res.render('software', { title: res.__('Settings') });
+    setTimeout(() => {
+        system.update();
+    }, 1000);
 });
 
-router.post('/update', function(req, res, next) {
-    system.update();
+router.post('/restart', function(req, res) {
+    res.render('static', {
+            title: res.__('Imageframe'),
+            header: res.__('RestartHeader'),
+            description: res.__('RestartDesc'),
+            shouldReload: true,
+        }
+    );
 
-    res.redirect('/software');
+    setTimeout(() => {
+        system.restartSoftware();
+    }, 1000);
 });
 
-router.post('/clear-tmp-dir', function(req, res, next) {
-    storage.clearTmpDir();
-
-    res.redirect('/software');
-});
 
 module.exports = router;

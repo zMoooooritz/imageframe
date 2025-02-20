@@ -37,6 +37,14 @@ class Config {
     getKVStorePath() {
         return path.join(this.getSettingsPath(), "kvstore.json");
     }
+
+    getLogsPath() {
+        if (process.env.NODE_ENV === "development") {
+            return path.join(this.dataBase, "imageframe.log");
+        } else {
+            return path.join("/", "var", "log", "imageframe.log");
+        }
+    }
 }
 
 const config = new Config();

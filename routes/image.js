@@ -28,7 +28,7 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
     res.locals = {
         dirs: storage.listContainers(),
         imgs: JSON.stringify(storage.buildImageMap()),
@@ -37,7 +37,7 @@ router.get('/', async function(req, res, next) {
     res.render('image', { title: res.__('Images') });
 });
 
-router.get('/list/:container', function(req, res, next) {
+router.get('/list/:container', function(req, res) {
     const { container } = req.params;
 
     res.json(storage.listImages(container));
@@ -45,13 +45,13 @@ router.get('/list/:container', function(req, res, next) {
 
 router.use('/view', express.static(config.getContainersPath()));
 
-router.post('/upload', upload.array('fimgn'), async function(req, res, next) {
+router.post('/upload', upload.array('fimgn'), async function(req, res) {
     await storage.fixAndMove(req.body.fdirn);
 
     res.redirect('/image')
 });
 
-router.post('/delete', upload.none(), function(req, res, next) {
+router.post('/delete', upload.none(), function(req, res) {
     var dir = req.body.fdird;
     var imgs = req.body.fimgd;
     if (typeof imgs === 'string') {

@@ -51,11 +51,11 @@ block content
             div(class='col-md-4')
                 div(class='card text-white bg-secondary')
                     div(class='card-body')
-                        h5(class='card-title bi-code-slash')  #{__('Settings')}
-                        p(class='card-text') #{__('SettingsDesc')}
-                        a(class='btn btn-light bi-gear' href='/software')  #{__('Configure')}
+                        h5(class='card-title bi-code-slash')  #{__('Miscellaneous')}
+                        p(class='card-text') #{__('MiscellaneousDesc')}
+                        a(class='btn btn-light bi-gear' href='/misc')  #{__('Configure')}
 
     script(src='javascripts/confirm.js')
     script.
-        custom_confirm("#power_off", '#{__('Shutdown')}', '#{__('ShutdownConfirm')}', '#{__('No')}', '#{__('Yes')}');
-        custom_confirm_alt("#power_reboot", '#{__('Reboot')}', '#{__('RebootConfirm')}', '#{__('No')}', '#{__('Yes')}');
+        custom_confirm_fst("#power_off", '#{__('Shutdown')}', '#{__('ShutdownConfirm')}', '#{__('No')}', '#{__('Yes')}');
+        custom_confirm_snd("#power_reboot", '#{__('Reboot')}', '#{__('RebootConfirm')}', '#{__('No')}', '#{__('Yes')}');

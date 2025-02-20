@@ -37,7 +37,7 @@ block content
 
     script(src='javascripts/confirm.js')
     script.
-        custom_confirm('#directory_delete', '#{__('DeleteDirectory')}', '#{__('DirectoryDeleteConfirm')}', '#{__('No')}', '#{__('Yes')}');
+        custom_confirm_fst('#directory_delete', '#{__('DeleteDirectory')}', '#{__('DirectoryDeleteConfirm')}', '#{__('No')}', '#{__('Yes')}');
 
         function checkNoDupes(identifier) {
             var element = $(identifier);
