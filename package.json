@@ -1,6 +1,6 @@
 {
   "name": "imageframe",
-  "version": "0.4.5",
+  "version": "0.5.0",
   "description": "Dynamic image slideshows on SoCs",
   "private": false,
   "author": {
@@ -30,6 +30,7 @@
     "serve-favicon": "^2.5.0",
     "serve-static": "^1.14.2",
     "sharp": "^0.33.2",
+    "systeminformation": "^5.25.11",
     "viewerjs": "^1.11.7"
   }
 }

@@ -1,0 +1,151 @@
+
+extends layout
+
+block content
+    div(class='container')
+        div(class='card mb-4')
+            div(class='card-header')  #{__('SystemMetrics')}
+            div(class='card-body')
+                div(class='row justify-content-center g-3')
+                    div(class='col-md-4')
+                        div(class='card text-white bg-primary')
+                            div(class='card-body')
+                                h5(class='card-title bi-cpu')  #{__('CpuUsage')}
+                                p(class='card-text') #{__('CurrentCpuLoad')}
+                                h3(id='cpu-load') #{__('Loading')}
+                                div(class='progress')
+                                    div(class='progress-bar bg-warning' id='cpu-progress' role='progressbar' style='width: 0%' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100')
+
+                    div(class='col-md-4')
+                        div(class='card text-white bg-success')
+                            div(class='card-body')
+                                h5(class='card-title bi-memory')  #{__('MemoryUsage')}
+                                p(class='card-text') #{__('RamConsumption')}
+                                h3(id='memory-usage') #{__('Loading')}
+                                div(class='progress')
+                                    div(class='progress-bar bg-warning' id='memory-progress' role='progressbar' style='width: 0%' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100')
+
+                    div(class='col-md-4')
+                        div(class='card text-white bg-info')
+                            div(class='card-body')
+                                h5(class='card-title bi-floppy')  #{__('DiskUsage')}
+                                p(class='card-text') #{__('RootFilesystemUsage')}
+                                h3(id='disk-usage') #{__('Loading')}
+                                div(class='progress')
+                                    div(class='progress-bar bg-warning' id='disk-progress' role='progressbar' style='width: 0%' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100')
+
+                    div(class='col-md-4')
+                        div(class='card text-white bg-warning')
+                            div(class='card-body')
+                                h5(class='card-title bi-wifi')  #{__('NetworkUsage')}
+                                p(class='card-text') #{__('RealTimeNetworkStats')}
+                                div(class='d-flex justify-content-between')
+                                    h3(class='bi-download' id='network-download')  #{__('Loading')}
+                                    h3(class='bi-upload' id='network-upload')  #{__('Loading')}
+
+                    div(class='col-md-4')
+                        div(class='card text-white bg-danger')
+                            div(class='card-body')
+                                h5(class='card-title bi-thermometer-half')  #{__('Temperature')}
+                                p(class='card-text') #{__('CpuTemperature')}
+                                h3(id='temperature') #{__('Loading')}
+
+                    div(class='col-md-4')
+                        div(class='card text-white bg-secondary')
+                            div(class='card-body')
+                                h5(class='card-title bi-clock-history')  #{__('Uptime')}
+                                p(class='card-text') #{__('SystemUptime')}
+                                h3(id='uptime') #{__('Loading')}
+        div(class='card mb-4')
+            div(class='card-header') #{__('Software')}
+            div(class='card-body')
+                div(class='row g-2')
+                    div(class='col-6')
+                        button(class='btn btn-info w-100 bi-tv' disabled)  #{currVersion}
+                    div(class='col-6')
+                        button(class='btn btn-info w-100 bi-cloud' disabled)  #{newestVersion}
+                form(method='post' enctype='multipart/form-data' action='/software/update' id='update_software' class='d-grid pt-2')
+                    - var isDisabled = (currVersion === newestVersion);
+                    button(
+                        type='submit'
+                        class='btn bi-cloud-arrow-down ' + (isDisabled ? 'btn-warning' : 'btn-success')
+                        disabled=isDisabled
+                    )  #{__('UpdateSoftware')}
+                hr
+                form(method='post' action='/software/restart' id='restart_software' class='d-grid')
+                    button(type='submit' class='btn btn-primary bi-bootstrap-reboot')  #{__('RestartSoftware')}
+        div(class='card mb-4')
+            div(class='card-header') #{__('Images')}
+            div(class='card-body')
+                form(method='post' enctype='multipart/form-data' action='/system/clear-tmp-dir' id='clear-tmp-dir' class='d-grid')
+                    button(type='submit' class='btn btn-danger bi-trash')  #{__('ClearTmpDir')} (#{tmpFiles} #{__('Images')})
+        div(class='card mb-4')
+            div(class='card-header d-flex justify-content-between align-items-center')
+                div()  #{__('Logs')}
+                button(type='button' class='btn btn-primary btn-sm bi-arrow-clockwise' onclick='fetchLogs()')  #{__('Refresh')}
+            div(class='card-body')
+                div(id='logContainer' class='bg-dark text-success-emphasis font-monospace border rounded p-2 overflow-auto' style='max-height: 300px')
+                
+    script(src='javascripts/confirm.js')
+    script.
+        custom_confirm_fst('#update_software', '#{__('UpdateSoftware')}', '#{__('UpdateConfirm')}', '#{__('No')}', '#{__('Yes')}');
+        custom_confirm_snd('#restart_software', '#{__('RestartSoftware')}', '#{__('RestartSoftwareConfirm')}', '#{__('No')}', '#{__('Yes')}');
+        custom_confirm_trd('#clear-tmp-dir', '#{__('ClearTmpDir')}', '#{__('ClearTmpDirConfirm')}', '#{__('No')}', '#{__('Yes')}');
+
+        function fetchLogs() {
+            $.get('/logs', (data) => {
+                const logContainer = $('#logContainer');
+                logContainer.html('');
+                data.logs.forEach(line => {
+                    logContainer.append($('<div>').text(line));
+                });
+            })
+        }
+
+        function fetchMetrics() {
+            $.ajax({
+                url: '/system/metrics',
+                method: 'GET',
+                success: function(data) {
+                    // Update CPU
+                    const cpuLoad = parseFloat(data.cpu.load);
+                    $('#cpu-load').text(cpuLoad + '%');
+                    $('#cpu-progress').css('width', cpuLoad + '%').attr('aria-valuenow', cpuLoad);
+
+                    // Update Memory
+                    const memUsed = parseFloat(data.memory.used);
+                    const memTotal = parseFloat(data.memory.total);
+                    const memPercent = ((memUsed / memTotal) * 100).toFixed(2);
+                    $('#memory-usage').text(memUsed + ' GB / ' + memTotal + ' GB');
+                    $('#memory-progress').css('width', memPercent + '%').attr('aria-valuenow', memPercent);
+
+                    // Update Disk
+                    const diskUsed = parseFloat(data.disk.used);
+                    const diskTotal = parseFloat(data.disk.total);
+                    const diskPercent = ((diskUsed / diskTotal) * 100).toFixed(2);
+                    $('#disk-usage').text(diskUsed + ' GB / ' + diskTotal + ' GB');
+                    $('#disk-progress').css('width', diskPercent + '%').attr('aria-valuenow', diskPercent);
+
+                    // Update Network
+                    const downloadSpeed = parseFloat(data.network.download).toFixed(2);
+                    const uploadSpeed = parseFloat(data.network.upload).toFixed(2);
+                    $('#network-download').text(' ' + downloadSpeed + ' KB/s');
+                    $('#network-upload').text(' ' + uploadSpeed + ' KB/s');
+
+                    // Update Temperature
+                    $('#temperature').text(data.temperature + ' °C');
+
+                    // Update Uptime
+                    $('#uptime').text(data.uptime + ' ' + '#{__('Hours')}');
+                },
+                error: function(err) {
+                    console.error('Error fetching system metrics:', err);
+                }
+            });
+        }
+
+        $(document).ready(() => {
+            fetchLogs();
+            fetchMetrics();
+            setInterval(fetchMetrics, 5000);
+        });

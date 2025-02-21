@@ -61,7 +61,6 @@ class Scheduler {
     }
 
     scheduleEvent(event) {
-        console.log("Schedule at:", new Date(event.date).toISOString(), "- Event:", event.action);
         this.activeEvent = createNewJob(event);
     }
 
@@ -73,7 +72,6 @@ function createNewJob(event) {
     const job = new CronJob(
         event.date,
         async function() {
-            console.log("Event:", event.action, "at", new Date(event.date).toISOString());
             scheduler.executeEvent(event);
             await scheduler.reschedule(false);
         },

@@ -41,8 +41,8 @@ const screenRouter = require('./routes/screen');
 const powerRouter = require('./routes/power');
 const automationRouter = require('./routes/automation');
 const softwareRouter = require('./routes/software');
-const miscRouter = require('./routes/misc')
 const logsRouter = require('./routes/logs');
+const systemRouter = require('./routes/system');
 
 global.__version = system.getInstalledVersion()
 
@@ -59,6 +59,11 @@ fs.mkdirSync(config.getTmpImagePath(), { recursive: true });
 fs.mkdirSync(config.getSettingsPath(), { recursive: true });
 
 if (process.env.NODE_ENV === 'development') {
+    var accessLogStream = fs.createWriteStream(config.getLogsPath(), { flags: 'a' })
+    app.use(logger('tiny', {
+        skip: function(req, res) { return res.statusCode < 400 },
+        stream: accessLogStream,
+    }));
     app.use(logger('dev'));
 } else {
     app.use(logger('tiny', {
@@ -90,8 +95,8 @@ app.use('/screen', screenRouter);
 app.use('/power', powerRouter);
 app.use('/automation', automationRouter);
 app.use('/software', softwareRouter);
-app.use('/misc', miscRouter);
 app.use('/logs', logsRouter);
+app.use('/system', systemRouter);
 
 app.use(function(req, res, next) {
     next(createError(404));
