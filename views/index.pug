@@ -17,7 +17,14 @@ block content
                     div(class='card-body')
                         h5(class='card-title bi-collection-play')  #{__('Slideshow')}
                         p(class='card-text') #{__('SlideshowDesc')}
-                        a(class='btn btn-light bi-gear' href='/slide')  #{__('Configure')}
+                        div(class='d-flex')
+                            div(class='flex-grow-1')
+                                a(class='btn btn-light bi-gear' href='/slide')  #{__('Configure')}
+                            div(class='d-flex gap-2')
+                                form(method='post' enctype='multipart/form-data' action='/slide/start')
+                                    button(type='submit' class='btn btn-light bi-play-circle')
+                                form(method='post' enctype='multipart/form-data' action='/slide/stop')
+                                    button(type='submit' class='btn btn-light bi-stop-circle')
 
             div(class='col-md-4')
                 div(class='card text-white bg-success')

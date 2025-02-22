@@ -123,6 +123,18 @@ class Schedule {
     }
 }
 
+class SlideshowDuration {
+    hours
+    minutes
+
+    static FromData(data) {
+        var duration = new SlideshowDuration();
+        duration.hours = parseInteger(data, "SLIDE_SHOW_HOURS", 0);
+        duration.minutes = parseInteger(data, "SLIDE_SHOW_MINUTES", 0);
+        return duration;
+    }
+}
+
 function containsValue(data, entry, value) {
     return parseArray(data, entry).includes(value);
 }
@@ -164,5 +176,6 @@ module.exports = {
     Event,
     EventActions,
     ModeSlide,
-    Schedule
+    Schedule,
+    SlideshowDuration
 }

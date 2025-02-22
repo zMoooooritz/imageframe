@@ -10,12 +10,12 @@ class Slideshow {
         this.isActive = false;
     }
 
-    async restart(cfg) {
+    restart(cfg) {
         this.stop();
         this.start(cfg);
     }
 
-    async start(cfg) {
+    start(cfg) {
         this.isActive = true;
 
         buildConfigFile(cfg.directories);
@@ -32,9 +32,8 @@ class Slideshow {
         }, 1000);
     }
 
-    async stop() {
+    stop() {
         this.isActive = false;
-
         system.stopSlideshow();
     }
 

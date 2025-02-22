@@ -15,10 +15,10 @@ block content
                                     option(value=dir) #{dir}
 
                     div(class='d-grid gap-2 pt-2')
-                        input(type='checkbox' class='btn-check' id='SLIDE_RANDOM' name='SLIDE_RANDOM' checked= data.doRandom autocomplete='off')
+                        input(type='checkbox' class='btn-check' id='SLIDE_RANDOM' name='SLIDE_RANDOM' checked=data.doRandom autocomplete='off')
                         label(class='btn btn-outline-info bi-shuffle' for='SLIDE_RANDOM' id='SLIDE_RANDOM_LABEL')  #{__('RandomOrder')}
 
-                        input(type='checkbox' class='btn-check' id='SLIDE_NAMES' name='SLIDE_NAMES' checked= data.showNames autocomplete='off')
+                        input(type='checkbox' class='btn-check' id='SLIDE_NAMES' name='SLIDE_NAMES' checked=data.showNames autocomplete='off')
                         label(class='btn btn-outline-info bi-eye' for='SLIDE_NAMES' id='SLIDE_NAMES_LABEL')  #{__('ShowNames')}
 
                     div(class='input-group pt-2')
@@ -36,8 +36,14 @@ block content
         div(class='card mb-4')
             div(class='card-header') #{__('SlideshowControl')}
             div(class='card-body')
-                div(class='d-flex justify-content-between gap-3')
-                    form(method='post' enctype='multipart/form-data' action='/slide/start' class='flex-fill')
-                        button(type='submit' class='btn btn-success bi-play-circle w-100')  #{__('Start')}
-                    form(method='post' enctype='multipart/form-data' action='/slide/stop' class='flex-fill')
-                        button(type='submit' class='btn btn-warning bi-stop-circle w-100')  #{__('Stop')}
+                form(method='post' enctype='multipart/form-data' action='/slide/start' id='slide_start')
+                    div(class='input-group pb-2')
+                        span(class='input-group-text') #{__('Duration')}
+                        input(type='number' class='form-control' min='0' id='SLIDE_SHOW_HOURS' name='SLIDE_SHOW_HOURS' autocomplete='off')
+                        span(class='input-group-text') h
+                        input(type='number' class='form-control' min='0' max='59' id='SLIDE_SHOW_MINUTES' name='SLIDE_SHOW_MINUTES' autocomplete='off')
+                        span(class='input-group-text') m
+                    button(type='submit' class='btn btn-success bi-play-circle w-100')  #{__('Start')}
+                hr
+                form(method='post' enctype='multipart/form-data' action='/slide/stop' class='pt-2')
+                    button(type='submit' class='btn btn-warning bi-stop-circle w-100')  #{__('Stop')}

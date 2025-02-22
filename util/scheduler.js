@@ -33,19 +33,19 @@ class Scheduler {
             this.scheduleEvent(nextEvent);
     }
 
-    async executeEvent(event) {
+    executeEvent(event) {
         var eventData = event.data;
 
         if (event.action == data.EventActions.START) {
             system.displayOn();
             if (eventData.mode == 'slide') {
-                await slideshow.restart(eventData.data);
+                slideshow.restart(eventData.data);
             }
         }
 
         if (event.action == data.EventActions.STOP) {
             system.displayOff();
-            await slideshow.stop();
+            slideshow.stop();
         }
     }
 
@@ -63,7 +63,6 @@ class Scheduler {
     scheduleEvent(event) {
         this.activeEvent = createNewJob(event);
     }
-
 }
 
 const scheduler = new Scheduler();

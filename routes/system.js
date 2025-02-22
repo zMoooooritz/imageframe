@@ -55,8 +55,8 @@ router.get('/metrics', async (req, res) => {
         load: cpu.currentLoad.toFixed(2),
       },
       memory: {
-        total: Math.round(mem.total / gbFactor),
-        used: Math.round((mem.total - mem.available) / gbFactor)
+        total: (mem.total / gbFactor).toFixed(2),
+        used: ((mem.total - mem.available) / gbFactor).toFixed(2),
       },
       disk: {
         total: Math.round(rootFs.size / gbFactor), // in GB
@@ -64,13 +64,13 @@ router.get('/metrics', async (req, res) => {
       },
       network: {
         download: (mainNetwork.rx_sec / kbFactor).toFixed(2),
-        upload: (mainNetwork.tx_sec / kbFactor).toFixed(2)
+        upload: (mainNetwork.tx_sec / kbFactor).toFixed(2),
       },
-      temperature: temp.main || 'N/A',
+      temperature: temp.main ? temp.main.toFixed(2) : 'N/A',
       uptime: (time.uptime / 3600).toFixed(2), // in hours
     });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch system metrics' + err });
+    res.status(500).json({ error: 'Failed to fetch system metrics' });
   }
 });
 
