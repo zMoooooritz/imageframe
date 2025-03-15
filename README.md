@@ -9,15 +9,17 @@ However, displaying images is only part of what this application offers. See the
 A Node.js server runs in the background on the device, enabling remote control of the image frame. (Though calling Node.js a "background process" might be a stretch—after all, it’s one of the heaviest objects in the universe!)
 
 ## Installation
+
 The following steps are required to setup the image frame (using a Raspberry Pi) [detailed instructions](#detailed-installation-instructions) provides a more detailed guide on how to setup the application:
+
 1. Install an OS, I recommend [Arch Linux](https://archlinuxarm.org/)
-2. Setup autologin via [getty](https://wiki.archlinux.org/title/Getty)
-3. Install `npm` as it is required for the NodeJS server
-4. Clone this repository onto the device
-5. Run the `setup.sh` script provided in this repository
+2. Install the required dependencies
+3. Clone this repository onto the device
+4. Run the `setup.sh` script provided in this repository
 The frontend should be reachable via the IP of the device (assign a static IP for ease of operation) and Port 3000 (without forwarding the reachability is restricted to the local network)
 
 ## Supported Functionality
+
 1. Upload, manage, and delete images while organizing them into folders.
 2. Create custom slideshows using images from multiple folders.
 3. Schedule specific slideshows to play during predefined timeframes.
@@ -25,20 +27,19 @@ The frontend should be reachable via the IP of the device (assign a static IP fo
 
 ## Preview
 
-<table>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/d32e281d-9585-459e-be0c-06113634185f" width="400"></td>
-    <td><img src="https://github.com/user-attachments/assets/0451dbf9-e4f1-4ebe-97f0-dcf81d982288" width="400"></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/0ec8c2e3-4583-4668-9cd9-cbae1a32d467" width="400"></td>
-    <td><img src="https://github.com/user-attachments/assets/f79767ea-603a-4741-b476-9a8a0288305d" width="400"></td>
-  </tr>
-</table>
+| ![Image 1](https://github.com/user-attachments/assets/d32e281d-9585-459e-be0c-06113634185f) | ![Image 2](https://github.com/user-attachments/assets/0451dbf9-e4f1-4ebe-97f0-dcf81d982288) |
+|:-------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------:|
+| ![Image 3](https://github.com/user-attachments/assets/0ec8c2e3-4583-4668-9cd9-cbae1a32d467) | ![Image 4](https://github.com/user-attachments/assets/f79767ea-603a-4741-b476-9a8a0288305d) |
 
 ## Detailed Installation Instructions
 
-Installation of the Operating System (from another Host OS) on the SD card `/dev/sdX`
+### OS Installation
+
+> [!WARNING]
+> Installation of the Operating System (from another Unix based Host OS) on the SD card `/dev/sdX`
+>
+> Be sure to use the intended drive, an overview of the drives can be show with `fdisk -l`
+
 ```bash
  # Setup two partitions
  # 1. Boot - W95 FAT32 (LBA) - 200MB
@@ -56,7 +57,7 @@ sync
 mv root/boot/* boot
 
 # Setup wifi for headless operation
-$EDITOR root/ect/systemd/network/wlan0.network
+$EDITOR root/etc/systemd/network/wlan0.network
 _____________
  [Match]
  Name=wlan0
@@ -68,58 +69,62 @@ _____________
 # Set SSID and PASSWD accordingly
 wpa_passphrase "SSID" "PASSWD" > root/etc/wpa_supplicant/wpa_supplicant-wlan0.conf
 
+# Create symlink for automatic wlan connection
 ln -s root/usr/lib/systemd/system/wpa_supplicant@.service \
       root/etc/systemd/system/multi-user.target.wants/wpa_supplicant@wlan0.service
 
+# unmount the newly created and configured filesystems
 umount boot root
 ```
 
-Configuration of the system
+## System Configuration
+
 ```bash
 # IP of the device needs to be sourced from the router
 ssh alarm@1.2.3.4 # passwd 'alarm'
 
-su # enter the default root pwd 'root'
-passwd # change root pwd
+su # Enter the default root pwd 'root'
+passwd # Change root pwd
 
-# change hostname if wanted
+# Change hostname if wanted
 $EDITOR /etc/hostname
 
-# change time zone
+# Change time zone
 ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
 
-# setup package manager
+# Setup package manager
 pacman-key --init
 pacman-key --populate archlinuxarm
 pacman -Sy
 
-# create the user
+# Create the user
 useradd -m -G wheel,video -s /bin/bash imageframe
 passwd imageframe
 
-# configure correct sudo permissions
-# grant wheel users elevated privileges
+# Configure correct sudo permissions
 visudo
 _________________________________________________
-  %wheel ALL=(ALL:ALL) NOPASSWD:ALL # uncomment this line
+  %wheel ALL=(ALL:ALL) NOPASSWD:ALL # Uncomment this line
 _________________________________________________
 
-# since the newest hardware acceleration driver is broken
+# Since the newest hardware acceleration driver is broken
 #  the driver needs to be changed
 $EDITOR /boot/config.txt
 ______________________________________________
- dtoverlay=vc4-kms-v3d # remove this line
+ dtoverlay=vc4-kms-v3d  # Remove this line
 
- dtoverlay=vc4-fkms-v3d # add this line
+ dtoverlay=vc4-fkms-v3d # Add this line
 ______________________________________________
 ```
 
-Setup the application
-```bash
-# install required applications
-pacman -Syu
-pacman -S fbida git npm figlet ttf-hack # can also choose another monospace font
+## Application Configuration
 
+```bash
+# Install required applications
+pacman -Syu
+pacman -S fbida git npm figlet ttf-hack # can also choose another monospace font (instead of ttf-hack)
+
+# Clone repo and setup application
 git clone https://github.com/zMoooooritz/imageframe code
 bash code/scripts/setup.sh
 ```
