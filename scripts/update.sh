@@ -20,8 +20,8 @@ fi
 # update the motd
 figlet "imageframe $latestTag"| sudo tee /etc/motd > /dev/null
 
-# update node dependencies to the once specified in package.lock
-npm install
+# update node dependencies to the once specified in package-lock.json
+npm ci
 
 # restart application in order for all changes to take effect
 sudo systemctl restart imageframe

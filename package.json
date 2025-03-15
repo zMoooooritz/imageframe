@@ -1,6 +1,6 @@
 {
   "name": "imageframe",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Dynamic image slideshows on SoCs",
   "private": false,
   "author": {
@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node --max-old-space-size=128 ./bin/www",
     "dev": "NODE_ENV=development node ./bin/www"
   },
   "dependencies": {
@@ -24,7 +24,7 @@
     "i18n": "^0.15.1",
     "jquery": "^3.6.0",
     "morgan": "~1.9.1",
-    "multer": "^1.4.4",
+    "multer": "^1.4.5-lts.1",
     "node-fetch": "^2.7.0",
     "pug": "^3.0.2",
     "serve-favicon": "^2.5.0",
