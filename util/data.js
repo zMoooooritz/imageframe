@@ -69,13 +69,15 @@ class SchedulingInformation {
     days
     holidays
     startTime
-    duration
+    hours
+    minutes
 
     constructor() {
         this.days = {};
         this.holidays = "ignore";
         this.startTime = new Time(0, 0);
-        this.duration = 0;
+        this.hours = 0;
+        this.minutes = 0;
         for (let day of DAYS) {
             this.days[day] = false;
         }
@@ -88,7 +90,8 @@ class SchedulingInformation {
         }
         si.holidays = "HOLIDAY_SELECTION" in data ? data["HOLIDAY_SELECTION"] : "ignore";
         si.startTime = parseTime(data, "START_TIME");
-        si.duration = parseInteger(data, "DURATION", 0);
+        si.hours = parseInteger(data, "DURATION_HOURS", 0);
+        si.minutes = parseInteger(data, "DURATION_MINUTES", 0);
         return si;
     }
 }

@@ -36,8 +36,10 @@ mixin accordionEntry(id, data)
                     input(type='time' class='form-control' id='START_TIME['+id+']' name='START_TIME['+id+']' value=data.schedulingInformation.startTime)
                 div(class='input-group pt-2')
                     span(class='input-group-text') #{__('Duration')}
-                    input(type='number' class='form-control' min='0' max='1440' id='DURATION['+id+']' name='DURATION['+id+']' value=data.schedulingInformation.duration autocomplete='off')
-                    span(class='input-group-text') #{__('Minutes')}
+                    input(type='number' class='form-control' min='0' max='23' id='DURATION_HOURS['+id+']' name='DURATION_HOURS['+id+']' value=data.schedulingInformation.hours autocomplete='off')
+                    span(class='input-group-text') h
+                    input(type='number' class='form-control' min='0' max='59' id='DURATION_MINUTES['+id+']' name='DURATION_MINUTES['+id+']' value=data.schedulingInformation.minutes autocomplete='off')
+                    span(class='input-group-text') m
                 hr
                 div()
                     select(class='form-select' id='SELECTED_MODE['+id+']' name='SELECTED_MODE['+id+']')
@@ -118,8 +120,8 @@ block content
             template.attr('id', 'ACCORDION_ITEM['+identifier+']');
             template.appendTo('#FORM_ACCORDION');
 
-            const replId = [ 'ACCORDION_HEADER', 'SCHEDULE_NAME', 'REMOVE_ITEM', 'DAYS_SELECTED', 'NO_HOLIDAY_SELECTED', 'IG_HOLIDAY_SELECTED', 'HOLIDAY_SELECTED', 'NO_HOLIDAY_SELECTED_LABEL', 'IG_HOLIDAY_SELECTED_LABEL', 'HOLIDAY_SELECTED_LABEL', 'START_TIME', 'DURATION', 'SELECTED_MODE', 'SLIDE_DIRS', 'SLIDE_RANDOM', 'SLIDE_RANDOM_LABEL', 'SLIDE_NAMES', 'SLIDE_NAMES_LABEL', 'SLIDE_IMAGE_TIME', 'SLIDE_TRANSITION_TIME' ]
-            const replName = [ 'SCHEDULE_NAME', 'DAYS_SELECTED', 'START_TIME', 'DURATION', 'SELECTED_MODE', 'SLIDE_DIRS', 'SLIDE_RANDOM', 'SLIDE_NAMES', 'SLIDE_IMAGE_TIME', 'SLIDE_TRANSITION_TIME' ]
+            const replId = [ 'ACCORDION_HEADER', 'SCHEDULE_NAME', 'REMOVE_ITEM', 'DAYS_SELECTED', 'NO_HOLIDAY_SELECTED', 'IG_HOLIDAY_SELECTED', 'HOLIDAY_SELECTED', 'NO_HOLIDAY_SELECTED_LABEL', 'IG_HOLIDAY_SELECTED_LABEL', 'HOLIDAY_SELECTED_LABEL', 'START_TIME', 'DURATION_HOURS', 'DURATION_MINUTES', 'SELECTED_MODE', 'SLIDE_DIRS', 'SLIDE_RANDOM', 'SLIDE_RANDOM_LABEL', 'SLIDE_NAMES', 'SLIDE_NAMES_LABEL', 'SLIDE_IMAGE_TIME', 'SLIDE_TRANSITION_TIME' ]
+            const replName = [ 'SCHEDULE_NAME', 'DAYS_SELECTED', 'START_TIME', 'DURATION_HOURS', 'DURATION_MINUTES', 'SELECTED_MODE', 'SLIDE_DIRS', 'SLIDE_RANDOM', 'SLIDE_NAMES', 'SLIDE_IMAGE_TIME', 'SLIDE_TRANSITION_TIME' ]
 
             replId.forEach(function(item, index) {
                 replaceId(template, item, identifier);

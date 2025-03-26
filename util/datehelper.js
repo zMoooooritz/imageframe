@@ -16,13 +16,11 @@ class DateHelper {
 
                 const si = schedule.schedulingInformation;
                 var startTime = si.startTime;
-                var duration = si.duration;
+                var duration = si.hours * 60 + si.minutes;
 
-                var durationHours = duration / 60;
-                var durationMinutes = duration % 60;
                 var endTime = {
-                    "hours": (startTime.hours + durationHours) % 24,
-                    "minutes": (startTime.minutes + durationMinutes) % 60
+                    "hours": (startTime.hours + si.hours) % 24,
+                    "minutes": (startTime.minutes + si.minutes) % 60
                 }
                 var daysOffset = Math.ceil(duration / 60 / 24);
 
