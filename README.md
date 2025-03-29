@@ -36,9 +36,9 @@ The frontend should be reachable via the IP of the device (assign a static IP fo
 ### OS Installation
 
 > [!WARNING]
-> Installation of the Operating System (from another Unix based Host OS) on the SD card `/dev/sdX`
+> Installing the Operating System from another Unix-based host onto the SD card (`/dev/sdX`)
 >
-> Be sure to use the intended drive, an overview of the drives can be show with `fdisk -l`
+> Ensure you select the correct drive, as writing to the wrong one can cause data loss. You can list available drives using: `fdisk -l`
 
 ```bash
  # Setup two partitions
