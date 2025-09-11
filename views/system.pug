@@ -56,6 +56,28 @@ block content
                                 h5(class='card-title bi-clock-history')  #{__('Uptime')}
                                 p(class='card-text') #{__('SystemUptime')}
                                 h3(id='uptime') #{__('Loading')}
+
+                    div(class='col-md-4')
+                        div(class='card text-white bg-info')
+                            div(class='card-body')
+                                h5(class='card-title bi-pci-card-network')  #{__('IP')}
+                                p(class='card-text') #{__('IPAddr')}
+                                h3(id='network-ip') #{__('Loading')}
+
+                    div(class='col-md-4')
+                        div(class='card text-white bg-primary')
+                            div(class='card-body')
+                                h5(class='card-title bi-motherboard')  #{__('OS')}
+                                p(class='card-text') #{__('OperatingSystem')}
+                                h3(id='os-type')  #{__('Loading')}
+
+                    div(class='col-md-4')
+                        div(class='card text-white bg-success')
+                            div(class='card-body')
+                                h5(class='card-title bi-display')  #{__('Display')}
+                                p(class='card-text') #{__('DisplayResolution')}
+                                h3(id='display-res') #{__('Loading')}
+
         div(class='card mb-4')
             div(class='card-header') #{__('Software')}
             div(class='card-body')
@@ -131,12 +153,19 @@ block content
                     const uploadSpeed = parseFloat(data.network.upload).toFixed(2);
                     $('#network-download').text(' ' + downloadSpeed + ' KB/s');
                     $('#network-upload').text(' ' + uploadSpeed + ' KB/s');
+                    $('#network-ip').text(data.network.addr);
 
                     // Update Temperature
                     $('#temperature').text(data.temperature + ' °C');
 
                     // Update Uptime
                     $('#uptime').text(data.uptime + ' ' + '#{__('Hours')}');
+
+                    // Update OS
+                    $('#os-type').text(data.os.name + ' ' + data.os.architecture);
+
+                    // Update Display
+                    $('#display-res').text(data.display.width + 'x' + data.display.height);
                 },
                 error: function(err) {
                     console.error('Error fetching system metrics:', err);

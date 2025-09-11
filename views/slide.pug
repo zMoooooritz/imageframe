@@ -3,6 +3,15 @@ extends layout
 block content
     div(class='container')
         div(class='card mb-4')
+            div(class='card-header')  #{__('SlideshowStatus')}
+            div(class='card-body')
+                table(class="table table-hover table-striped rounded-3 overflow-hidden")
+                    thead(id='mode-head')
+                    tbody(id='mode-content')
+                        tr()
+                            td() #{__('Loading')}
+
+        div(class='card mb-4')
             div(class='card-header') #{__('SlideshowSettings')}
             div(class='card-body')
                 form(method='post' enctype='multipart/form-data' action='/slide/save' id='slide_save')
@@ -47,3 +56,57 @@ block content
                 hr
                 form(method='post' enctype='multipart/form-data' action='/slide/stop' class='pt-2')
                     button(type='submit' class='btn btn-warning bi-stop-circle w-100')  #{__('Stop')}
+
+    script.
+        function updateSlideshowStatus() {
+            $.ajax({
+                url: '/slide/status',
+                method: 'GET',
+                success: function(data) {
+                    $('#mode-head').empty();
+                    $('#mode-content').empty();
+                    $('#mode-head').append(
+                        "<tr>" +
+                            "<th>" + '#{__('Key')}' + "</td>" +
+                            "<th>" + '#{__('Value')}' + "</td>" +
+                        "</tr>"
+                    );
+
+                    addTableRow('#mode-content', '#{__('Active')}', data.active);
+
+                    if ( data.active && Object.keys(data.status).length > 0 )
+                    {
+                        const path_parts = data.status.image_path.split('/');
+                        const image_name = path_parts[path_parts.length - 1];
+                        const image_container = path_parts[path_parts.length - 2];
+                        const image_resolution = data.status.image_width + "x" + data.status.image_height
+                        const last_switch = new Date(data.status.timestamp * 1000);
+
+                        addTableRow('#mode-content', '#{__('Image')}', image_name);
+                        addTableRow('#mode-content', '#{__('Directory')}', image_container);
+                        addTableRow('#mode-content', '#{__('ImageResolution')}', image_resolution);
+                        addTableRow('#mode-content', '#{__('ImageIndex')}', data.status.image_number);
+                        addTableRow('#mode-content', '#{__('TotalImages')}', data.status.total_images);
+                        addTableRow('#mode-content', '#{__('LastSwitch')}', last_switch.toLocaleString());
+                    }
+
+                },
+                error: function(err) {
+                    console.error('Error fetching display information:', err);
+                }
+            });
+        }
+
+        function addTableRow(table_id, key, value) {
+            $(table_id).append(
+                "<tr>" +
+                    "<td>" + key + "</td>" +
+                    "<td>" + value + "</td>" +
+                "</tr>"
+            );
+        }
+
+        $(document).ready(() => {
+            updateSlideshowStatus();
+            setInterval(updateSlideshowStatus, 2000);
+        });

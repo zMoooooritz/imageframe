@@ -102,5 +102,20 @@
 	"CpuTemperature": "CPU-Temperatur",
 	"Uptime": "Betriebszeit",
 	"SystemUptime": "Systembetriebszeit",
-	"Hours": "Stunden"
+	"Hours": "Stunden",
+	"Display": "Anzeige",
+	"DisplayResolution": "Anzeigeauflösung",
+	"OS": "OS",
+	"IP": "IP",
+	"IPAddr": "IP-Adresse",
+	"OperatingSystem": "Betriebssystem",
+	"SlideshowStatus": "Diashow-Status",
+	"Key": "Schlüssel",
+	"Value": "Wert",
+	"Active": "Aktiv",
+	"Image": "Bild",
+	"ImageResolution": "Bildauflösung",
+	"ImageIndex": "Bildnummer",
+	"TotalImages": "Gesamtanzahl Bilder",
+	"LastSwitch": "Letzter Wechsel"
 }

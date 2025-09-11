@@ -38,6 +38,10 @@ class Config {
         return path.join(this.getSettingsPath(), "kvstore.json");
     }
 
+    getFbiStatusPath() {
+        return path.join("/", "tmp", "fbi-info");
+    }
+
     getLogsPath() {
         if (process.env.NODE_ENV === "development") {
             return path.join(this.dataBase, "imageframe.log");

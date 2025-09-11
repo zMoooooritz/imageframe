@@ -17,8 +17,8 @@ if [[ "$latestTag" != "$currentTag" ]]; then
     exec "$0"
 fi
 
-# update the motd
-figlet "imageframe $latestTag"| sudo tee /etc/motd > /dev/null
+# update the greeter
+figlet "imageframe $latestTag"| sudo tee /etc/greeter > /dev/null
 
 # update node dependencies to the once specified in package-lock.json
 npm ci

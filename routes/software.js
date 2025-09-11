@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const system = require('../util/system');
-const storage = require('../util/storage');
 
 router.post('/update', function(req, res) {
     res.render('static', {

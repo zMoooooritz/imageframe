@@ -5,6 +5,7 @@ const storage = require('../util/storage')
 const kvStore = require('../util/kvstore');
 const data = require('../util/data');
 const scheduler = require('../util/scheduler');
+const slideshow = require('../util/slideshow');
 
 const upload = multer();
 
@@ -16,6 +17,19 @@ router.get('/', async function(req, res) {
 
     res.render('slide', { title: res.__('Slideshow') });
 });
+
+router.get('/status', async (req, res) => {
+  try {
+
+    res.json({
+        active: slideshow.isActive,
+        status: slideshow.status,
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch display information' });
+  }
+});
+
 
 router.post('/save', upload.none(), async function(req, res) {
     var ms = data.ModeSlide.FromData(req.body);

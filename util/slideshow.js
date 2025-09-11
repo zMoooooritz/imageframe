@@ -8,6 +8,9 @@ class Slideshow {
 
     constructor() {
         this.isActive = false;
+        this.status = {};
+
+        this.startStatusReader();
     }
 
     restart(cfg) {
@@ -25,7 +28,8 @@ class Slideshow {
         options += `-timeout ${cfg.timePerSlide} `;
         options += `-blend ${cfg.transitionTime} `;
         options += cfg.showNames ? "-verbose " : "-noverbose ";
-        options += `-list ${config.getImageListFilePath()}`;
+        options += `-list ${config.getImageListFilePath()} `;
+        options += `-status ${config.getFbiStatusPath()}`;
 
         setTimeout(function() {
             system.startSlideshow(options);
@@ -37,6 +41,31 @@ class Slideshow {
         system.stopSlideshow();
     }
 
+    startStatusReader() {
+        const stream = fs.createReadStream(config.getFbiStatusPath(), { encoding: 'utf8' });
+
+        let buffer = "";
+
+        stream.on('data', (chunk) => {
+            buffer += chunk;
+
+            try {
+                const status = JSON.parse(buffer);
+                this.status = status;
+                buffer = "";
+            } catch (e) {
+                // Incomplete JSON received, waiting for more data
+            }
+        });
+
+        stream.on('error', (err) => {
+            setTimeout(() => this.startStatusReader(), 1000);
+        });
+
+        stream.on('end', () => {
+            setTimeout(() => this.startStatusReader(), 1000);
+        });
+    }
 }
 
 function buildConfigFile(directories) {

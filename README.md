@@ -1,29 +1,19 @@
 # imageframe
 
-ImageFrame is a lightweight application for creating a slideshow on a display or television. It can run on minimal hardware, such as a Raspberry Pi, making it an efficient choice for embedded systems.
+ImageFrame is a lightweight application for creating slideshows on displays or televisions. It runs efficiently on minimal hardware, such as a Raspberry Pi, making it an ideal choice for embedded systems.
 
-The images are displayed using [fbida](https://github.com/fcarlier/fbida), eliminating the need for a desktop environment. This allows the software to run smoothly even on low-power devices, including the Raspberry Pi Zero W.
+Images are displayed using [fbida](https://github.com/fcarlier/fbida), eliminating the need for a desktop environment. This allows the software to run smoothly even on low-power devices, including the Raspberry Pi Zero W.
 
-However, displaying images is only part of what this application offers. See the [Functionality](#supported-functionality) section for a full overview of its features and a preview in the [Preview](#preview) section.  
+Beyond simple image display, this application offers comprehensive slideshow management. See the [Features](#features) section for a complete overview and the [Preview](#preview) section for screenshots.
 
-A Node.js server runs in the background on the device, enabling remote control of the image frame. (Though calling Node.js a "background process" might be a stretch—after all, it’s one of the heaviest objects in the universe!)
+A Node.js server runs in the background, enabling remote control of the image frame through a web interface. (Though calling Node.js a "background process" might be generous - it's one of the heaviest objects in the universe!)
 
-## Installation
+## Features
 
-The following steps are required to setup the image frame (using a Raspberry Pi) [detailed instructions](#detailed-installation-instructions) provides a more detailed guide on how to setup the application:
-
-1. Install an OS, I recommend [Arch Linux](https://archlinuxarm.org/)
-2. Install the required dependencies
-3. Clone this repository onto the device
-4. Run the `setup.sh` script provided in this repository
-The frontend should be reachable via the IP of the device (assign a static IP for ease of operation) and Port 3000 (without forwarding the reachability is restricted to the local network)
-
-## Supported Functionality
-
-1. Upload, manage, and delete images while organizing them into folders.
-2. Create custom slideshows using images from multiple folders.
-3. Schedule specific slideshows to play during predefined timeframes.
-4. Update the software directly from the user interface.
+1. **Image Management**: Upload, organize, and delete images with folder-based organization
+2. **Custom Slideshows**: Create personalized slideshows using images from multiple folders
+3. **Scheduling**: Schedule specific slideshows to play during predefined timeframes
+4. **Remote Updates**: Update the software directly from the web interface
 
 ## Preview
 
@@ -31,100 +21,112 @@ The frontend should be reachable via the IP of the device (assign a static IP fo
 |:-------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------:|
 | ![Image 3](https://github.com/user-attachments/assets/0ec8c2e3-4583-4668-9cd9-cbae1a32d467) | ![Image 4](https://github.com/user-attachments/assets/f79767ea-603a-4741-b476-9a8a0288305d) |
 
-## Detailed Installation Instructions
+## Installation
 
-### OS Installation
+Follow these steps to set up your imageframe:
+
+### 1. Operating System Installation
+
+Install a Debian-based Linux distribution suitable for your hardware. For Raspberry Pi devices, we recommend [Raspberry Pi OS](https://www.raspberrypi.com/software/).
+
+**Installation Steps:**
+
+1. Download and use the official Raspberry Pi Imager (available for Windows, macOS, and Linux)
+2. The official imager simplifies headless setup configuration
+3. Configure SSH, Wi-Fi, and user account during the imaging process
 
 > [!WARNING]
-> Installing the Operating System from another Unix-based host onto the SD card (`/dev/sdX`)
->
-> Ensure you select the correct drive, as writing to the wrong one can cause data loss. You can list available drives using: `fdisk -l`
+> Ensure you select the correct storage device during installation to prevent data loss.
+
+### 2. System Configuration
+
+Connect to your device and configure the system:
 
 ```bash
- # Setup two partitions
- # 1. Boot - W95 FAT32 (LBA) - 200MB
- # 2. Root - remaining Capacity
-fdisk /dev/sdX
+# Connect via SSH (replace with your device's IP address)
+ssh imageframe@192.168.1.100
 
-# Create and mount the filesystems
-mkfs.vfat /dev/sdX1; mkdir boot; mount /dev/sdX1 boot
-mkfs.ext4 /dev/sdX2; mkdir root; mount /dev/sdX2 root
+# Switch to root user
+sudo su
 
-# Install the OS files
-wget http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-armv7-latest.tar.gz
-bsdtar -xpf ArchLinuxARM-rpi-armv7-latest.tar.gz -C root
-sync
-mv root/boot/* boot
+# Update the system
+apt update && apt upgrade -y
 
-# Setup wifi for headless operation
-$EDITOR root/etc/systemd/network/wlan0.network
-_____________
- [Match]
- Name=wlan0
- 
- [Network]
- DHCP=yes
-_____________
+# Set timezone (if not configured during imaging)
+timedatectl set-timezone Region/City
 
-# Set SSID and PASSWD accordingly
-wpa_passphrase "SSID" "PASSWD" > root/etc/wpa_supplicant/wpa_supplicant-wlan0.conf
-
-# Create symlink for automatic wlan connection
-ln -s root/usr/lib/systemd/system/wpa_supplicant@.service \
-      root/etc/systemd/system/multi-user.target.wants/wpa_supplicant@wlan0.service
-
-# unmount the newly created and configured filesystems
-umount boot root
-```
-
-## System Configuration
-
-```bash
-# IP of the device needs to be sourced from the router
-ssh alarm@1.2.3.4 # passwd 'alarm'
-
-su # Enter the default root pwd 'root'
-passwd # Change root pwd
-
-# Change hostname if wanted
-$EDITOR /etc/hostname
-
-# Change time zone
-ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
-
-# Setup package manager
-pacman-key --init
-pacman-key --populate archlinuxarm
-pacman -Sy
-
-# Create the user
-useradd -m -G wheel,video -s /bin/bash imageframe
-passwd imageframe
-
-# Configure correct sudo permissions
+# Configure passwordless sudo for convenience
 visudo
-_________________________________________________
-  %wheel ALL=(ALL:ALL) NOPASSWD:ALL # Uncomment this line
-_________________________________________________
-
-# Since the newest hardware acceleration driver is broken
-#  the driver needs to be changed
-$EDITOR /boot/config.txt
-______________________________________________
- dtoverlay=vc4-kms-v3d  # Remove this line
-
- dtoverlay=vc4-fkms-v3d # Add this line
-______________________________________________
 ```
 
-## Application Configuration
+Edit the sudoers file to uncomment this line:
 
 ```bash
-# Install required applications
-pacman -Syu
-pacman -S fbida git npm figlet ttf-hack # can also choose another monospace font (instead of ttf-hack)
-
-# Clone repo and setup application
-git clone https://github.com/zMoooooritz/imageframe code
-bash code/scripts/setup.sh
+%sudo ALL=(ALL:ALL) NOPASSWD:ALL
 ```
+
+**Fix Hardware Acceleration (Raspberry Pi specific):**
+
+Edit the boot configuration:
+
+```bash
+sudo nano /boot/config.txt
+```
+
+Make these changes:
+
+```bash
+# Comment out or remove this line:
+dtoverlay=vc4-kms-v3d
+
+# Add this line instead:
+dtoverlay=vc4-fkms-v3d
+```
+
+Reboot after making these changes:
+
+```bash
+sudo reboot
+```
+
+### 3. Application Setup
+
+Install dependencies and set up the imageframe application:
+
+```bash
+# Install required packages
+sudo apt install fbida git npm figlet -y
+
+# Clone the repository
+git clone https://github.com/zMoooooritz/imageframe ~/imageframe
+
+# Run the setup script
+cd ~/imageframe
+bash scripts/setup.sh
+```
+
+## Advanced Features
+
+### Enhanced Status Display
+
+For users who want additional status information, a modified version of fbida is available in my [fork](https://github.com/zMoooooritz/fbida). This enhancement allows the imageframe Web UI to display advanced state information about currently displayed images.
+
+**Note:** This feature is optional and requires manual compilation. No pre-compiled binaries are provided, so users must:
+
+1. Compile the application for their specific hardware
+2. Install the necessary dependencies
+3. Replace the system fbida with the enhanced version
+
+This modification provides a richer user experience but is not required for basic functionality.
+
+## Getting Started
+
+After installation, access the web interface by navigating to your device's IP address in a web browser. From there, you can:
+
+- Upload and organize your images
+- Create custom slideshows
+- Set up scheduling
+- Monitor system status
+- Update the application
+
+Enjoy your new imageframe!

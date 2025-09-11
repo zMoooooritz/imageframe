@@ -26,11 +26,11 @@ class System {
     }
 
     static startSlideshow(options) {
-        execute(`fbi -nointeractive -a -T 1 -cachemem 100 ${options}`);
+        execute(`sudo fbi -nointeractive -a -cachemem 100 ${options}`);
     }
 
     static stopSlideshow() {
-        execute(`killall -q -KILL fbi`);
+        execute(`sudo killall -q -KILL fbi`);
     }
 
     static getInstalledVersion() {
@@ -91,7 +91,16 @@ function execute(command) {
     if (process.env.NODE_ENV === "development") {
         console.log(command);
     } else {
-        exec(command);
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.error(stderr);
+            }
+            console.log(stdout);
+        });
     }
 }
 

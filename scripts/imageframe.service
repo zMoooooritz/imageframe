@@ -3,6 +3,7 @@ Description=imageframe
 After=network.target
 
 [Service]
+ExecStartPre=/bin/bash -c 'if [[ ! -p /tmp/fbi-info ]]; then mkfifo /tmp/fbi-info; fi'
 ExecStart=/usr/bin/npm run start --prefix /home/imageframe/code
 WorkingDirectory=/home/imageframe/code
 Restart=always
