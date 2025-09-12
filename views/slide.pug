@@ -37,11 +37,15 @@ block content
         div(class='card mb-4')
             div(class='card-header')  #{__('SlideshowStatus')}
             div(class='card-body')
-                table(class="table table-hover table-striped rounded-3 overflow-hidden")
-                    thead(id='mode-head')
-                    tbody(id='mode-content')
-                        tr()
-                            td() #{__('Loading')}
+                div(class='table-responsive')
+                    table(class="table table-hover table-striped rounded-3 overflow-hidden")
+                        colgroup
+                            col(style="width: 30%;")
+                            col(style="width: 70%;")
+                        thead(id='mode-head')
+                        tbody(id='mode-content')
+                            tr()
+                                td() #{__('Loading')}
 
         div(class='card mb-4')
             div(class='card-header') #{__('SlideshowControl')}
