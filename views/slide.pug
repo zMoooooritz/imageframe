@@ -3,15 +3,6 @@ extends layout
 block content
     div(class='container')
         div(class='card mb-4')
-            div(class='card-header')  #{__('SlideshowStatus')}
-            div(class='card-body')
-                table(class="table table-hover table-striped rounded-3 overflow-hidden")
-                    thead(id='mode-head')
-                    tbody(id='mode-content')
-                        tr()
-                            td() #{__('Loading')}
-
-        div(class='card mb-4')
             div(class='card-header') #{__('SlideshowSettings')}
             div(class='card-body')
                 form(method='post' enctype='multipart/form-data' action='/slide/save' id='slide_save')
@@ -42,9 +33,28 @@ block content
                     br
                     div(class='d-grid')
                         button(type='submit' class='btn btn-primary bi-floppy')  #{__('Save')}
+
+        div(class='card mb-4')
+            div(class='card-header')  #{__('SlideshowStatus')}
+            div(class='card-body')
+                table(class="table table-hover table-striped rounded-3 overflow-hidden")
+                    thead(id='mode-head')
+                    tbody(id='mode-content')
+                        tr()
+                            td() #{__('Loading')}
+
         div(class='card mb-4')
             div(class='card-header') #{__('SlideshowControl')}
             div(class='card-body')
+                div(class='container text-center')
+                    div(class='row g-2')
+                        div(class='col-12 col-md-4 mb-2')
+                            button(type='button' class='btn btn-primary bi-arrow-left-circle w-100' id='btn-prev')  #{__('Previous')}
+                        div(class='col-12 col-md-4 mb-2')
+                            button(type='button' class='btn btn-primary bi-pause-circle w-100' id='btn-pause')  #{__('Pause/Resume')}
+                        div(class='col-12 col-md-4 mb-2')
+                            button(type='button' class='btn btn-primary bi-arrow-right-circle w-100' id='btn-next')  #{__('Next')}
+                hr
                 form(method='post' enctype='multipart/form-data' action='/slide/start' id='slide_start')
                     div(class='input-group pb-2')
                         span(class='input-group-text') #{__('Duration')}
@@ -54,8 +64,7 @@ block content
                         span(class='input-group-text') m
                     button(type='submit' class='btn btn-success bi-play-circle w-100')  #{__('Start')}
                 hr
-                form(method='post' enctype='multipart/form-data' action='/slide/stop' class='pt-2')
-                    button(type='submit' class='btn btn-warning bi-stop-circle w-100')  #{__('Stop')}
+                button(type='button' class='btn btn-warning bi-stop-circle w-100' id='btn-stop')  #{__('Stop')}
 
     script.
         function updateSlideshowStatus() {
@@ -72,7 +81,7 @@ block content
                         "</tr>"
                     );
 
-                    addTableRow('#mode-content', '#{__('Active')}', data.active);
+                    addTableRow('#mode-content', '#{__('Active')}', data.active ? '#{__('Yes')}' : '#{__('No')}');
 
                     if ( data.active && Object.keys(data.status).length > 0 )
                     {
@@ -82,6 +91,7 @@ block content
                         const image_resolution = data.status.image_width + "x" + data.status.image_height
                         const last_switch = new Date(data.status.timestamp * 1000);
 
+                        addTableRow('#mode-content', '#{__('Paused')}', data.status.paused ? '#{__('Yes')}' : '#{__('No')}');
                         addTableRow('#mode-content', '#{__('Image')}', image_name);
                         addTableRow('#mode-content', '#{__('Directory')}', image_container);
                         addTableRow('#mode-content', '#{__('ImageResolution')}', image_resolution);
@@ -106,7 +116,66 @@ block content
             );
         }
 
+        function postSlideCommand(command) {
+            $.ajax({
+                url: '/slide/' + command,
+                method: 'POST',
+                error: function(err) {
+                    console.error('Error sending slideshow command:', err);
+                }
+            });
+        }
+
         $(document).ready(() => {
             updateSlideshowStatus();
             setInterval(updateSlideshowStatus, 2000);
+
+            // Control buttons
+            $('#btn-prev').click(function() {
+                postSlideCommand('prev');
+            });
+
+            $('#btn-pause').click(function() {
+                postSlideCommand('pause');
+            });
+
+            $('#btn-next').click(function() {
+                postSlideCommand('next');
+            });
+
+            // Settings form
+            $('#slide_save').on('submit', function(e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    url: '/slide/save',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    error: function(err) {
+                        console.error('Error saving settings:', err);
+                    }
+                });
+            });
+
+            // Start slideshow form
+            $('#slide_start').on('submit', function(e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    url: '/slide/start',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        // Clear the duration inputs
+                        $('#SLIDE_SHOW_HOURS, #SLIDE_SHOW_MINUTES').val('');
+                    },
+                    error: function(err) {
+                        console.error('Error starting slideshow:', err);
+                    }
+                });
+            });
+
+            $('#btn-stop').click(function() {
+                postSlideCommand('stop');
+            });
         });

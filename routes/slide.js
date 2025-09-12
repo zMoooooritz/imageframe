@@ -1,11 +1,14 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
+const fs = require('fs');
+const constants = require('constants');
 const storage = require('../util/storage')
 const kvStore = require('../util/kvstore');
 const data = require('../util/data');
 const scheduler = require('../util/scheduler');
 const slideshow = require('../util/slideshow');
+const config = require('../util/config');
 
 const upload = multer();
 
@@ -20,7 +23,6 @@ router.get('/', async function(req, res) {
 
 router.get('/status', async (req, res) => {
   try {
-
     res.json({
         active: slideshow.isActive,
         status: slideshow.status,
@@ -40,7 +42,7 @@ router.post('/save', upload.none(), async function(req, res) {
     kvStore.set("defaults", defaults);
     await kvStore.save();
 
-    res.redirect('/slide');
+    res.json({ success: true, message: 'Settings saved successfully' });
 });
 
 router.post('/start', upload.none(), async function(req, res) {
@@ -57,14 +59,48 @@ router.post('/start', upload.none(), async function(req, res) {
         scheduler.scheduleEvent(endEvent);
     }
 
-    res.redirect(req.get('Referer') || req.get('Referrer') || "/");
+    res.json({ success: true, message: 'Slideshow started successfully' });
 });
 
 router.post('/stop', function(req, res) {
     const stopEvent = new data.Event(new Date(), data.EventActions.STOP, {});
     scheduler.executeEvent(stopEvent);
 
-    res.redirect(req.get('Referer') || req.get('Referrer') || "/");
+    res.json({ success: true, message: 'Slideshow stopped successfully' });
 });
+
+router.post('/pause', function(req, res) {
+    writeToFbiCommandsPipe("pause");
+
+    res.json({ success: true, message: 'Slideshow paused successfully' });
+});
+
+router.post('/next', function(req, res) {
+    writeToFbiCommandsPipe("next");
+
+    res.json({ success: true, message: 'Slideshow went to next slide successfully' });
+});
+
+router.post('/prev', function(req, res) {
+    writeToFbiCommandsPipe("prev");
+
+    res.json({ success: true, message: 'Slideshow went to previous slide successfully' });
+});
+
+function writeToFbiCommandsPipe(command) {
+  fs.open(config.getFbiCommandsPath(), constants.O_WRONLY | constants.O_NONBLOCK, (err, fd) => {
+    if (err) {
+      if (err.code === 'ENXIO')
+        return;
+      console.error('Pipe error:', err);
+      return;
+    }
+
+    fs.write(fd, Buffer.from(command + '\n'), () => {
+      fs.close(fd, () => {});
+    });
+  });
+}
+
 
 module.exports = router;

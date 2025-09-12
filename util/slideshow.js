@@ -29,7 +29,8 @@ class Slideshow {
         options += `-blend ${cfg.transitionTime} `;
         options += cfg.showNames ? "-verbose " : "-noverbose ";
         options += `-list ${config.getImageListFilePath()} `;
-        options += `-status ${config.getFbiStatusPath()}`;
+        options += `-status ${config.getFbiStatusPath()} `;
+        options += `-commands ${config.getFbiCommandsPath()}`;
 
         setTimeout(function() {
             system.startSlideshow(options);

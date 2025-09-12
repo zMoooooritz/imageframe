@@ -21,10 +21,9 @@ block content
                             div(class='flex-grow-1')
                                 a(class='btn btn-light bi-gear' href='/slide')  #{__('Configure')}
                             div(class='d-flex gap-2')
-                                form(method='post' enctype='multipart/form-data' action='/slide/start')
-                                    button(type='submit' class='btn btn-light bi-play-circle')
-                                form(method='post' enctype='multipart/form-data' action='/slide/stop')
-                                    button(type='submit' class='btn btn-light bi-stop-circle')
+                                button(type='button' class='btn btn-light bi-play-circle' id='btn-slide-start')
+                                button(type='button' class='btn btn-light bi-pause-circle' id='btn-slide-pause')
+                                button(type='button' class='btn btn-light bi-stop-circle' id='btn-slide-stop')
 
             div(class='col-md-4')
                 div(class='card text-white bg-success')
@@ -66,3 +65,28 @@ block content
     script.
         custom_confirm_fst("#power_off", '#{__('Shutdown')}', '#{__('ShutdownConfirm')}', '#{__('No')}', '#{__('Yes')}');
         custom_confirm_snd("#power_reboot", '#{__('Reboot')}', '#{__('RebootConfirm')}', '#{__('No')}', '#{__('Yes')}');
+
+        function postSlideCommand(command) {
+            $.ajax({
+                url: '/slide/' + command,
+                method: 'POST',
+                error: function(err) {
+                    console.error('Error sending slideshow command:', err);
+                }
+            });
+        }
+
+        $(document).ready(() => {
+            // Slide Control buttons
+            $('#btn-slide-start').click(function() {
+                postSlideCommand('start');
+            });
+
+            $('#btn-slide-pause').click(function() {
+                postSlideCommand('pause');
+            });
+
+            $('#btn-slide-stop').click(function() {
+                postSlideCommand('stop');
+            });
+        });

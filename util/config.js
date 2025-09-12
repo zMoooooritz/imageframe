@@ -39,7 +39,11 @@ class Config {
     }
 
     getFbiStatusPath() {
-        return path.join("/", "tmp", "fbi-info");
+        return path.join("/", "tmp", "fbi-status");
+    }
+
+    getFbiCommandsPath() {
+        return path.join("/", "tmp", "fbi-commands");
     }
 
     getLogsPath() {

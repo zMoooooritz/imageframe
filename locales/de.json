@@ -117,5 +117,9 @@
 	"ImageResolution": "Bildauflösung",
 	"ImageIndex": "Bildnummer",
 	"TotalImages": "Gesamtanzahl Bilder",
-	"LastSwitch": "Letzter Wechsel"
+	"LastSwitch": "Letzter Wechsel",
+	"Paused": "Pausiert",
+	"Pause/Resume": "Pausieren/Fortsetzen",
+	"Previous": "Vorheriges",
+	"Next": "Nächstes"
 }
