@@ -1,4 +1,5 @@
 const fs = require('fs');
+const constants = require('constants');
 const path = require('path');
 const EventEmitter = require('events');
 const config = require('./config');
@@ -12,7 +13,7 @@ class Slideshow extends EventEmitter {
         this.isActive = false;
         this.status = {};
 
-        this.startStatusReader();
+        this.#startStatusReader();
     }
 
     restart(cfg) {
@@ -24,19 +25,23 @@ class Slideshow extends EventEmitter {
         this.isActive = true;
         this.emit('slideStateChange', this.getState());
 
-        buildConfigFile(cfg.directories);
+        this.#buildConfigFile(cfg.directories);
 
-        var options = "";
-        options += cfg.doRandom ? "-random " : "-norandom ";
-        options += `-timeout ${cfg.timePerSlide} `;
-        options += `-blend ${cfg.transitionTime} `;
-        options += cfg.showNames ? "-verbose " : "-noverbose ";
-        options += `-list ${config.getImageListFilePath()} `;
-        options += `-status ${config.getFbiStatusPath()} `;
-        options += `-commands ${config.getFbiCommandsPath()}`;
+        const options = [
+            `-nointeractive`,
+            `-autozoom`,
+            `-cachemem 100`,
+            cfg.doRandom ? "-random" : "-norandom",
+            `-timeout ${cfg.timePerSlide}`,
+            `-blend ${cfg.transitionTime}`,
+            cfg.showNames ? "-verbose" : "-noverbose",
+            `-list ${config.getImageListFilePath()}`,
+            `-status ${config.getFbiStatusPath()}`,
+            `-commands ${config.getFbiCommandsPath()}`
+        ].join(" ");
 
-        setTimeout(function() {
-            system.startSlideshow(options);
+        setTimeout(() => {
+            system.execute(`sudo fbi ${options}`);
         }, 1000);
     }
 
@@ -44,10 +49,43 @@ class Slideshow extends EventEmitter {
         this.isActive = false;
         this.status = {};
         this.emit('slideStateChange', this.getState() );
-        system.stopSlideshow();
+        system.execute(`sudo killall -q -KILL fbi`);
     }
 
-    startStatusReader() {
+    toggle_pause() {
+        if (this.isActive) {
+            this.#sendCommandToFbi("pause");
+        }
+    }
+
+    next_image() {
+        if (this.isActive) {
+            this.#sendCommandToFbi("next");
+        }
+    }
+
+    prev_image() {
+        if (this.isActive) {
+            this.#sendCommandToFbi("prev");
+        }
+    }
+
+    #sendCommandToFbi(command) {
+        fs.open(config.getFbiCommandsPath(), constants.O_WRONLY | constants.O_NONBLOCK, (err, fd) => {
+            if (err) {
+            if (err.code === 'ENXIO')
+                return;
+            console.error('Pipe error:', err);
+            return;
+            }
+
+            fs.write(fd, Buffer.from(command + '\n'), () => {
+            fs.close(fd, () => {});
+            });
+        });
+    }
+
+    #startStatusReader() {
         const stream = fs.createReadStream(config.getFbiStatusPath(), { encoding: 'utf8' });
 
         let buffer = "";
@@ -71,29 +109,29 @@ class Slideshow extends EventEmitter {
         });
 
         stream.on('error', (err) => {
-            setTimeout(() => this.startStatusReader(), 1000);
+            setTimeout(() => this.#startStatusReader(), 1000);
         });
 
         stream.on('end', () => {
-            setTimeout(() => this.startStatusReader(), 1000);
+            setTimeout(() => this.#startStatusReader(), 1000);
         });
+    }
+
+    #buildConfigFile(directories) {
+        let data = "";
+        directories.forEach((directory) => {
+            const images = storage.listImages(directory);
+            images.forEach((image) => {
+                const imgPath = path.join(config.getContainersPath(), directory, image);
+                data += imgPath + "\n";
+            });
+        });
+        fs.writeFileSync(config.getImageListFilePath(), data);
     }
 
     getState() {
         return { active: this.isActive, status: this.status };
     }
-}
-
-function buildConfigFile(directories) {
-    data = "";
-    directories.forEach((directory) => {
-        const images = storage.listImages(directory);
-        images.forEach((image) => {
-            const imgPath = path.join(config.getContainersPath(), directory, image);
-            data += imgPath + "\n";
-        });
-    });
-    fs.writeFileSync(config.getImageListFilePath(), data);
 }
 
 const slideshow = new Slideshow();

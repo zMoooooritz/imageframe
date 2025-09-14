@@ -1,14 +1,11 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const fs = require('fs');
-const constants = require('constants');
 const storage = require('../util/storage')
 const kvStore = require('../util/kvstore');
 const data = require('../util/data');
 const scheduler = require('../util/scheduler');
 const slideshow = require('../util/slideshow');
-const config = require('../util/config');
 
 const upload = multer();
 
@@ -22,52 +19,51 @@ router.get('/', async function(req, res) {
 });
 
 router.get('/status', async (req, res) => {
-  try {
-    res.json({
-        active: slideshow.isActive,
-        status: slideshow.status,
-    });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch display information' });
-  }
+    try {
+        res.json({
+            active: slideshow.isActive,
+            status: slideshow.status,
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch display information' });
+    }
 });
 
 // Server-Sent Events endpoint for real-time status updates
 router.get('/status/stream', (req, res) => {
-  // Set SSE headers
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Cache-Control'
-  });
+    // Set SSE headers
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Cache-Control'
+    });
 
-  // Send initial state
-  res.write(`data: ${JSON.stringify(slideshow.getState())}\n\n`);
+    // Send initial state
+    res.write(`data: ${JSON.stringify(slideshow.getState())}\n\n`);
 
-  // Listen for state changes
-  const stateChangeHandler = (data) => {
-    res.write(`data: ${JSON.stringify(data)}\n\n`);
-  };
+    // Listen for state changes
+    const stateChangeHandler = (data) => {
+        res.write(`data: ${JSON.stringify(data)}\n\n`);
+    };
 
-  slideshow.on('slideStateChange', stateChangeHandler);
+    slideshow.on('slideStateChange', stateChangeHandler);
 
-  // Handle client disconnect
-  req.on('close', () => {
-    slideshow.removeListener('slideStateChange', stateChangeHandler);
-  });
+    // Handle client disconnect
+    req.on('close', () => {
+        slideshow.removeListener('slideStateChange', stateChangeHandler);
+    });
 
-  // Send heartbeat every 30 seconds to keep connection alive
-  const heartbeat = setInterval(() => {
-    res.write(': heartbeat\n\n');
-  }, 30000);
+    // Send heartbeat every 30 seconds to keep connection alive
+    const heartbeat = setInterval(() => {
+        res.write(': heartbeat\n\n');
+    }, 30000);
 
-  req.on('close', () => {
-    clearInterval(heartbeat);
-  });
+    req.on('close', () => {
+        clearInterval(heartbeat);
+    });
 });
-
 
 router.post('/save', upload.none(), async function(req, res) {
     var ms = data.ModeSlide.FromData(req.body);
@@ -106,37 +102,21 @@ router.post('/stop', function(req, res) {
 });
 
 router.post('/pause', function(req, res) {
-    writeToFbiCommandsPipe("pause");
+    slideshow.toggle_pause();
 
     res.json({ success: true, message: 'Slideshow paused successfully' });
 });
 
 router.post('/next', function(req, res) {
-    writeToFbiCommandsPipe("next");
+    slideshow.next_image();
 
     res.json({ success: true, message: 'Slideshow went to next slide successfully' });
 });
 
 router.post('/prev', function(req, res) {
-    writeToFbiCommandsPipe("prev");
+    slideshow.prev_image();
 
     res.json({ success: true, message: 'Slideshow went to previous slide successfully' });
 });
-
-function writeToFbiCommandsPipe(command) {
-  fs.open(config.getFbiCommandsPath(), constants.O_WRONLY | constants.O_NONBLOCK, (err, fd) => {
-    if (err) {
-      if (err.code === 'ENXIO')
-        return;
-      console.error('Pipe error:', err);
-      return;
-    }
-
-    fs.write(fd, Buffer.from(command + '\n'), () => {
-      fs.close(fd, () => {});
-    });
-  });
-}
-
 
 module.exports = router;

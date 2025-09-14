@@ -6,31 +6,23 @@ const deasync = require("deasync");
 
 class System {
     static shutdown() {
-        execute("sudo shutdown now");
+        this.execute("sudo shutdown now");
     }
 
     static reboot() {
-        execute("sudo shutdown -r now");
+        this.execute("sudo shutdown -r now");
     }
 
     static restartSoftware() {
-        execute("sudo systemctl restart imageframe");
+        this.execute("sudo systemctl restart imageframe");
     }
 
     static displayOn() {
-        execute("vcgencmd display_power 1");
+        this.execute("vcgencmd display_power 1");
     }
 
     static displayOff() {
-        execute("vcgencmd display_power 0");
-    }
-
-    static startSlideshow(options) {
-        execute(`sudo fbi -nointeractive -a -cachemem 100 ${options}`);
-    }
-
-    static stopSlideshow() {
-        execute(`sudo killall -q -KILL fbi`);
+        this.execute("vcgencmd display_power 0");
     }
 
     static getInstalledVersion() {
@@ -85,22 +77,22 @@ class System {
             )
         }
     }
-}
 
-function execute(command) {
-    if (process.env.NODE_ENV === "development") {
-        console.log(command);
-    } else {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.error(stderr);
-            }
-            console.log(stdout);
-        });
+    static execute(command) {
+        if (process.env.NODE_ENV === "development") {
+            console.log(command);
+        } else {
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`exec error: ${error.message}`);
+                    return;
+                }
+                if (stderr) {
+                    console.error(stderr);
+                }
+                console.log(stdout);
+            });
+        }
     }
 }
 
