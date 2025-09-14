@@ -37,6 +37,8 @@ block content
         div(class='card mb-4')
             div(class='card-header')  #{__('SlideshowStatus')}
             div(class='card-body')
+                div(class='text-center mb-3' id='current-image-container' style='display: none;')
+                    img(id='current-image' class='img-fluid rounded' style='max-height: 300px; max-width: 100%;')
                 div(class='table-responsive')
                     table(class="table table-hover table-striped rounded-3 overflow-hidden")
                         colgroup
@@ -71,43 +73,62 @@ block content
                 button(type='button' class='btn btn-warning bi-stop-circle w-100' id='btn-stop')  #{__('Stop')}
 
     script.
-        function updateSlideshowStatus() {
-            $.ajax({
-                url: '/slide/status',
-                method: 'GET',
-                success: function(data) {
-                    $('#mode-head').empty();
-                    $('#mode-content').empty();
-                    $('#mode-head').append(
-                        "<tr>" +
-                            "<th>" + '#{__('Key')}' + "</td>" +
-                            "<th>" + '#{__('Value')}' + "</td>" +
-                        "</tr>"
-                    );
+        function updateSlideshowStatus(data) {
+            $('#mode-head').empty();
+            $('#mode-content').empty();
+            $('#mode-head').append(
+                "<tr>" +
+                    "<th>" + '#{__('Key')}' + "</td>" +
+                    "<th>" + '#{__('Value')}' + "</td>" +
+                "</tr>"
+            );
 
-                    addTableRow('#mode-content', '#{__('Active')}', data.active ? '#{__('Yes')}' : '#{__('No')}');
+            addTableRow('#mode-content', '#{__('Active')}', data.active ? '#{__('Yes')}' : '#{__('No')}');
 
-                    if ( data.active && Object.keys(data.status).length > 0 )
-                    {
-                        const path_parts = data.status.image_path.split('/');
-                        const image_name = path_parts[path_parts.length - 1];
-                        const image_container = path_parts[path_parts.length - 2];
-                        const image_resolution = data.status.image_width + "x" + data.status.image_height
-                        const last_switch = new Date(data.status.timestamp * 1000);
+            if ( data.active && Object.keys(data.status).length > 0 )
+            {
+                const path_parts = data.status.image_path.split('/');
+                const image_name = path_parts[path_parts.length - 1];
+                const image_container = path_parts[path_parts.length - 2];
+                const image_resolution = data.status.image_width + "x" + data.status.image_height
+                const last_switch = new Date(data.status.timestamp * 1000);
 
-                        addTableRow('#mode-content', '#{__('Paused')}', data.status.paused ? '#{__('Yes')}' : '#{__('No')}');
-                        addTableRow('#mode-content', '#{__('Image')}', image_name);
-                        addTableRow('#mode-content', '#{__('Directory')}', image_container);
-                        addTableRow('#mode-content', '#{__('ImageResolution')}', image_resolution);
-                        addTableRow('#mode-content', '#{__('ImageIndex')}', data.status.image_number);
-                        addTableRow('#mode-content', '#{__('TotalImages')}', data.status.total_images);
-                        addTableRow('#mode-content', '#{__('LastSwitch')}', last_switch.toLocaleString());
-                    }
+                const imageUrl = '/image/view/' + image_container + '/' + image_name;
+                $('#current-image').attr('src', imageUrl);
+                $('#current-image-container').show();
 
-                },
-                error: function(err) {
-                    console.error('Error fetching display information:', err);
+                addTableRow('#mode-content', '#{__('Paused')}', data.status.paused ? '#{__('Yes')}' : '#{__('No')}');
+                addTableRow('#mode-content', '#{__('Image')}', image_name);
+                addTableRow('#mode-content', '#{__('Directory')}', image_container);
+                addTableRow('#mode-content', '#{__('ImageResolution')}', image_resolution);
+                addTableRow('#mode-content', '#{__('ImageIndex')}', data.status.image_number);
+                addTableRow('#mode-content', '#{__('TotalImages')}', data.status.total_images);
+                addTableRow('#mode-content', '#{__('LastSwitch')}', last_switch.toLocaleString());
+            } else {
+                $('#current-image-container').hide();
+            }
+        }
+
+        function initializeSSE() {
+            const eventSource = new EventSource('/slide/status/stream');
+            
+            eventSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    updateSlideshowStatus(data);
+                } catch (e) {
+                    console.error('Error parsing SSE data:', e);
                 }
+            };
+
+            eventSource.onerror = function(event) {
+                console.error('SSE connection error:', event);
+            };
+
+            eventSource.onopen = function(event) {};
+
+            window.addEventListener('beforeunload', function() {
+                eventSource.close();
             });
         }
 
@@ -131,8 +152,8 @@ block content
         }
 
         $(document).ready(() => {
-            updateSlideshowStatus();
-            setInterval(updateSlideshowStatus, 2000);
+            // Initialize SSE connection for real-time updates
+            initializeSSE();
 
             // Control buttons
             $('#btn-prev').click(function() {

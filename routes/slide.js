@@ -32,6 +32,42 @@ router.get('/status', async (req, res) => {
   }
 });
 
+// Server-Sent Events endpoint for real-time status updates
+router.get('/status/stream', (req, res) => {
+  // Set SSE headers
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Cache-Control'
+  });
+
+  // Send initial state
+  res.write(`data: ${JSON.stringify(slideshow.getState())}\n\n`);
+
+  // Listen for state changes
+  const stateChangeHandler = (data) => {
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  };
+
+  slideshow.on('slideStateChange', stateChangeHandler);
+
+  // Handle client disconnect
+  req.on('close', () => {
+    slideshow.removeListener('slideStateChange', stateChangeHandler);
+  });
+
+  // Send heartbeat every 30 seconds to keep connection alive
+  const heartbeat = setInterval(() => {
+    res.write(': heartbeat\n\n');
+  }, 30000);
+
+  req.on('close', () => {
+    clearInterval(heartbeat);
+  });
+});
+
 
 router.post('/save', upload.none(), async function(req, res) {
     var ms = data.ModeSlide.FromData(req.body);

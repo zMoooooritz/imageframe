@@ -1,12 +1,14 @@
 const fs = require('fs');
 const path = require('path');
+const EventEmitter = require('events');
 const config = require('./config');
 const storage = require('./storage');
 const system = require('./system');
 
-class Slideshow {
+class Slideshow extends EventEmitter {
 
     constructor() {
+        super();
         this.isActive = false;
         this.status = {};
 
@@ -20,6 +22,7 @@ class Slideshow {
 
     start(cfg) {
         this.isActive = true;
+        this.emit('slideStateChange', this.getState());
 
         buildConfigFile(cfg.directories);
 
@@ -39,6 +42,8 @@ class Slideshow {
 
     stop() {
         this.isActive = false;
+        this.status = {};
+        this.emit('slideStateChange', this.getState() );
         system.stopSlideshow();
     }
 
@@ -52,7 +57,13 @@ class Slideshow {
 
             try {
                 const status = JSON.parse(buffer);
+                const statusChanged = JSON.stringify(this.status) !== JSON.stringify(status);
                 this.status = status;
+                
+                if (statusChanged) {
+                    this.emit('slideStateChange', this.getState());
+                }
+                
                 buffer = "";
             } catch (e) {
                 // Incomplete JSON received, waiting for more data
@@ -66,6 +77,10 @@ class Slideshow {
         stream.on('end', () => {
             setTimeout(() => this.startStatusReader(), 1000);
         });
+    }
+
+    getState() {
+        return { active: this.isActive, status: this.status };
     }
 }
 
