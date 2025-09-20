@@ -119,4 +119,10 @@ router.post('/prev', function(req, res) {
     res.json({ success: true, message: 'Slideshow went to previous slide successfully' });
 });
 
+router.post('/statusline', function(req, res) {
+    slideshow.toggle_statusline();
+
+    res.json({ success: true, message: 'Slideshow toggled status line successfully' });
+});
+
 module.exports = router;

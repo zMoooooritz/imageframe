@@ -70,6 +70,12 @@ class Slideshow extends EventEmitter {
         }
     }
 
+    toggle_statusline() {
+        if (this.isActive) {
+            this.#sendCommandToFbi("statusline");
+        }
+    }
+
     #sendCommandToFbi(command) {
         fs.open(config.getFbiCommandsPath(), constants.O_WRONLY | constants.O_NONBLOCK, (err, fd) => {
             if (err) {

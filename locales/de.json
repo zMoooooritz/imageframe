@@ -121,5 +121,6 @@
 	"Paused": "Pausiert",
 	"Pause/Resume": "Pausieren/Fortsetzen",
 	"Previous": "Vorheriges",
-	"Next": "Nächstes"
+	"Next": "Nächstes",
+	"StatusLine": "Statuszeile"
 }
